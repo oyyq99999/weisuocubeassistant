@@ -1,7 +1,7 @@
 MIDlet-Version: 0.0.1
-MIDlet-Vendor: Midlet Suite Vendor
+MIDlet-Vendor: 铯狼
 MIDlet-Jar-URL: WeisuoCubeAssistant.jar
 MicroEdition-Configuration: CLDC-1.1
 MicroEdition-Profile: MIDP-2.0
-MIDlet-1: WeisuoCubeAssistantMIDlet,,main.WeisuoCubeAssistantMain
+MIDlet-1: WeisuoCubeAssistant,,main.WeisuoCubeAssistantMain
 MIDlet-Name: WeisuoCubeAssistant

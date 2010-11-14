@@ -7,10 +7,12 @@ public class PrepareThread extends Thread {
 	private long pressedTime = -1;
 	private TimerCanvas caller = null;
 	private boolean preparing = true;
+
 	public PrepareThread(long pressedTime, TimerCanvas caller) {
 		this.pressedTime = pressedTime;
 		this.caller = caller;
 	}
+
 	public void run() {
 		// TODO Auto-generated method stub
 		super.run();
@@ -27,16 +29,19 @@ public class PrepareThread extends Thread {
 			}
 		}
 	}
+
 	public boolean isPreparing() {
 		return preparing;
 	}
+
 	public void setPreparing(boolean preparing) {
 		this.preparing = preparing;
 	}
+
 	public void interrupt() {
 		// TODO Auto-generated method stub
 		this.setPreparing(false);
 		super.interrupt();
 	}
-	
+
 }

@@ -11,15 +11,15 @@ public class TimingThread extends Thread {
 	private boolean running = false;
 	private String time = "0:0.00";
 	private TimerCanvas caller = null;
-	
-	public TimingThread(TimerCanvas caller) {
+
+	public TimingThread(TimerCanvas caller, long startTime) {
 		this.caller = caller;
+		this.startTime = startTime;
 	}
-	
+
 	public void run() {
 		// TODO Auto-generated method stub
 		super.run();
-		startTime = System.currentTimeMillis();
 		do {
 			try {
 				Thread.sleep(5);
@@ -37,27 +37,28 @@ public class TimingThread extends Thread {
 				minutes = seconds / 60;
 				seconds %= 60;
 			}
-			time = minutes + ":" + seconds + "." + (hundredths < 10 ? ("0" + Long.toString(hundredths)) : Long.toString(hundredths));
+			time = minutes
+					+ ":"
+					+ seconds
+					+ "."
+					+ (hundredths < 10 ? ("0" + Long.toString(hundredths))
+							: Long.toString(hundredths));
 			caller.setTime(time);
 			caller.repaint();
 		} while (running);
 	}
 
-	
 	public boolean isRunning() {
 		return running;
 	}
-
 
 	public void setRunning(boolean running) {
 		this.running = running;
 	}
 
-
 	public String getTime() {
 		return time;
 	}
-
 
 	public void interrupt() {
 		// TODO Auto-generated method stub
@@ -71,11 +72,10 @@ public class TimingThread extends Thread {
 		}
 	}
 
-
 	public synchronized void start() {
 		// TODO Auto-generated method stub
 		setRunning(true);
 		super.start();
 	}
-	
+
 }

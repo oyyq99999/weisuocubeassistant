@@ -4,38 +4,45 @@ import javax.microedition.lcdui.Command;
 import javax.microedition.lcdui.CommandListener;
 import javax.microedition.lcdui.Display;
 import javax.microedition.lcdui.Displayable;
-import javax.microedition.lcdui.Font;
 import javax.microedition.lcdui.Graphics;
 import javax.microedition.lcdui.game.GameCanvas;
 
+import main.WeisuoCubeAssistantMain;
 import threads.PrepareThread;
 import threads.TimingThread;
-
-import main.WeisuoCubeAssistantMain;
+import util.CustomFont;
 
 public class TimerCanvas extends GameCanvas implements CommandListener {
 
 	private WeisuoCubeAssistantMain mainMIDlet = null;
+	private Displayable backTo = null;
 	private MainMenu mainMenu = null;
 	private int state = 0;
-	private int fontColor = 0x0;
-	private int bgColorReady = 0x7f00ff;
-	private int bgColorPressed = 0xff0000;
-	private int bgColorOK = 0x00ff00;
+	private int bgColorReady = 0xffffffff;
+	private int bgColorPressed = 0xffff0000;
+	private int bgColorOK = 0xff00ff00;
+	private int fontColor = 0xff000000;
 	private String time = "0:0.00";
-	private Font timeFont = Font.getFont(Font.FONT_STATIC_TEXT,
-			Font.STYLE_BOLD, Font.SIZE_LARGE);
 	private Command backCommand = new Command("·µ»Ø", Command.BACK, 1);
+	private Command continueCommmand = new Command("¼ÌÐø", Command.OK, 1);
 	private TimingThread timingThread = null;
 	private PrepareThread prepareThread = null;
+	private CustomFont timeFont = null;
 
 	protected TimerCanvas(boolean suppressKeyEvents,
-			WeisuoCubeAssistantMain mainMIDlet, MainMenu mainMenu) {
+			WeisuoCubeAssistantMain mainMIDlet, MainMenu mainMenu,
+			Displayable backTo) {
 		super(suppressKeyEvents);
 		this.mainMIDlet = mainMIDlet;
 		this.mainMenu = mainMenu;
+		this.backTo = backTo;
+		this.setTitle("Ãë±í");
 		this.addCommand(backCommand);
+		if (!backTo.getClass().equals(mainMenu.getClass())) {
+			this.addCommand(continueCommmand);
+		}
 		this.setCommandListener(this);
+		timeFont = new CustomFont("/digiface.png");
 		// TODO Auto-generated constructor stub
 	}
 
@@ -58,6 +65,7 @@ public class TimerCanvas extends GameCanvas implements CommandListener {
 
 	protected void keyReleased(int keyCode) {
 		// TODO Auto-generated method stub
+		long startTime = System.currentTimeMillis();
 		super.keyReleased(keyCode);
 		if (prepareThread != null) {
 			prepareThread.interrupt();
@@ -65,7 +73,7 @@ public class TimerCanvas extends GameCanvas implements CommandListener {
 		}
 		if (state == 2) {
 			if (timingThread == null) {
-				timingThread = new TimingThread(this);
+				timingThread = new TimingThread(this, startTime);
 			}
 			if (timingThread.isRunning() == false) {
 				timingThread.start();
@@ -74,7 +82,6 @@ public class TimerCanvas extends GameCanvas implements CommandListener {
 			setState(0);
 		}
 	}
-	
 
 	protected void pointerPressed(int x, int y) {
 		// TODO Auto-generated method stub
@@ -95,6 +102,7 @@ public class TimerCanvas extends GameCanvas implements CommandListener {
 
 	protected void pointerReleased(int x, int y) {
 		// TODO Auto-generated method stub
+		long startTime = System.currentTimeMillis();
 		super.pointerReleased(x, y);
 		if (prepareThread != null) {
 			prepareThread.interrupt();
@@ -102,7 +110,7 @@ public class TimerCanvas extends GameCanvas implements CommandListener {
 		}
 		if (state == 2) {
 			if (timingThread == null) {
-				timingThread = new TimingThread(this);
+				timingThread = new TimingThread(this, startTime);
 			}
 			if (timingThread.isRunning() == false) {
 				timingThread.start();
@@ -124,13 +132,15 @@ public class TimerCanvas extends GameCanvas implements CommandListener {
 			break;
 		case 2:
 			g.setColor(bgColorOK);
+			if (time.substring(time.indexOf(".") + 1, time.indexOf(".") + 2)
+					.equals("0")) {
+				Display.getDisplay(mainMIDlet).flashBacklight(1);
+			}
 			break;
 		}
 		g.fillRect(0, 0, getWidth(), getHeight());
-		g.setColor(fontColor);
-		g.setFont(timeFont);
-		g.drawString(time, getWidth() / 2, getHeight() / 2, Graphics.HCENTER
-				| Graphics.BASELINE);
+		timeFont.drawString(g, fontColor, time, getWidth() / 2,
+				getHeight() / 2, Graphics.HCENTER | Graphics.VCENTER);
 	}
 
 	public void resetTimer() {
@@ -151,6 +161,9 @@ public class TimerCanvas extends GameCanvas implements CommandListener {
 			resetTimer();
 			setState(0);
 			Display.getDisplay(mainMIDlet).setCurrent(mainMenu);
+		}
+		if (c == continueCommmand) {
+			Display.getDisplay(mainMIDlet).setCurrent(backTo);
 		}
 	}
 
