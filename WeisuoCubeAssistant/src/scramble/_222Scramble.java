@@ -2,6 +2,8 @@ package scramble;
 
 import java.util.Random;
 
+import javax.microedition.lcdui.Form;
+
 import util.EnDeCoder222;
 
 public class _222Scramble extends Scramble {
@@ -14,12 +16,19 @@ public class _222Scramble extends Scramble {
 	private char[] orientCost = new char[729];
 	private EnDeCoder222 coder = new EnDeCoder222();
 	private int moves[][] = new int[2][100];
+	private Form prepare = null;
 
 	public _222Scramble() {
 		this(0);
 	}
 
 	public _222Scramble(int minLength) {
+		this.length = minLength;
+		initCostTable();
+	}
+
+	public _222Scramble(int minLength, Form prepare) {
+		this.prepare = prepare;
 		this.length = minLength;
 		initCostTable();
 	}
@@ -39,6 +48,13 @@ public class _222Scramble extends Scramble {
 				orientCost[0] = 0;
 				permCount++;
 				orientCount++;
+				// System.out.println("Depth " + (int) depth + " initialized "
+				// + permCount + " perms " + orientCount + " orients");
+				if (prepare != null) {
+					prepare.deleteAll();
+					prepare.append("Depth: " + (int) depth + "\n" + permCount
+							+ "/5040\n" + orientCount + "/729\n");
+				}
 				continue;
 			} else {
 				for (int i = 0; i < 5040; i++) {
@@ -87,6 +103,13 @@ public class _222Scramble extends Scramble {
 						}
 					}
 				}
+			}
+			// System.out.println("Depth " + (int) depth + " initialized "
+			// + permCount + " perms " + orientCount + " orients");
+			if (prepare != null) {
+				prepare.deleteAll();
+				prepare.append("Depth: " + (int) depth + "\n" + permCount
+						+ "/5040\n" + orientCount + "/729");
 			}
 		}
 	}
@@ -217,8 +240,6 @@ public class _222Scramble extends Scramble {
 
 	public String scramble() {
 		// TODO Auto-generated method stub
-		reset();
-		randomState();
 		// for (int i = 0; i < 8; i++) {
 		// System.out.print(state[0][i] + " ");
 		// }
@@ -227,9 +248,11 @@ public class _222Scramble extends Scramble {
 		// System.out.print(state[1][i] + " ");
 		// }
 		// System.out.println();
-		int code = encode(this.state);
 		int i = 0;
 		do {
+			reset();
+			randomState();
+			int code = encode(this.state);
 			// long start = System.currentTimeMillis();
 			for (i = length; i < moves[0].length + 1; i++) {
 				for (int j = 0; j < moves[0].length; j++) {
@@ -243,7 +266,7 @@ public class _222Scramble extends Scramble {
 					break;
 				}
 			}
-		} while (i == moves[0].length);
+		} while (i == moves[0].length + 1);
 		this.scrambleSequence = convertToNames();
 		// for (i = 0; i < 11; i++) {
 		// if (moves[0][i] == -1)
@@ -313,7 +336,7 @@ public class _222Scramble extends Scramble {
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
 		_222Scramble scr = new _222Scramble();
-		// long start = System.currentTimeMillis();
+		long start = System.currentTimeMillis();
 		// for (int code = 0; code < 100000; code++) {
 		// if ((code % 729) % 3 != 0)
 		// continue;
@@ -330,6 +353,6 @@ public class _222Scramble extends Scramble {
 		// }
 		// }
 		System.out.println(scr.scramble());
-		// System.out.println((System.currentTimeMillis() - start));
+		System.out.println((System.currentTimeMillis() - start));
 	}
 }

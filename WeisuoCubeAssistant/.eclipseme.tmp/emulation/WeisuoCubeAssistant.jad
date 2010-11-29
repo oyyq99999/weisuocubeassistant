@@ -1,8 +1,8 @@
 MIDlet-1: WeisuoCubeAssistant,,main.WeisuoCubeAssistantMain
-MIDlet-Jar-Size: 38022
+MIDlet-Jar-Size: 67304
 MIDlet-Jar-URL: WeisuoCubeAssistant.jar
 MIDlet-Name: WeisuoCubeAssistant
 MIDlet-Vendor: 铯狼
-MIDlet-Version: 0.0.1
+MIDlet-Version: 0.0.2
 MicroEdition-Configuration: CLDC-1.1
 MicroEdition-Profile: MIDP-2.0

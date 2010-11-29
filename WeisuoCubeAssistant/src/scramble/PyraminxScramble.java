@@ -2,6 +2,8 @@ package scramble;
 
 import java.util.Random;
 
+import javax.microedition.lcdui.Form;
+
 import util.EnDeCoderPyra;
 
 public class PyraminxScramble extends Scramble {
@@ -18,12 +20,19 @@ public class PyraminxScramble extends Scramble {
 	private char[] orientCost = new char[81 * 32];
 	private EnDeCoderPyra coder = new EnDeCoderPyra();
 	private int moves[][] = new int[2][100];
+	private Form prepare = null;
 
 	public PyraminxScramble() {
 		this(0);
 	}
 
 	public PyraminxScramble(int minLength) {
+		this.length = minLength;
+		initCostTable();
+	}
+
+	public PyraminxScramble(int minLength, Form prepare) {
+		this.prepare = prepare;
 		this.length = minLength;
 		initCostTable();
 	}
@@ -44,8 +53,13 @@ public class PyraminxScramble extends Scramble {
 				orientCost[0] = 0;
 				permCount++;
 				orientCount++;
-//				 System.out.println("Depth " + (int) depth + " initialized "
-//				 + permCount + " perms " + orientCount + " orients");
+				// System.out.println("Depth " + (int) depth + " initialized "
+				// + permCount + " perms " + orientCount + " orients");
+				if (prepare != null) {
+					prepare.deleteAll();
+					prepare.append("Depth: " + (int) depth + "\n" + permCount
+							+ "/360\n" + orientCount + "/2592\n");
+				}
 				continue;
 			} else {
 				for (int i = 0; i < 81 * 32; i++) {
@@ -99,6 +113,11 @@ public class PyraminxScramble extends Scramble {
 			}
 			// System.out.println("Depth " + (int) depth + " initialized "
 			// + permCount + " perms " + orientCount + " orients");
+			if (prepare != null) {
+				prepare.deleteAll();
+				prepare.append("Depth: " + (int) depth + "\n" + permCount
+						+ "/360\n" + orientCount + "/2592\n");
+			}
 		}
 	}
 
@@ -315,20 +334,6 @@ public class PyraminxScramble extends Scramble {
 	private String convertToNames() {
 		// TODO Auto-generated method stub
 		StringBuffer sb = new StringBuffer();
-		for (int i = 0; i < 4; i++) {
-			switch (tips[i]) {
-			case 0:
-				break;
-			case 1:
-				sb.append("ulrb".charAt(i));
-				sb.append(" ");
-				break;
-			case 2:
-				sb.append("ulrb".charAt(i));
-				sb.append("' ");
-				break;
-			}
-		}
 		for (int i = 0; i < moves[0].length; i++) {
 			if (moves[0][i] == -1)
 				break;
@@ -351,6 +356,20 @@ public class PyraminxScramble extends Scramble {
 				sb.append(" ");
 				break;
 			case 2:
+				sb.append("' ");
+				break;
+			}
+		}
+		for (int i = 0; i < 4; i++) {
+			switch (tips[i]) {
+			case 0:
+				break;
+			case 1:
+				sb.append("ulrb".charAt(i));
+				sb.append(" ");
+				break;
+			case 2:
+				sb.append("ulrb".charAt(i));
 				sb.append("' ");
 				break;
 			}

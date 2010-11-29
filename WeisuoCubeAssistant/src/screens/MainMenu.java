@@ -2,48 +2,27 @@ package screens;
 
 import javax.microedition.lcdui.Command;
 import javax.microedition.lcdui.CommandListener;
-import javax.microedition.lcdui.Display;
 import javax.microedition.lcdui.Displayable;
 import javax.microedition.lcdui.Font;
 import javax.microedition.lcdui.List;
 import javax.microedition.midlet.MIDletStateChangeException;
 
-import main.WeisuoCubeAssistantMain;
+import model.GlobalData;
 import scramble.ClockScramble;
 import scramble.CubeScramble;
 import scramble.LatchScramble;
 import scramble.MegaminxScramble;
-import scramble.PyraminxScramble;
+import scramble.OldPyraminxScramble;
 import scramble.SQ1Scramble;
-import scramble._222Scramble;
 
 public class MainMenu extends List implements CommandListener {
 
 	private final Command exitCommand = new Command("退出", Command.EXIT, 1);
 	private final Font listItemFont = Font.getFont(Font.FACE_SYSTEM,
 			Font.STYLE_UNDERLINED, Font.SIZE_MEDIUM);
-	private WeisuoCubeAssistantMain mainMIDlet = null;
 
-	private TimerCanvas timerCanvas = null;
-	private ScrambleForm scrambleForm = null;
-
-	private _222Scramble scrambler222 = null;
-	private CubeScramble scrambler333 = null;
-	private CubeScramble scrambler444 = null;
-	private CubeScramble scrambler555 = null;
-	private CubeScramble scrambler666 = null;
-	private CubeScramble scrambler777 = null;
-	private CubeScramble scrambler999 = null;
-	private CubeScramble scrambler111111 = null;
-	private SQ1Scramble scramblerSQ1 = null;
-	private MegaminxScramble scramblerMegaminx = null;
-	private PyraminxScramble scramblerPyraminx = null;
-	private ClockScramble scramblerClock = null;
-	private LatchScramble scramblerLatch = null;
-
-	public MainMenu(String title, WeisuoCubeAssistantMain mainMIDlet) {
+	public MainMenu(String title) {
 		super(title, List.IMPLICIT);
-		this.mainMIDlet = mainMIDlet;
 		this.addCommand(exitCommand);
 		this.setCommandListener(this);
 		this.append("二阶", null);
@@ -60,6 +39,7 @@ public class MainMenu extends List implements CommandListener {
 		this.append("魔表", null);
 		this.append("插销(LatchCube)", null);
 		this.append("秒表", null);
+		this.append("设置", null);
 		for (int i = 0; i < this.size(); i++) {
 			this.setFont(i, listItemFont);
 		}
@@ -70,137 +50,187 @@ public class MainMenu extends List implements CommandListener {
 		// TODO Auto-generated method stub
 		if (c == exitCommand) {
 			try {
-				this.mainMIDlet.destroyApp(true);
+				GlobalData.mainMIDlet.destroyApp(true);
 			} catch (MIDletStateChangeException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-			this.mainMIDlet.notifyDestroyed();
+			GlobalData.mainMIDlet.notifyDestroyed();
 		}
 		if (c == List.SELECT_COMMAND) {
 			if (this.getString(this.getSelectedIndex()).equals("秒表")) {
 				// 选择“秒表”时的动作
-				if (timerCanvas == null) {
-					timerCanvas = new TimerCanvas(false, mainMIDlet, this, this);
+				if (GlobalData.timerCanvas == null) {
+					GlobalData.timerCanvas = new TimerCanvas(false, this);
 				}
-				Display.getDisplay(mainMIDlet).setCurrent(timerCanvas);
+				GlobalData.display.setCurrent(GlobalData.timerCanvas);
 			}
 			if (this.getString(this.getSelectedIndex()).equals("插销(LatchCube)")) {
 				// 选择“插销(LatchCube)”时的动作
-				if (scramblerLatch == null) {
-					scramblerLatch = new LatchScramble();
+				if (GlobalData.scramblerLatch == null) {
+					GlobalData.scramblerLatch = new LatchScramble();
 				}
-				scrambleForm = new ScrambleForm("插销打乱", scramblerLatch,
-						this.mainMIDlet, this);
-				Display.getDisplay(mainMIDlet).setCurrent(scrambleForm);
+				GlobalData.scrambleForm = new ScrambleForm("插销打乱",
+						GlobalData.scramblerLatch);
+				GlobalData.display.setCurrent(GlobalData.scrambleForm);
 			}
 			if (this.getString(this.getSelectedIndex()).equals("二阶")) {
 				// 选择“二阶”时的动作
-				if (scrambler222 == null) {
-					scrambler222 = new _222Scramble();
+				if (GlobalData.randomPosition222) {
+					if (GlobalData.scrambler222 == null) {
+						ConfirmForm confirm = new ConfirmForm(
+								"二阶打乱",
+								"这是本次运行（或更改设置后）第一次进入随机状态二阶打乱，需要一些准备工作，准备过程可能需要几秒钟的时间，继续吗？",
+								this);
+						GlobalData.display.setCurrent(confirm);
+					} else {
+						GlobalData.scrambleForm = new ScrambleForm("二阶打乱",
+								GlobalData.scrambler222);
+						GlobalData.display.setCurrent(GlobalData.scrambleForm);
+					}
+				} else {
+					if (GlobalData.randomMoveScrambler222 == null) {
+						GlobalData.randomMoveScrambler222 = new CubeScramble(2);
+					}
+					GlobalData.scrambleForm = new ScrambleForm("二阶打乱",
+							GlobalData.randomMoveScrambler222);
+					GlobalData.display.setCurrent(GlobalData.scrambleForm);
 				}
-				scrambleForm = new ScrambleForm("二阶打乱", scrambler222,
-						this.mainMIDlet, this);
-				Display.getDisplay(mainMIDlet).setCurrent(scrambleForm);
 			}
 			if (this.getString(this.getSelectedIndex()).equals("三阶")) {
 				// 选择“三阶”时的动作
-				if (scrambler333 == null) {
-					scrambler333 = new CubeScramble(3);
+				if (GlobalData.randomPosition333) {
+					if (GlobalData.randomStateScrambler333 == null) {
+						ConfirmForm confirm = new ConfirmForm(
+								"三阶打乱",
+								"这是本次运行（或更改设置后）第一次进入随机状态三阶打乱，需要一些准备工作，准备过程可能需要几分钟的时间，其间需要读写文件4次(每次读文件可能需要一次确认，写文件可能需要四次确认，各种手机可能不同)，共需内存11M，继续吗？",
+								this);
+						GlobalData.display.setCurrent(confirm);
+					} else {
+						GlobalData.scrambleForm = new ScrambleForm("三阶打乱",
+								GlobalData.randomStateScrambler333);
+						GlobalData.display.setCurrent(GlobalData.scrambleForm);
+					}
+				} else {
+					if (GlobalData.scrambler333 == null) {
+						GlobalData.scrambler333 = new CubeScramble(3);
+					}
+					GlobalData.scrambleForm = new ScrambleForm("三阶打乱",
+							GlobalData.scrambler333);
+					GlobalData.display.setCurrent(GlobalData.scrambleForm);
 				}
-				scrambleForm = new ScrambleForm("三阶打乱", scrambler333,
-						this.mainMIDlet, this);
-				Display.getDisplay(mainMIDlet).setCurrent(scrambleForm);
 			}
 			if (this.getString(this.getSelectedIndex()).equals("四阶")) {
 				// 选择“四阶”时的动作
-				if (scrambler444 == null) {
-					scrambler444 = new CubeScramble(4);
+				if (GlobalData.scrambler444 == null) {
+					GlobalData.scrambler444 = new CubeScramble(4);
 				}
-				scrambleForm = new ScrambleForm("四阶打乱", scrambler444,
-						this.mainMIDlet, this);
-				Display.getDisplay(mainMIDlet).setCurrent(scrambleForm);
+				GlobalData.scrambleForm = new ScrambleForm("四阶打乱",
+						GlobalData.scrambler444);
+				GlobalData.display.setCurrent(GlobalData.scrambleForm);
 			}
 			if (this.getString(this.getSelectedIndex()).equals("五阶")) {
 				// 选择“五阶”时的动作
-				if (scrambler555 == null) {
-					scrambler555 = new CubeScramble(5);
+				if (GlobalData.scrambler555 == null) {
+					GlobalData.scrambler555 = new CubeScramble(5);
 				}
-				scrambleForm = new ScrambleForm("五阶打乱", scrambler555,
-						this.mainMIDlet, this);
-				Display.getDisplay(mainMIDlet).setCurrent(scrambleForm);
+				GlobalData.scrambleForm = new ScrambleForm("五阶打乱",
+						GlobalData.scrambler555);
+				GlobalData.display.setCurrent(GlobalData.scrambleForm);
 			}
 			if (this.getString(this.getSelectedIndex()).equals("六阶")) {
 				// 选择“六阶”时的动作
-				if (scrambler666 == null) {
-					scrambler666 = new CubeScramble(6);
+				if (GlobalData.scrambler666 == null) {
+					GlobalData.scrambler666 = new CubeScramble(6);
 				}
-				scrambleForm = new ScrambleForm("六阶打乱", scrambler666,
-						this.mainMIDlet, this);
-				Display.getDisplay(mainMIDlet).setCurrent(scrambleForm);
+				GlobalData.scrambleForm = new ScrambleForm("六阶打乱",
+						GlobalData.scrambler666);
+				GlobalData.display.setCurrent(GlobalData.scrambleForm);
 			}
 			if (this.getString(this.getSelectedIndex()).equals("七阶")) {
 				// 选择“七阶”时的动作
-				if (scrambler777 == null) {
-					scrambler777 = new CubeScramble(7);
+				if (GlobalData.scrambler777 == null) {
+					GlobalData.scrambler777 = new CubeScramble(7);
 				}
-				scrambleForm = new ScrambleForm("七阶打乱", scrambler777,
-						this.mainMIDlet, this);
-				Display.getDisplay(mainMIDlet).setCurrent(scrambleForm);
+				GlobalData.scrambleForm = new ScrambleForm("七阶打乱",
+						GlobalData.scrambler777);
+				GlobalData.display.setCurrent(GlobalData.scrambleForm);
 			}
 			if (this.getString(this.getSelectedIndex()).equals("九阶")) {
 				// 选择“九阶”时的动作
-				if (scrambler999 == null) {
-					scrambler999 = new CubeScramble(9);
+				if (GlobalData.scrambler999 == null) {
+					GlobalData.scrambler999 = new CubeScramble(9);
 				}
-				scrambleForm = new ScrambleForm("九阶打乱", scrambler999,
-						this.mainMIDlet, this);
-				Display.getDisplay(mainMIDlet).setCurrent(scrambleForm);
+				GlobalData.scrambleForm = new ScrambleForm("九阶打乱",
+						GlobalData.scrambler999);
+				GlobalData.display.setCurrent(GlobalData.scrambleForm);
 			}
 			if (this.getString(this.getSelectedIndex()).equals("十一阶")) {
 				// 选择“十一阶”时的动作
-				if (scrambler111111 == null) {
-					scrambler111111 = new CubeScramble(11);
+				if (GlobalData.scrambler111111 == null) {
+					GlobalData.scrambler111111 = new CubeScramble(11);
 				}
-				scrambleForm = new ScrambleForm("十一阶打乱", scrambler111111,
-						this.mainMIDlet, this);
-				Display.getDisplay(mainMIDlet).setCurrent(scrambleForm);
+				GlobalData.scrambleForm = new ScrambleForm("十一阶打乱",
+						GlobalData.scrambler111111);
+				GlobalData.display.setCurrent(GlobalData.scrambleForm);
 			}
 			if (this.getString(this.getSelectedIndex()).equals("SQ1")) {
 				// 选择“SQ1”时的动作
-				if (scramblerSQ1 == null) {
-					scramblerSQ1 = new SQ1Scramble();
+				if (GlobalData.scramblerSQ1 == null) {
+					GlobalData.scramblerSQ1 = new SQ1Scramble();
 				}
-				scrambleForm = new ScrambleForm("SQ1打乱", scramblerSQ1,
-						this.mainMIDlet, this);
-				Display.getDisplay(mainMIDlet).setCurrent(scrambleForm);
+				GlobalData.scrambleForm = new ScrambleForm("SQ1打乱",
+						GlobalData.scramblerSQ1);
+				GlobalData.display.setCurrent(GlobalData.scrambleForm);
 			}
 			if (this.getString(this.getSelectedIndex()).equals("五魔")) {
 				// 选择“五魔”时的动作
-				if (scramblerMegaminx == null) {
-					scramblerMegaminx = new MegaminxScramble();
+				if (GlobalData.scramblerMegaminx == null) {
+					GlobalData.scramblerMegaminx = new MegaminxScramble();
 				}
-				scrambleForm = new ScrambleForm("五魔打乱", scramblerMegaminx,
-						this.mainMIDlet, this);
-				Display.getDisplay(mainMIDlet).setCurrent(scrambleForm);
+				GlobalData.scrambleForm = new ScrambleForm("五魔打乱",
+						GlobalData.scramblerMegaminx);
+				GlobalData.display.setCurrent(GlobalData.scrambleForm);
 			}
 			if (this.getString(this.getSelectedIndex()).equals("金字塔")) {
 				// 选择“金字塔”时的动作
-				if (scramblerPyraminx == null) {
-					scramblerPyraminx = new PyraminxScramble();
+				if (GlobalData.randomPositionPyraminx) {
+					if (GlobalData.scramblerPyraminx == null) {
+						ConfirmForm confirm = new ConfirmForm(
+								"金字塔打乱",
+								"这是本次运行（或更改设置后）第一次进入随机状态金字塔打乱，需要一些准备工作，准备过程可能需要几秒钟的时间，继续吗？",
+								this);
+						GlobalData.display.setCurrent(confirm);
+					} else {
+						GlobalData.scrambleForm = new ScrambleForm("金字塔打乱",
+								GlobalData.scramblerPyraminx);
+						GlobalData.display.setCurrent(GlobalData.scrambleForm);
+					}
+				} else {
+					if (GlobalData.randomMoveScramblerPyraminx == null) {
+						GlobalData.randomMoveScramblerPyraminx = new OldPyraminxScramble();
+					}
+					GlobalData.scrambleForm = new ScrambleForm("金字塔打乱",
+							GlobalData.randomMoveScramblerPyraminx);
+					GlobalData.display.setCurrent(GlobalData.scrambleForm);
 				}
-				scrambleForm = new ScrambleForm("金字塔打乱", scramblerPyraminx,
-						this.mainMIDlet, this);
-				Display.getDisplay(mainMIDlet).setCurrent(scrambleForm);
 			}
 			if (this.getString(this.getSelectedIndex()).equals("魔表")) {
 				// 选择“魔表”时的动作
-				if (scramblerClock == null) {
-					scramblerClock = new ClockScramble();
+				if (GlobalData.scramblerClock == null) {
+					GlobalData.scramblerClock = new ClockScramble();
 				}
-				scrambleForm = new ScrambleForm("魔表打乱", scramblerClock,
-						this.mainMIDlet, this);
-				Display.getDisplay(mainMIDlet).setCurrent(scrambleForm);
+				GlobalData.scrambleForm = new ScrambleForm("魔表打乱",
+						GlobalData.scramblerClock);
+				GlobalData.display.setCurrent(GlobalData.scrambleForm);
+			}
+			if (this.getString(this.getSelectedIndex()).equals("设置")) {
+				// 选择“设置”时的动作
+				if (GlobalData.settingForm == null) {
+					GlobalData.settingForm = new SettingForm(this);
+				}
+				GlobalData.settingForm.refresh();
+				GlobalData.display.setCurrent(GlobalData.settingForm);
 			}
 		}
 	}

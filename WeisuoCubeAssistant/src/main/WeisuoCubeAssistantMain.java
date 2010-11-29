@@ -3,16 +3,16 @@ package main;
 import javax.microedition.lcdui.Display;
 import javax.microedition.midlet.MIDlet;
 import javax.microedition.midlet.MIDletStateChangeException;
+
+import model.GlobalData;
+
 import screens.MainMenu;
 
 public class WeisuoCubeAssistantMain extends MIDlet {
 
-	private MainMenu mainMenu = null;
-	private Display display = null;
-
 	public void destroyApp(boolean arg0) throws MIDletStateChangeException {
 		// TODO Auto-generated method stub
-
+		GlobalData.saveData();
 	}
 
 	public void pauseApp() {
@@ -35,11 +35,14 @@ public class WeisuoCubeAssistantMain extends MIDlet {
 				}
 			}
 		}.start();
-		mainMenu = new MainMenu("WeisuoCubeAssistant", this);
-		if (display == null) {
-			display = Display.getDisplay(this);
+		GlobalData.loadData();
+		GlobalData.mainMIDlet = this;
+		if (GlobalData.mainMenu == null)
+			GlobalData.mainMenu = new MainMenu("WeisuoCubeAssistant");
+		if (GlobalData.display == null) {
+			GlobalData.display = Display.getDisplay(this);
 		}
-		display.setCurrent(mainMenu);
+		GlobalData.display.setCurrent(GlobalData.mainMenu);
 	}
 
 }

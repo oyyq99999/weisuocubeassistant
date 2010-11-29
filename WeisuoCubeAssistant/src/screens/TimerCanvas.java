@@ -2,21 +2,18 @@ package screens;
 
 import javax.microedition.lcdui.Command;
 import javax.microedition.lcdui.CommandListener;
-import javax.microedition.lcdui.Display;
 import javax.microedition.lcdui.Displayable;
 import javax.microedition.lcdui.Graphics;
 import javax.microedition.lcdui.game.GameCanvas;
 
-import main.WeisuoCubeAssistantMain;
+import model.GlobalData;
 import threads.PrepareThread;
 import threads.TimingThread;
 import util.CustomFont;
 
 public class TimerCanvas extends GameCanvas implements CommandListener {
 
-	private WeisuoCubeAssistantMain mainMIDlet = null;
 	private Displayable backTo = null;
-	private MainMenu mainMenu = null;
 	private int state = 0;
 	private int bgColorReady = 0xffffffff;
 	private int bgColorPressed = 0xffff0000;
@@ -29,16 +26,12 @@ public class TimerCanvas extends GameCanvas implements CommandListener {
 	private PrepareThread prepareThread = null;
 	private CustomFont timeFont = null;
 
-	protected TimerCanvas(boolean suppressKeyEvents,
-			WeisuoCubeAssistantMain mainMIDlet, MainMenu mainMenu,
-			Displayable backTo) {
+	protected TimerCanvas(boolean suppressKeyEvents, Displayable backTo) {
 		super(suppressKeyEvents);
-		this.mainMIDlet = mainMIDlet;
-		this.mainMenu = mainMenu;
 		this.backTo = backTo;
 		this.setTitle("√Î±Ì");
 		this.addCommand(backCommand);
-		if (!backTo.getClass().equals(mainMenu.getClass())) {
+		if (!backTo.getClass().equals(GlobalData.mainMenu.getClass())) {
 			this.addCommand(continueCommmand);
 		}
 		this.setCommandListener(this);
@@ -134,7 +127,7 @@ public class TimerCanvas extends GameCanvas implements CommandListener {
 			g.setColor(bgColorOK);
 			if (time.substring(time.indexOf(".") + 1, time.indexOf(".") + 2)
 					.equals("0")) {
-				Display.getDisplay(mainMIDlet).flashBacklight(1);
+				GlobalData.display.flashBacklight(1);
 			}
 			break;
 		}
@@ -160,10 +153,12 @@ public class TimerCanvas extends GameCanvas implements CommandListener {
 		if (c == backCommand) {
 			resetTimer();
 			setState(0);
-			Display.getDisplay(mainMIDlet).setCurrent(mainMenu);
+			GlobalData.display.setCurrent(GlobalData.mainMenu);
 		}
 		if (c == continueCommmand) {
-			Display.getDisplay(mainMIDlet).setCurrent(backTo);
+			resetTimer();
+			setState(0);
+			GlobalData.display.setCurrent(backTo);
 		}
 	}
 

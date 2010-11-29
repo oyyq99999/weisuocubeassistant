@@ -34,7 +34,8 @@ public class SQ1Scramble extends Scramble {
 			int y;
 			do {
 				x = rand.nextInt(12) - 5;
-				y = twists >= 2 ? rand.nextInt(7) : rand.nextInt(12) - 5;
+				// 将第二次twist之后的底层转动限制在0到5之间，WCA打乱是这样的，不知道为什么
+				y = twists >= 2 ? rand.nextInt(6) : rand.nextInt(12) - 5;
 			} while ((x == 0 && y == 0 && i != 0)
 					|| (check(x, y) == false)
 					|| (i + (x != 0 ? 1 : 0) + (y != 0 ? 1 : 0) + 1 > length + 1));
@@ -86,7 +87,7 @@ public class SQ1Scramble extends Scramble {
 		else
 			return false;
 	}
-	
+
 	public static void main(String args[]) {
 		System.out.println(new SQ1Scramble().scramble());
 	}
