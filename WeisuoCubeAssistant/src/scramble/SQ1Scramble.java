@@ -5,7 +5,7 @@ import java.util.Random;
 public class SQ1Scramble extends Scramble {
 
 	private int[] top = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11 };
-	private int[] bottom = { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 0 };
+	private int[] bottom = { 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 12 };
 
 	public SQ1Scramble(int length) {
 		this.length = length;
@@ -18,7 +18,7 @@ public class SQ1Scramble extends Scramble {
 	private void reset() {
 		for (int i = 0; i < top.length; i++) {
 			top[i] = i;
-			bottom[i] = (i + 1) % 12;
+			bottom[i] = (i + 1) % 12 + 12;
 		}
 	}
 
@@ -51,6 +51,7 @@ public class SQ1Scramble extends Scramble {
 			twists++;
 			if (i + moved > length) {
 				sequence.append("(0, 0)");
+				move(0, 0);
 			}
 		}
 		scrambleSequence = sequence.toString().trim();
