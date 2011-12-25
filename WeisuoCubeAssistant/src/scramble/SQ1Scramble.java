@@ -34,7 +34,7 @@ public class SQ1Scramble extends Scramble {
 			int y;
 			do {
 				x = rand.nextInt(12) - 5;
-				// ½«µÚ¶þ´ÎtwistÖ®ºóµÄµ×²ã×ª¶¯ÏÞÖÆÔÚ0µ½5Ö®¼ä£¬WCA´òÂÒÊÇÕâÑùµÄ£¬²»ÖªµÀÎªÊ²Ã´
+				// å°†ç¬¬äºŒæ¬¡twistä¹‹åŽçš„åº•å±‚è½¬åŠ¨é™åˆ¶åœ¨0åˆ°5ä¹‹é—´ï¼ŒWCAæ‰“ä¹±æ˜¯è¿™æ ·çš„ï¼Œä¸çŸ¥é“ä¸ºä»€ä¹ˆ
 				y = twists >= 2 ? rand.nextInt(6) : rand.nextInt(12) - 5;
 			} while ((x == 0 && y == 0 && i != 0)
 					|| (check(x, y) == false)

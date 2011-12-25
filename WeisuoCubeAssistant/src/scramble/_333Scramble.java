@@ -13,7 +13,7 @@ public class _333Scramble extends Scramble {
 	}
 
 	public _333Scramble(int maxLength) {
-		// ×î´ó³¤¶È
+		// æœ€å¤§é•¿åº¦
 		this.length = maxLength;
 	}
 

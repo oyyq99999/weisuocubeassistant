@@ -8,10 +8,10 @@ import util.EnDeCoder222;
 
 public class _222Scramble extends Scramble {
 
-	// length±íÊ¾×î¶Ì´Ólength²½¿ªÊ¼ËÑË÷
+	// lengthè¡¨ç¤ºæœ€çŸ­ä»lengthæ­¥å¼€å§‹æœç´¢
 	// UFL, URF, UBR, ULB, DLF, DFR, DRB, DBL
-	private int[][] state = { { 0, 1, 2, 3, 4, 5, 6, 7 },// Î»ÖÃ
-			{ 0, 0, 0, 0, 0, 0, 0, 0 } };// ·½Ïò
+	private int[][] state = { { 0, 1, 2, 3, 4, 5, 6, 7 },// ä½ç½®
+			{ 0, 0, 0, 0, 0, 0, 0, 0 } };// æ–¹å‘
 	private char[] permCost = new char[5040];
 	private char[] orientCost = new char[729];
 	private EnDeCoder222 coder = new EnDeCoder222();

@@ -74,7 +74,7 @@ public class LatchScramble extends Scramble {
 		int i = 0;
 		for (i = 0; i < times; i++) {
 
-			// 转动
+			// 杞姩
 			int tmp = label[u][0];
 			label[u][0] = label[u][1];
 			label[u][1] = label[u][3];
@@ -94,7 +94,7 @@ public class LatchScramble extends Scramble {
 		int i = 0;
 		for (i = 0; i < times; i++) {
 
-			// 转动
+			// 杞姩
 			int tmp = label[d][0];
 			label[d][0] = label[d][1];
 			label[d][1] = label[d][3];
@@ -114,7 +114,7 @@ public class LatchScramble extends Scramble {
 		int i = 0;
 		for (i = 0; i < times; i++) {
 
-			// 转动
+			// 杞姩
 			int tmp = label[l][0];
 			label[l][0] = label[l][1];
 			label[l][1] = label[l][3];
@@ -134,7 +134,7 @@ public class LatchScramble extends Scramble {
 		int i = 0;
 		for (i = 0; i < times; i++) {
 
-			// 转动
+			// 杞姩
 			int tmp = label[r][0];
 			label[r][0] = label[r][1];
 			label[r][1] = label[r][3];
@@ -154,7 +154,7 @@ public class LatchScramble extends Scramble {
 		int i = 0;
 		for (i = 0; i < times; i++) {
 
-			// 转动
+			// 杞姩
 			int tmp = label[f][0];
 			label[f][0] = label[f][1];
 			label[f][1] = label[f][3];
@@ -174,7 +174,7 @@ public class LatchScramble extends Scramble {
 		int i = 0;
 		for (i = 0; i < times; i++) {
 
-			// 转动
+			// 杞姩
 			int tmp = label[b][0];
 			label[b][0] = label[b][1];
 			label[b][1] = label[b][3];

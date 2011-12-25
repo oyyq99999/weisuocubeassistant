@@ -15,7 +15,7 @@ public class MegaminxScramble extends Scramble {
 
 	public MegaminxScramble(int lines, int lineLength) {
 		this.lines = lines;
-		this.lineLength = (lineLength + 1) / 2 * 2;// ±£Ö¤ÊÇÅ¼Êı
+		this.lineLength = (lineLength + 1) / 2 * 2;// ä¿è¯æ˜¯å¶æ•°
 		this.length = lines * (lineLength + 1);
 	}
 

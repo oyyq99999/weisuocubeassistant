@@ -11,8 +11,8 @@ import scramble._222Scramble;
 import scramble._333Scramble;
 
 public class ConfirmForm extends Form implements CommandListener {
-	private final Command okCommand = new Command("È·¶¨", Command.OK, 1);
-	private final Command cancelCommand = new Command("È¡Ïû", Command.CANCEL, 2);
+	private final Command okCommand = new Command("ç¡®å®š", Command.OK, 1);
+	private final Command cancelCommand = new Command("å–æ¶ˆ", Command.CANCEL, 2);
 	private Displayable former;
 
 	public ConfirmForm(String title, String info, Displayable former) {
@@ -31,34 +31,34 @@ public class ConfirmForm extends Form implements CommandListener {
 			GlobalData.display.setCurrent(former);
 		}
 		if (c == okCommand) {
-			if (getTitle().indexOf("¶þ½×") >= 0) {
-				this.setTitle("¶þ½×´òÂÒ×¼±¸ÖÐ");
+			if (getTitle().indexOf("äºŒé˜¶") >= 0) {
+				this.setTitle("äºŒé˜¶æ‰“ä¹±å‡†å¤‡ä¸­");
 				this.deleteAll();
 				this.removeCommand(okCommand);
 				this.removeCommand(cancelCommand);
 				GlobalData.scrambler222 = new _222Scramble(
 						GlobalData.randomPosition222MinLength, this);
-				ScrambleForm scrambleForm = new ScrambleForm("¶þ½×´òÂÒ",
+				ScrambleForm scrambleForm = new ScrambleForm("äºŒé˜¶æ‰“ä¹±",
 						GlobalData.scrambler222);
 				GlobalData.display.setCurrent(scrambleForm);
-			} else if (getTitle().indexOf("Èý½×") >= 0) {
-				this.setTitle("Èý½×´òÂÒ×¼±¸ÖÐ");
+			} else if (getTitle().indexOf("ä¸‰é˜¶") >= 0) {
+				this.setTitle("ä¸‰é˜¶æ‰“ä¹±å‡†å¤‡ä¸­");
 				this.deleteAll();
 				this.removeCommand(okCommand);
 				this.removeCommand(cancelCommand);
 				GlobalData.randomStateScrambler333 = new _333Scramble(
 						GlobalData.randomPosition333MaxLength, this);
-				ScrambleForm scrambleForm = new ScrambleForm("Èý½×´òÂÒ",
+				ScrambleForm scrambleForm = new ScrambleForm("ä¸‰é˜¶æ‰“ä¹±",
 						GlobalData.randomStateScrambler333);
 				GlobalData.display.setCurrent(scrambleForm);
-			} else if (getTitle().indexOf("½ð×ÖËþ") >= 0) {
-				this.setTitle("½ð×ÖËþ´òÂÒ×¼±¸ÖÐ");
+			} else if (getTitle().indexOf("é‡‘å­—å¡”") >= 0) {
+				this.setTitle("é‡‘å­—å¡”æ‰“ä¹±å‡†å¤‡ä¸­");
 				this.deleteAll();
 				this.removeCommand(okCommand);
 				this.removeCommand(cancelCommand);
 				GlobalData.scramblerPyraminx = new PyraminxScramble(
 						GlobalData.randomPositionPyraminxMinLength, this);
-				ScrambleForm scrambleForm = new ScrambleForm("½ð×ÖËþ´òÂÒ",
+				ScrambleForm scrambleForm = new ScrambleForm("é‡‘å­—å¡”æ‰“ä¹±",
 						GlobalData.scramblerPyraminx);
 				GlobalData.display.setCurrent(scrambleForm);
 			}

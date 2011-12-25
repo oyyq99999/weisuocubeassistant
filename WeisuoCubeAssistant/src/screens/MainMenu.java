@@ -17,7 +17,7 @@ import scramble.SQ1Scramble;
 
 public class MainMenu extends List implements CommandListener {
 
-	private final Command exitCommand = new Command("ÍË³ö", Command.EXIT, 1);
+	private final Command exitCommand = new Command("é€€å‡º", Command.EXIT, 1);
 	private final Font listItemFont = Font.getFont(Font.FACE_SYSTEM,
 			Font.STYLE_UNDERLINED, Font.SIZE_MEDIUM);
 
@@ -25,21 +25,21 @@ public class MainMenu extends List implements CommandListener {
 		super(title, List.IMPLICIT);
 		this.addCommand(exitCommand);
 		this.setCommandListener(this);
-		this.append("¶ş½×", null);
-		this.append("Èı½×", null);
-		this.append("ËÄ½×", null);
-		this.append("Îå½×", null);
-		this.append("Áù½×", null);
-		this.append("Æß½×", null);
-		this.append("¾Å½×", null);
-		this.append("Ê®Ò»½×", null);
+		this.append("äºŒé˜¶", null);
+		this.append("ä¸‰é˜¶", null);
+		this.append("å››é˜¶", null);
+		this.append("äº”é˜¶", null);
+		this.append("å…­é˜¶", null);
+		this.append("ä¸ƒé˜¶", null);
+		this.append("ä¹é˜¶", null);
+		this.append("åä¸€é˜¶", null);
 		this.append("SQ1", null);
-		this.append("ÎåÄ§", null);
-		this.append("½ğ×ÖËş", null);
-		this.append("Ä§±í", null);
-		this.append("²åÏú(LatchCube)", null);
-		this.append("Ãë±í", null);
-		this.append("ÉèÖÃ", null);
+		this.append("äº”é­”", null);
+		this.append("é‡‘å­—å¡”", null);
+		this.append("é­”è¡¨", null);
+		this.append("æ’é”€(LatchCube)", null);
+		this.append("ç§’è¡¨", null);
+		this.append("è®¾ç½®", null);
 		for (int i = 0; i < this.size(); i++) {
 			this.setFont(i, listItemFont);
 		}
@@ -58,33 +58,33 @@ public class MainMenu extends List implements CommandListener {
 			GlobalData.mainMIDlet.notifyDestroyed();
 		}
 		if (c == List.SELECT_COMMAND) {
-			if (this.getString(this.getSelectedIndex()).equals("Ãë±í")) {
-				// Ñ¡Ôñ¡°Ãë±í¡±Ê±µÄ¶¯×÷
+			if (this.getString(this.getSelectedIndex()).equals("ç§’è¡¨")) {
+				// é€‰æ‹©â€œç§’è¡¨â€æ—¶çš„åŠ¨ä½œ
 				if (GlobalData.timerCanvas == null) {
 					GlobalData.timerCanvas = new TimerCanvas(false, this);
 				}
 				GlobalData.display.setCurrent(GlobalData.timerCanvas);
 			}
-			if (this.getString(this.getSelectedIndex()).equals("²åÏú(LatchCube)")) {
-				// Ñ¡Ôñ¡°²åÏú(LatchCube)¡±Ê±µÄ¶¯×÷
+			if (this.getString(this.getSelectedIndex()).equals("æ’é”€(LatchCube)")) {
+				// é€‰æ‹©â€œæ’é”€(LatchCube)â€æ—¶çš„åŠ¨ä½œ
 				if (GlobalData.scramblerLatch == null) {
 					GlobalData.scramblerLatch = new LatchScramble();
 				}
-				GlobalData.scrambleForm = new ScrambleForm("²åÏú´òÂÒ",
+				GlobalData.scrambleForm = new ScrambleForm("æ’é”€æ‰“ä¹±",
 						GlobalData.scramblerLatch);
 				GlobalData.display.setCurrent(GlobalData.scrambleForm);
 			}
-			if (this.getString(this.getSelectedIndex()).equals("¶ş½×")) {
-				// Ñ¡Ôñ¡°¶ş½×¡±Ê±µÄ¶¯×÷
+			if (this.getString(this.getSelectedIndex()).equals("äºŒé˜¶")) {
+				// é€‰æ‹©â€œäºŒé˜¶â€æ—¶çš„åŠ¨ä½œ
 				if (GlobalData.randomPosition222) {
 					if (GlobalData.scrambler222 == null) {
 						ConfirmForm confirm = new ConfirmForm(
-								"¶ş½×´òÂÒ",
-								"ÕâÊÇ±¾´ÎÔËĞĞ£¨»ò¸ü¸ÄÉèÖÃºó£©µÚÒ»´Î½øÈëËæ»ú×´Ì¬¶ş½×´òÂÒ£¬ĞèÒªÒ»Ğ©×¼±¸¹¤×÷£¬×¼±¸¹ı³Ì¿ÉÄÜĞèÒª¼¸ÃëÖÓµÄÊ±¼ä£¬¼ÌĞøÂğ£¿",
+								"äºŒé˜¶æ‰“ä¹±",
+								"è¿™æ˜¯æœ¬æ¬¡è¿è¡Œï¼ˆæˆ–æ›´æ”¹è®¾ç½®åï¼‰ç¬¬ä¸€æ¬¡è¿›å…¥éšæœºçŠ¶æ€äºŒé˜¶æ‰“ä¹±ï¼Œéœ€è¦ä¸€äº›å‡†å¤‡å·¥ä½œï¼Œå‡†å¤‡è¿‡ç¨‹å¯èƒ½éœ€è¦å‡ ç§’é’Ÿçš„æ—¶é—´ï¼Œç»§ç»­å—ï¼Ÿ",
 								this);
 						GlobalData.display.setCurrent(confirm);
 					} else {
-						GlobalData.scrambleForm = new ScrambleForm("¶ş½×´òÂÒ",
+						GlobalData.scrambleForm = new ScrambleForm("äºŒé˜¶æ‰“ä¹±",
 								GlobalData.scrambler222);
 						GlobalData.display.setCurrent(GlobalData.scrambleForm);
 					}
@@ -92,22 +92,22 @@ public class MainMenu extends List implements CommandListener {
 					if (GlobalData.randomMoveScrambler222 == null) {
 						GlobalData.randomMoveScrambler222 = new CubeScramble(2);
 					}
-					GlobalData.scrambleForm = new ScrambleForm("¶ş½×´òÂÒ",
+					GlobalData.scrambleForm = new ScrambleForm("äºŒé˜¶æ‰“ä¹±",
 							GlobalData.randomMoveScrambler222);
 					GlobalData.display.setCurrent(GlobalData.scrambleForm);
 				}
 			}
-			if (this.getString(this.getSelectedIndex()).equals("Èı½×")) {
-				// Ñ¡Ôñ¡°Èı½×¡±Ê±µÄ¶¯×÷
+			if (this.getString(this.getSelectedIndex()).equals("ä¸‰é˜¶")) {
+				// é€‰æ‹©â€œä¸‰é˜¶â€æ—¶çš„åŠ¨ä½œ
 				if (GlobalData.randomPosition333) {
 					if (GlobalData.randomStateScrambler333 == null) {
 						ConfirmForm confirm = new ConfirmForm(
-								"Èı½×´òÂÒ",
-								"ÕâÊÇ±¾´ÎÔËĞĞ£¨»ò¸ü¸ÄÉèÖÃºó£©µÚÒ»´Î½øÈëËæ»ú×´Ì¬Èı½×´òÂÒ£¬ĞèÒªÒ»Ğ©×¼±¸¹¤×÷£¬×¼±¸¹ı³Ì¿ÉÄÜĞèÒª¼¸·ÖÖÓµÄÊ±¼ä£¬Æä¼äĞèÒª¶ÁĞ´ÎÄ¼ş4´Î(Ã¿´Î¶ÁÎÄ¼ş¿ÉÄÜĞèÒªÒ»´ÎÈ·ÈÏ£¬Ğ´ÎÄ¼ş¿ÉÄÜĞèÒªËÄ´ÎÈ·ÈÏ£¬¸÷ÖÖÊÖ»ú¿ÉÄÜ²»Í¬)£¬¹²ĞèÄÚ´æ11M£¬¼ÌĞøÂğ£¿",
+								"ä¸‰é˜¶æ‰“ä¹±",
+								"è¿™æ˜¯æœ¬æ¬¡è¿è¡Œï¼ˆæˆ–æ›´æ”¹è®¾ç½®åï¼‰ç¬¬ä¸€æ¬¡è¿›å…¥éšæœºçŠ¶æ€ä¸‰é˜¶æ‰“ä¹±ï¼Œéœ€è¦ä¸€äº›å‡†å¤‡å·¥ä½œï¼Œå‡†å¤‡è¿‡ç¨‹å¯èƒ½éœ€è¦å‡ åˆ†é’Ÿçš„æ—¶é—´ï¼Œå…¶é—´éœ€è¦è¯»å†™æ–‡ä»¶4æ¬¡(æ¯æ¬¡è¯»æ–‡ä»¶å¯èƒ½éœ€è¦ä¸€æ¬¡ç¡®è®¤ï¼Œå†™æ–‡ä»¶å¯èƒ½éœ€è¦å››æ¬¡ç¡®è®¤ï¼Œå„ç§æ‰‹æœºå¯èƒ½ä¸åŒ)ï¼Œå…±éœ€å†…å­˜11Mï¼Œç»§ç»­å—ï¼Ÿ",
 								this);
 						GlobalData.display.setCurrent(confirm);
 					} else {
-						GlobalData.scrambleForm = new ScrambleForm("Èı½×´òÂÒ",
+						GlobalData.scrambleForm = new ScrambleForm("ä¸‰é˜¶æ‰“ä¹±",
 								GlobalData.randomStateScrambler333);
 						GlobalData.display.setCurrent(GlobalData.scrambleForm);
 					}
@@ -115,94 +115,94 @@ public class MainMenu extends List implements CommandListener {
 					if (GlobalData.scrambler333 == null) {
 						GlobalData.scrambler333 = new CubeScramble(3);
 					}
-					GlobalData.scrambleForm = new ScrambleForm("Èı½×´òÂÒ",
+					GlobalData.scrambleForm = new ScrambleForm("ä¸‰é˜¶æ‰“ä¹±",
 							GlobalData.scrambler333);
 					GlobalData.display.setCurrent(GlobalData.scrambleForm);
 				}
 			}
-			if (this.getString(this.getSelectedIndex()).equals("ËÄ½×")) {
-				// Ñ¡Ôñ¡°ËÄ½×¡±Ê±µÄ¶¯×÷
+			if (this.getString(this.getSelectedIndex()).equals("å››é˜¶")) {
+				// é€‰æ‹©â€œå››é˜¶â€æ—¶çš„åŠ¨ä½œ
 				if (GlobalData.scrambler444 == null) {
 					GlobalData.scrambler444 = new CubeScramble(4);
 				}
-				GlobalData.scrambleForm = new ScrambleForm("ËÄ½×´òÂÒ",
+				GlobalData.scrambleForm = new ScrambleForm("å››é˜¶æ‰“ä¹±",
 						GlobalData.scrambler444);
 				GlobalData.display.setCurrent(GlobalData.scrambleForm);
 			}
-			if (this.getString(this.getSelectedIndex()).equals("Îå½×")) {
-				// Ñ¡Ôñ¡°Îå½×¡±Ê±µÄ¶¯×÷
+			if (this.getString(this.getSelectedIndex()).equals("äº”é˜¶")) {
+				// é€‰æ‹©â€œäº”é˜¶â€æ—¶çš„åŠ¨ä½œ
 				if (GlobalData.scrambler555 == null) {
 					GlobalData.scrambler555 = new CubeScramble(5);
 				}
-				GlobalData.scrambleForm = new ScrambleForm("Îå½×´òÂÒ",
+				GlobalData.scrambleForm = new ScrambleForm("äº”é˜¶æ‰“ä¹±",
 						GlobalData.scrambler555);
 				GlobalData.display.setCurrent(GlobalData.scrambleForm);
 			}
-			if (this.getString(this.getSelectedIndex()).equals("Áù½×")) {
-				// Ñ¡Ôñ¡°Áù½×¡±Ê±µÄ¶¯×÷
+			if (this.getString(this.getSelectedIndex()).equals("å…­é˜¶")) {
+				// é€‰æ‹©â€œå…­é˜¶â€æ—¶çš„åŠ¨ä½œ
 				if (GlobalData.scrambler666 == null) {
 					GlobalData.scrambler666 = new CubeScramble(6);
 				}
-				GlobalData.scrambleForm = new ScrambleForm("Áù½×´òÂÒ",
+				GlobalData.scrambleForm = new ScrambleForm("å…­é˜¶æ‰“ä¹±",
 						GlobalData.scrambler666);
 				GlobalData.display.setCurrent(GlobalData.scrambleForm);
 			}
-			if (this.getString(this.getSelectedIndex()).equals("Æß½×")) {
-				// Ñ¡Ôñ¡°Æß½×¡±Ê±µÄ¶¯×÷
+			if (this.getString(this.getSelectedIndex()).equals("ä¸ƒé˜¶")) {
+				// é€‰æ‹©â€œä¸ƒé˜¶â€æ—¶çš„åŠ¨ä½œ
 				if (GlobalData.scrambler777 == null) {
 					GlobalData.scrambler777 = new CubeScramble(7);
 				}
-				GlobalData.scrambleForm = new ScrambleForm("Æß½×´òÂÒ",
+				GlobalData.scrambleForm = new ScrambleForm("ä¸ƒé˜¶æ‰“ä¹±",
 						GlobalData.scrambler777);
 				GlobalData.display.setCurrent(GlobalData.scrambleForm);
 			}
-			if (this.getString(this.getSelectedIndex()).equals("¾Å½×")) {
-				// Ñ¡Ôñ¡°¾Å½×¡±Ê±µÄ¶¯×÷
+			if (this.getString(this.getSelectedIndex()).equals("ä¹é˜¶")) {
+				// é€‰æ‹©â€œä¹é˜¶â€æ—¶çš„åŠ¨ä½œ
 				if (GlobalData.scrambler999 == null) {
 					GlobalData.scrambler999 = new CubeScramble(9);
 				}
-				GlobalData.scrambleForm = new ScrambleForm("¾Å½×´òÂÒ",
+				GlobalData.scrambleForm = new ScrambleForm("ä¹é˜¶æ‰“ä¹±",
 						GlobalData.scrambler999);
 				GlobalData.display.setCurrent(GlobalData.scrambleForm);
 			}
-			if (this.getString(this.getSelectedIndex()).equals("Ê®Ò»½×")) {
-				// Ñ¡Ôñ¡°Ê®Ò»½×¡±Ê±µÄ¶¯×÷
+			if (this.getString(this.getSelectedIndex()).equals("åä¸€é˜¶")) {
+				// é€‰æ‹©â€œåä¸€é˜¶â€æ—¶çš„åŠ¨ä½œ
 				if (GlobalData.scrambler111111 == null) {
 					GlobalData.scrambler111111 = new CubeScramble(11);
 				}
-				GlobalData.scrambleForm = new ScrambleForm("Ê®Ò»½×´òÂÒ",
+				GlobalData.scrambleForm = new ScrambleForm("åä¸€é˜¶æ‰“ä¹±",
 						GlobalData.scrambler111111);
 				GlobalData.display.setCurrent(GlobalData.scrambleForm);
 			}
 			if (this.getString(this.getSelectedIndex()).equals("SQ1")) {
-				// Ñ¡Ôñ¡°SQ1¡±Ê±µÄ¶¯×÷
+				// é€‰æ‹©â€œSQ1â€æ—¶çš„åŠ¨ä½œ
 				if (GlobalData.scramblerSQ1 == null) {
 					GlobalData.scramblerSQ1 = new SQ1Scramble();
 				}
-				GlobalData.scrambleForm = new ScrambleForm("SQ1´òÂÒ",
+				GlobalData.scrambleForm = new ScrambleForm("SQ1æ‰“ä¹±",
 						GlobalData.scramblerSQ1);
 				GlobalData.display.setCurrent(GlobalData.scrambleForm);
 			}
-			if (this.getString(this.getSelectedIndex()).equals("ÎåÄ§")) {
-				// Ñ¡Ôñ¡°ÎåÄ§¡±Ê±µÄ¶¯×÷
+			if (this.getString(this.getSelectedIndex()).equals("äº”é­”")) {
+				// é€‰æ‹©â€œäº”é­”â€æ—¶çš„åŠ¨ä½œ
 				if (GlobalData.scramblerMegaminx == null) {
 					GlobalData.scramblerMegaminx = new MegaminxScramble();
 				}
-				GlobalData.scrambleForm = new ScrambleForm("ÎåÄ§´òÂÒ",
+				GlobalData.scrambleForm = new ScrambleForm("äº”é­”æ‰“ä¹±",
 						GlobalData.scramblerMegaminx);
 				GlobalData.display.setCurrent(GlobalData.scrambleForm);
 			}
-			if (this.getString(this.getSelectedIndex()).equals("½ğ×ÖËş")) {
-				// Ñ¡Ôñ¡°½ğ×ÖËş¡±Ê±µÄ¶¯×÷
+			if (this.getString(this.getSelectedIndex()).equals("é‡‘å­—å¡”")) {
+				// é€‰æ‹©â€œé‡‘å­—å¡”â€æ—¶çš„åŠ¨ä½œ
 				if (GlobalData.randomPositionPyraminx) {
 					if (GlobalData.scramblerPyraminx == null) {
 						ConfirmForm confirm = new ConfirmForm(
-								"½ğ×ÖËş´òÂÒ",
-								"ÕâÊÇ±¾´ÎÔËĞĞ£¨»ò¸ü¸ÄÉèÖÃºó£©µÚÒ»´Î½øÈëËæ»ú×´Ì¬½ğ×ÖËş´òÂÒ£¬ĞèÒªÒ»Ğ©×¼±¸¹¤×÷£¬×¼±¸¹ı³Ì¿ÉÄÜĞèÒª¼¸ÃëÖÓµÄÊ±¼ä£¬¼ÌĞøÂğ£¿",
+								"é‡‘å­—å¡”æ‰“ä¹±",
+								"è¿™æ˜¯æœ¬æ¬¡è¿è¡Œï¼ˆæˆ–æ›´æ”¹è®¾ç½®åï¼‰ç¬¬ä¸€æ¬¡è¿›å…¥éšæœºçŠ¶æ€é‡‘å­—å¡”æ‰“ä¹±ï¼Œéœ€è¦ä¸€äº›å‡†å¤‡å·¥ä½œï¼Œå‡†å¤‡è¿‡ç¨‹å¯èƒ½éœ€è¦å‡ ç§’é’Ÿçš„æ—¶é—´ï¼Œç»§ç»­å—ï¼Ÿ",
 								this);
 						GlobalData.display.setCurrent(confirm);
 					} else {
-						GlobalData.scrambleForm = new ScrambleForm("½ğ×ÖËş´òÂÒ",
+						GlobalData.scrambleForm = new ScrambleForm("é‡‘å­—å¡”æ‰“ä¹±",
 								GlobalData.scramblerPyraminx);
 						GlobalData.display.setCurrent(GlobalData.scrambleForm);
 					}
@@ -210,22 +210,22 @@ public class MainMenu extends List implements CommandListener {
 					if (GlobalData.randomMoveScramblerPyraminx == null) {
 						GlobalData.randomMoveScramblerPyraminx = new OldPyraminxScramble();
 					}
-					GlobalData.scrambleForm = new ScrambleForm("½ğ×ÖËş´òÂÒ",
+					GlobalData.scrambleForm = new ScrambleForm("é‡‘å­—å¡”æ‰“ä¹±",
 							GlobalData.randomMoveScramblerPyraminx);
 					GlobalData.display.setCurrent(GlobalData.scrambleForm);
 				}
 			}
-			if (this.getString(this.getSelectedIndex()).equals("Ä§±í")) {
-				// Ñ¡Ôñ¡°Ä§±í¡±Ê±µÄ¶¯×÷
+			if (this.getString(this.getSelectedIndex()).equals("é­”è¡¨")) {
+				// é€‰æ‹©â€œé­”è¡¨â€æ—¶çš„åŠ¨ä½œ
 				if (GlobalData.scramblerClock == null) {
 					GlobalData.scramblerClock = new ClockScramble();
 				}
-				GlobalData.scrambleForm = new ScrambleForm("Ä§±í´òÂÒ",
+				GlobalData.scrambleForm = new ScrambleForm("é­”è¡¨æ‰“ä¹±",
 						GlobalData.scramblerClock);
 				GlobalData.display.setCurrent(GlobalData.scrambleForm);
 			}
-			if (this.getString(this.getSelectedIndex()).equals("ÉèÖÃ")) {
-				// Ñ¡Ôñ¡°ÉèÖÃ¡±Ê±µÄ¶¯×÷
+			if (this.getString(this.getSelectedIndex()).equals("è®¾ç½®")) {
+				// é€‰æ‹©â€œè®¾ç½®â€æ—¶çš„åŠ¨ä½œ
 				if (GlobalData.settingForm == null) {
 					GlobalData.settingForm = new SettingForm(this);
 				}

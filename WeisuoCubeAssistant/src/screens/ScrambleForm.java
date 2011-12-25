@@ -11,9 +11,9 @@ import model.GlobalData;
 import scramble.Scramble;
 
 public class ScrambleForm extends Form implements CommandListener {
-	private Command scrambleCommand = new Command("ÐÂ´òÂÒ", Command.SCREEN, 1);
-	private Command backCommand = new Command("·µ»Ø", Command.BACK, 1);
-	private Command continueCommand = new Command("¼ÌÐø", Command.OK, 1);
+	private Command scrambleCommand = new Command("æ–°æ‰“ä¹±", Command.SCREEN, 1);
+	private Command backCommand = new Command("è¿”å›ž", Command.BACK, 1);
+	private Command continueCommand = new Command("ç»§ç»­", Command.OK, 1);
 	private StringItem scrambleStringItem = new StringItem("", "");
 	private TimerCanvas timerCanvas = null;
 	private Font scrambleFont = Font.getFont(Font.FACE_MONOSPACE,
@@ -36,7 +36,7 @@ public class ScrambleForm extends Form implements CommandListener {
 	public void commandAction(Command c, Displayable d) {
 		// TODO Auto-generated method stub
 		if (c == this.scrambleCommand) {
-			this.scrambleStringItem.setText("´òÂÒÖÐ...");
+			this.scrambleStringItem.setText("æ‰“ä¹±ä¸­...");
 			this.scrambleStringItem.setText(scrambler.scramble());
 		} else if (c == this.backCommand) {
 			GlobalData.display.setCurrent(GlobalData.mainMenu);

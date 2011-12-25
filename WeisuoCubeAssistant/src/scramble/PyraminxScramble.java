@@ -8,12 +8,12 @@ import util.EnDeCoderPyra;
 
 public class PyraminxScramble extends Scramble {
 
-	// length±íÊ¾×î¶Ì´Ólength²½¿ªÊ¼ËÑË÷
+	// lengthè¡¨ç¤ºæœ€çŸ­ä»lengthæ­¥å¼€å§‹æœç´¢
 	// DF, DL, DR, FL, FR, RL
 	// U, L, R, B
-	private int[][] state = { { 0, 1, 2, 3, 4, 5 }, // ÀâÎ»ÖÃ
-			{ 0, 0, 0, 0, 0, 0 },// Àâ·½Ïò
-			{ 0, 0, 0, 0, -1, -1 } };// ´ó½Ç·½Ïò
+	private int[][] state = { { 0, 1, 2, 3, 4, 5 }, // æ£±ä½ç½®
+			{ 0, 0, 0, 0, 0, 0 },// æ£±æ–¹å‘
+			{ 0, 0, 0, 0, -1, -1 } };// å¤§è§’æ–¹å‘
 	// u, l, r, b
 	private int[] tips = { 0, 0, 0, 0 };
 	private char[] permCost = new char[720];

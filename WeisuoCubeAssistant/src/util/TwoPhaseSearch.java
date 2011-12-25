@@ -131,7 +131,7 @@ public class TwoPhaseSearch {
 							|| (lastAxis2 == -1 && axis != lastAxis)
 							|| (lastAxis / 2 != lastAxis2 / 2 && axis != lastAxis)
 							|| (lastAxis / 2 == lastAxis2 / 2 && axis / 2 != lastAxis / 2)) {
-						// µÚ¶ş½×¶ÎµÚÒ»²½ºÍµÚÒ»½×¶Î×îºóÒ»²½(Á½²½)²»ÄÜÆ½ĞĞ
+						// ç¬¬äºŒé˜¶æ®µç¬¬ä¸€æ­¥å’Œç¬¬ä¸€é˜¶æ®µæœ€åä¸€æ­¥(ä¸¤æ­¥)ä¸èƒ½å¹³è¡Œ
 						if (depth == 0) {
 							if (parallel) {
 								if (axis / 2 == phase1Axis / 2)

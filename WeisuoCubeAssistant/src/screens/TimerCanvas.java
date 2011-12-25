@@ -20,8 +20,8 @@ public class TimerCanvas extends GameCanvas implements CommandListener {
 	private int bgColorOK = 0xff00ff00;
 	private int fontColor = 0xff000000;
 	private String time = "0:0.00";
-	private Command backCommand = new Command("·µ»Ø", Command.BACK, 1);
-	private Command continueCommmand = new Command("¼ÌÐø", Command.OK, 1);
+	private Command backCommand = new Command("è¿”å›ž", Command.BACK, 1);
+	private Command continueCommmand = new Command("ç»§ç»­", Command.OK, 1);
 	private TimingThread timingThread = null;
 	private PrepareThread prepareThread = null;
 	private CustomFont timeFont = null;
@@ -29,7 +29,7 @@ public class TimerCanvas extends GameCanvas implements CommandListener {
 	protected TimerCanvas(boolean suppressKeyEvents, Displayable backTo) {
 		super(suppressKeyEvents);
 		this.backTo = backTo;
-		this.setTitle("Ãë±í");
+		this.setTitle("ç§’è¡¨");
 		this.addCommand(backCommand);
 		if (!backTo.getClass().equals(GlobalData.mainMenu.getClass())) {
 			this.addCommand(continueCommmand);

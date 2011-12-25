@@ -16,28 +16,28 @@ import model.GlobalData;
 public class SettingForm extends Form implements CommandListener,
 		ItemStateListener {
 
-	private final Command okCommand = new Command("È·¶¨", Command.OK, 1);
-	private final Command cancelCommand = new Command("È¡Ïû", Command.CANCEL, 1);
+	private final Command okCommand = new Command("ç¡®å®š", Command.OK, 1);
+	private final Command cancelCommand = new Command("å–æ¶ˆ", Command.CANCEL, 1);
 	// private final Command chooseCommand = new Command("", Command.ITEM, 1);
 	private Displayable former;
-	private final String[] scramblersFor222 = { "Ëæ»ú×´Ì¬", "Ëæ»ú²½Öè" };
-	private final String[] scramblersFor333 = { "Ëæ»ú×´Ì¬", "Ëæ»ú²½Öè" };
-	private final String[] scramblersForPyraminx = { "Ëæ»ú×´Ì¬", "Ëæ»ú²½Öè" };
-	private ChoiceGroup scramblerChoiceFor222 = new ChoiceGroup("¶ş½×´òÂÒ·½Ê½",
+	private final String[] scramblersFor222 = { "éšæœºçŠ¶æ€", "éšæœºæ­¥éª¤" };
+	private final String[] scramblersFor333 = { "éšæœºçŠ¶æ€", "éšæœºæ­¥éª¤" };
+	private final String[] scramblersForPyraminx = { "éšæœºçŠ¶æ€", "éšæœºæ­¥éª¤" };
+	private ChoiceGroup scramblerChoiceFor222 = new ChoiceGroup("äºŒé˜¶æ‰“ä¹±æ–¹å¼",
 			ChoiceGroup.EXCLUSIVE, scramblersFor222, null);
-	private ChoiceGroup scramblerChoiceFor333 = new ChoiceGroup("Èı½×´òÂÒ·½Ê½",
+	private ChoiceGroup scramblerChoiceFor333 = new ChoiceGroup("ä¸‰é˜¶æ‰“ä¹±æ–¹å¼",
 			ChoiceGroup.EXCLUSIVE, scramblersFor333, null);
-	private ChoiceGroup scramblerChoiceForPyraminx = new ChoiceGroup("½ğ×ÖËş´òÂÒ·½Ê½",
+	private ChoiceGroup scramblerChoiceForPyraminx = new ChoiceGroup("é‡‘å­—å¡”æ‰“ä¹±æ–¹å¼",
 			ChoiceGroup.EXCLUSIVE, scramblersForPyraminx, null);
-	private TextField randomPosition222MinLength = new TextField("×î¶Ì´òÂÒ²½Öè", "0",
+	private TextField randomPosition222MinLength = new TextField("æœ€çŸ­æ‰“ä¹±æ­¥éª¤", "0",
 			1, TextField.NUMERIC);
-	private TextField randomPosition333MaxLength = new TextField("×î³¤´òÂÒ²½Öè",
+	private TextField randomPosition333MaxLength = new TextField("æœ€é•¿æ‰“ä¹±æ­¥éª¤",
 			"25", 2, TextField.NUMERIC);
-	private TextField randomPositionPyraminxMinLength = new TextField("×î¶Ì´òÂÒ²½Öè",
+	private TextField randomPositionPyraminxMinLength = new TextField("æœ€çŸ­æ‰“ä¹±æ­¥éª¤",
 			"0", 1, TextField.NUMERIC);
 
 	public SettingForm(Displayable former) {
-		super("ÉèÖÃ");
+		super("è®¾ç½®");
 		this.addCommand(okCommand);
 		this.addCommand(cancelCommand);
 		// scramblerChoiceFor222.addCommand(chooseCommand);
@@ -90,16 +90,16 @@ public class SettingForm extends Form implements CommandListener,
 		if (c == okCommand) {
 			if (scramblerChoiceFor333.isSelected(0)) {
 				if (Integer.parseInt(randomPosition333MaxLength.getString()) < 20) {
-					Alert alert = new Alert("²»¿É½ÓÊÜµÄ³¤¶È",
-							"Èı½××î³¤´òÂÒ³¤¶ÈĞèÒªÖÁÉÙÉèÖÃÎª20²½ÒÔÉÏ£¬·ñÔò¿ÉÄÜÎŞ½â£¡", null,
+					Alert alert = new Alert("ä¸å¯æ¥å—çš„é•¿åº¦",
+							"ä¸‰é˜¶æœ€é•¿æ‰“ä¹±é•¿åº¦éœ€è¦è‡³å°‘è®¾ç½®ä¸º20æ­¥ä»¥ä¸Šï¼Œå¦åˆ™å¯èƒ½æ— è§£ï¼", null,
 							AlertType.ERROR);
 					alert.setTimeout(3000);
 					GlobalData.display.setCurrent(alert, this);
 					return;
 				}
 				if (Integer.parseInt(randomPosition333MaxLength.getString()) < 22) {
-					Alert alert = new Alert("²»ÍÆ¼öµÄ³¤¶È",
-							"Èı½××î³¤´òÂÒ³¤¶ÈÉèÖÃÎª22²½ÒÔÏÂ¿ÉÄÜ»áµ¼ÖÂÇó½âºÜÂı£¡", null,
+					Alert alert = new Alert("ä¸æ¨èçš„é•¿åº¦",
+							"ä¸‰é˜¶æœ€é•¿æ‰“ä¹±é•¿åº¦è®¾ç½®ä¸º22æ­¥ä»¥ä¸‹å¯èƒ½ä¼šå¯¼è‡´æ±‚è§£å¾ˆæ…¢ï¼", null,
 							AlertType.WARNING);
 					alert.setTimeout(3000);
 					GlobalData.display.setCurrent(alert, former);
