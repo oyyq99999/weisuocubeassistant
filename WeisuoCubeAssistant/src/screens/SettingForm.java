@@ -125,7 +125,7 @@ public class SettingForm extends Form implements CommandListener,
 
 		}
 		if (scramblerChoiceFor333.isSelected(1)
-				|| Integer.parseInt(randomPosition333MaxLength.getString()) >= 22) {
+				|| Integer.parseInt(randomPosition333MaxLength.getString()) >= 20) {
 			GlobalData.display.setCurrent(former);
 		}
 	}
