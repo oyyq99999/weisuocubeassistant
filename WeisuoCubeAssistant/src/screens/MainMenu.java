@@ -103,7 +103,7 @@ public class MainMenu extends List implements CommandListener {
 					if (GlobalData.randomStateScrambler333 == null) {
 						ConfirmForm confirm = new ConfirmForm(
 								"三阶打乱",
-								"这是本次运行（或更改设置后）第一次进入随机状态三阶打乱，需要一些准备工作，准备过程可能需要几分钟的时间，其间需要读写文件4次(每次读文件可能需要一次确认，写文件可能需要四次确认，各种手机可能不同)，共需内存11M，继续吗？",
+								"这是本次运行（或更改设置后）第一次进入随机状态三阶打乱，需要一些准备工作，准备过程可能需要几十秒的时间，其间需要读写文件(读写文件可能需要确认，各种手机可能不同)，共需内存1.7M，继续吗？",
 								this);
 						GlobalData.display.setCurrent(confirm);
 					} else {

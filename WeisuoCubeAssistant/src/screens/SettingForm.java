@@ -97,13 +97,6 @@ public class SettingForm extends Form implements CommandListener,
 					GlobalData.display.setCurrent(alert, this);
 					return;
 				}
-				if (Integer.parseInt(randomPosition333MaxLength.getString()) < 22) {
-					Alert alert = new Alert("不推荐的长度",
-							"三阶最长打乱长度设置为22步以下可能会导致求解很慢！", null,
-							AlertType.WARNING);
-					alert.setTimeout(3000);
-					GlobalData.display.setCurrent(alert, former);
-				}
 			}
 			GlobalData.randomPosition222 = scramblerChoiceFor222.isSelected(0);
 			GlobalData.randomPosition333 = scramblerChoiceFor333.isSelected(0);
