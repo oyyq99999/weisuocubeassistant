@@ -2,357 +2,166 @@ package scramble;
 
 import java.util.Random;
 
-import javax.microedition.lcdui.Form;
-
-import util.EnDeCoder222;
-
 public class _222Scramble extends Scramble {
+    private static int[] perm = new int[7];
+    private static int[] fact = {1, 1, 2, 6, 24, 120, 720};
+    private static int[][] permmv = new int[5040][3];
+    private static int[][] twstmv = new int[729][3];
+    private static int[] permprun = new int[5040];
+    private static int[] twstprun = new int[729];
+    private static String[] move2str = {"U  ", "U2 ", "U' ", "R  ", "R2 ", "R' ", "F  ", "F2 ", "F' "};
+    private static boolean inited = false;
 
-	// length表示最短从length步开始搜索
-	// UFL, URF, UBR, ULB, DLF, DFR, DRB, DBL
-	private int[][] state = { { 0, 1, 2, 3, 4, 5, 6, 7 },// 位置
-			{ 0, 0, 0, 0, 0, 0, 0, 0 } };// 方向
-	private char[] permCost = new char[5040];
-	private char[] orientCost = new char[729];
-	private EnDeCoder222 coder = new EnDeCoder222();
-	private int moves[][] = new int[2][100];
-	private Form prepare = null;
-
-	public _222Scramble() {
-		this(0);
-	}
-
-	public _222Scramble(int minLength) {
-		this.length = minLength;
-		initCostTable();
-	}
-
-	public _222Scramble(int minLength, Form prepare) {
-		this.prepare = prepare;
-		this.length = minLength;
-		initCostTable();
-	}
-
-	private void initCostTable() {
-		reset();
-		for (int i = 0; i < 5040; i++) {
-			permCost[i] = 255;
-			if (i < 729)
-				orientCost[i] = 255;
+    private int[] sol = new int[12];
+    
+    public _222Scramble(byte length) {
+    	super.length = length;
+    }
+    
+    private static int getpermmv(int idx, int move) {
+        int val = 0x6543210;
+        int t;
+		for (int i=0; i<6; i++) {
+			int p = fact[6-i];
+			int v = idx / p;
+			idx -= v*p;
+			v <<= 2;
+			perm[i] = (val >> v) & 0x0f;
+			int m = (1 << v) - 1;
+			val = (val & m) + ((val >> 4) & ~m);
 		}
-		int permCount = 0;
-		int orientCount = 0;
-		for (char depth = 0; permCount < 5040 || orientCount < 729; depth++) {
-			if (depth == 0) {
-				permCost[0] = 0;
-				orientCost[0] = 0;
-				permCount++;
-				orientCount++;
-				// System.out.println("Depth " + (int) depth + " initialized "
-				// + permCount + " perms " + orientCount + " orients");
-				if (prepare != null) {
-					prepare.deleteAll();
-					prepare.append("Depth: " + (int) depth + "\n" + permCount
-							+ "/5040\n" + orientCount + "/729\n");
-				}
-				continue;
-			} else {
-				for (int i = 0; i < 5040; i++) {
-					if (permCost[i] == depth - 1) {
-						int perm = i;
-						int code = perm * 729;
-						int[][] codeState = decode(code);
-						int axis = -1;
-						int turns = 0;
-						for (axis = 0; axis < 3; axis++) {
-							for (turns = 1; turns < 4; turns++) {
-								for (int j = 0; j < 8; j++) {
-									this.state[0][j] = codeState[0][j];
-									this.state[1][j] = codeState[1][j];
-								}
-								doMove(axis, turns);
-								int newPerm = encode(state) / 729;
-								if (permCost[newPerm] == 255) {
-									permCost[newPerm] = depth;
-									permCount++;
-								}
-							}
-						}
-					}
-					if (i < 729) {
-						if (orientCost[i] == depth - 1) {
-							int orient = i;
-							int code = orient;
-							int[][] codeState = decode(code);
-							int axis = -1;
-							int turns = 0;
-							for (axis = 0; axis < 3; axis++) {
-								for (turns = 1; turns < 4; turns++) {
-									for (int j = 0; j < 8; j++) {
-										this.state[0][j] = codeState[0][j];
-										this.state[1][j] = codeState[1][j];
-									}
-									doMove(axis, turns);
-									int newOrient = encode(state) % 729;
-									if (orientCost[newOrient] == 255) {
-										orientCost[newOrient] = depth;
-										orientCount++;
-									}
-								}
-							}
-						}
-					}
-				}
-			}
-			// System.out.println("Depth " + (int) depth + " initialized "
-			// + permCount + " perms " + orientCount + " orients");
-			if (prepare != null) {
-				prepare.deleteAll();
-				prepare.append("Depth: " + (int) depth + "\n" + permCount
-						+ "/5040\n" + orientCount + "/729");
-			}
+		perm[6] = val;
+		if (move == 0) {
+		    t = perm[0];perm[0] = perm[1];perm[1] = perm[3];perm[3] = perm[2];perm[2] = t;
+		} else if (move == 1) {
+		    t = perm[0];perm[0] = perm[4];perm[4] = perm[5];perm[5] = perm[1];perm[1] = t;
+		} else if (move == 2) {
+		    t = perm[0];perm[0] = perm[2];perm[2] = perm[6];perm[6] = perm[4];perm[4] = t;
 		}
-	}
-
-	private void doMove(int axis, int count) {
-		switch (axis) {
-		case 0:
-			moveU(count);
-			break;
-		case 1:
-			moveR(count);
-			break;
-		case 2:
-			moveF(count);
-			break;
+		idx = 0;
+		val = 0x6543210;
+		for (int i=0; i<6; i++) {
+			int v = perm[i] << 2;
+			idx = (7 - i) * idx + ((val >> v) & 0x0f);
+			val -= 0x1111110 << v;
 		}
-	}
-
-	private int encode(int[][] state) {
-		return coder.encode(state);
-	}
-
-	private int[][] decode(int code) {
-		return coder.decode(code);
-	}
-
-	private void reset() {
-		for (int i = 0; i < 8; i++) {
-			state[0][i] = i;
-			state[1][i] = 0;
+		return idx;	
+    }
+    
+    private static int gettwstmv(int idx, int move) {
+        perm[6] = 18;
+        for (int i=0; i<6; i++) {
+            perm[6] -= perm[i] = idx % 3;
+            idx /= 3;
+        }
+        perm[6] %= 3;
+        int t;
+		if (move == 0) {
+		    t = perm[0];perm[0] = perm[1];perm[1] = perm[3];perm[3] = perm[2];perm[2] = t;
+		} else if (move == 1) {
+		    t = perm[0];perm[0] = perm[4]+2;perm[4] = perm[5]+1;perm[5] = perm[1]+2;perm[1] = t+1;
+		} else if (move == 2) {
+		    t = perm[0];perm[0] = perm[2]+1;perm[2] = perm[6]+2;perm[6] = perm[4]+1;perm[4] = t+2;
 		}
-		for (int i = 0; i < moves[0].length; i++) {
-			moves[0][i] = -1;
-			moves[1][i] = 0;
+		for (int i=5; i>=0; i--) {
+		    idx = idx * 3 + perm[i] % 3;
 		}
-	}
+		return idx;
+    }
+    
+    private static void init() {
+        if (inited) {
+            return;
+        }
+        for (int i=0; i<729; i++) {
+            twstprun[i] = -1;
+            for (int j=0; j<3; j++) {
+                twstmv[i][j] = gettwstmv(i, j);
+            }
+        }
+        for (int i=0; i<5040; i++) {
+            permprun[i] = -1;
+            for (int j=0; j<3; j++) {
+                permmv[i][j] = getpermmv(i, j);
+            }
+        }
+        twstprun[0] = permprun[0] = 0;
+        for (int l=0; l<7; l++) {
+            for (int p=0; p<5040; p++) {
+                if (permprun[p] == l) {
+                    for (int m=0; m<3; m++) {
+                        int q = p;
+                        for (int c=0; c<3; c++) {
+                            q = permmv[q][m];
+                            if (permprun[q] == -1) {
+                                permprun[q] = l+1;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        for (int l=0; l<6; l++) {
+            for (int p=0; p<729; p++) {
+                if (twstprun[p] == l) {
+                    for (int m=0; m<3; m++) {
+                        int q = p;
+                        for (int c=0; c<3; c++) {
+                            q = twstmv[q][m];
+                            if (twstprun[q] == -1) {
+                                twstprun[q] = l+1;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        inited = true;
+    }
+    
+    private boolean search(int d, int q, int t, int l, int lm) {
+        if (l == 0) {
+            if (q == 0 && t == 0) {
+                return true;
+            }
+        } else {
+            if (permprun[q] > l || twstprun[t] > l) {
+                return false;
+            }
+            for (int m=0; m<3; m++) {
+                if (m != lm) {
+                    int p = q;
+                    int s = t;
+                    for (int a=0; a<3; a++) {
+                        p = permmv[p][m];
+                        s = twstmv[s][m];
+                        sol[d] = m * 3 + a;
+                        if (search(d+1, p, s, l-1, m)) {
+                            return true;
+                        }
+                    }
+                }
+            }
+        }
+        return false;
+    }
 
-	private void moveU(int n) {
-		for (int i = 0; i < n; i++) {
-			int t = state[0][0];
-			state[0][0] = state[0][1];
-			state[0][1] = state[0][2];
-			state[0][2] = state[0][3];
-			state[0][3] = t;
+    public String scramble() {
+        init();
+        Random gen = new Random();
+        int perm = gen.nextInt(5040);
+        int twst = gen.nextInt(729);
+        int depth;
+        for (depth=0; depth<12; depth++) {
+            if (search(0, perm, twst, depth, -1)) {
+                break;
+            }
+        }
+        StringBuffer sb = new StringBuffer();
+        for (int i=0; i<depth; i++) {
+            sb.append(move2str[sol[i]]);
+        }
+        return sb.toString();
+    }
 
-			t = state[1][0];
-			state[1][0] = state[1][1];
-			state[1][1] = state[1][2];
-			state[1][2] = state[1][3];
-			state[1][3] = t;
-		}
-	}
-
-	private void moveR(int n) {
-		for (int i = 0; i < n; i++) {
-			int t = state[0][1];
-			state[0][1] = state[0][5];
-			state[0][5] = state[0][6];
-			state[0][6] = state[0][2];
-			state[0][2] = t;
-
-			t = state[1][1];
-			state[1][1] = (state[1][5] + 2) % 3;
-			state[1][5] = (state[1][6] + 1) % 3;
-			state[1][6] = (state[1][2] + 2) % 3;
-			state[1][2] = (t + 1) % 3;
-		}
-	}
-
-	private void moveF(int n) {
-		for (int i = 0; i < n; i++) {
-			int t = state[0][0];
-			state[0][0] = state[0][4];
-			state[0][4] = state[0][5];
-			state[0][5] = state[0][1];
-			state[0][1] = t;
-
-			t = state[1][0];
-			state[1][0] = (state[1][4] + 2) % 3;
-			state[1][4] = (state[1][5] + 1) % 3;
-			state[1][5] = (state[1][1] + 2) % 3;
-			state[1][1] = (t + 1) % 3;
-		}
-	}
-
-	private void randomState() {
-		Random rand = new Random();
-		int code;
-		do {
-			code = rand.nextInt(5040) * 729 + rand.nextInt(729);
-		} while ((code % 729) % 3 != 0);
-		this.state = decode(code);
-	}
-
-	private boolean solve(int stateCode, int moveCount, int lastAxis, int depth) {
-		// System.out.println("Solving Depth " + depth);
-		if (moveCount == 0) {
-			if (stateCode == 0)
-				return true;
-		} else {
-			if (permCost[stateCode / 729] > moveCount
-					|| orientCost[stateCode % 729] > moveCount)
-				return false;
-			else {
-				int[][] stateNow = decode(stateCode);
-				int axis = -1;
-				int turns = 0;
-				for (axis = 0; axis < 3; axis++) {
-					if (axis != lastAxis) {
-						for (turns = 1; turns < 4; turns++) {
-							for (int i = 0; i < 8; i++) {
-								this.state[0][i] = stateNow[0][i];
-								this.state[1][i] = stateNow[1][i];
-							}
-							moves[0][depth] = axis;
-							moves[1][depth] = turns;
-							doMove(axis, turns);
-							if (solve(encode(this.state), moveCount - 1, axis,
-									depth + 1))
-								return true;
-						}
-					}
-				}
-			}
-		}
-		return false;
-	}
-
-	public String scramble() {
-		// TODO Auto-generated method stub
-		// for (int i = 0; i < 8; i++) {
-		// System.out.print(state[0][i] + " ");
-		// }
-		// System.out.println();
-		// for (int i = 0; i < 8; i++) {
-		// System.out.print(state[1][i] + " ");
-		// }
-		// System.out.println();
-		int i = 0;
-		do {
-			reset();
-			randomState();
-			int code = encode(this.state);
-			// long start = System.currentTimeMillis();
-			for (i = length; i < moves[0].length + 1; i++) {
-				for (int j = 0; j < moves[0].length; j++) {
-					moves[0][j] = -1;
-					moves[1][j] = 0;
-				}
-				// System.out.println("Solve at Length " + i);
-				if (solve(code, i, -1, 0)) {
-					// System.out.println(System.currentTimeMillis() - start);
-					inverseSolution();
-					break;
-				}
-			}
-		} while (i == moves[0].length + 1);
-		this.scrambleSequence = convertToNames();
-		// for (i = 0; i < 11; i++) {
-		// if (moves[0][i] == -1)
-		// break;
-		// System.out.print(moves[0][i] + " ");
-		// }
-		// System.out.println();
-		// for (i = 0; i < 11; i++) {
-		// if (moves[1][i] == 0)
-		// break;
-		// System.out.print(moves[1][i] + " ");
-		// }
-		// System.out.println();
-		return this.scrambleSequence;
-	}
-
-	private void inverseSolution() {
-		// TODO Auto-generated method stub
-		int endIndex;
-		for (endIndex = moves[0].length - 1; endIndex >= 0; endIndex--) {
-			if (moves[0][endIndex] >= 0)
-				break;
-		}
-		int i;
-		int j;
-		for (i = 0, j = endIndex; i <= j; i++, j--) {
-			int t = moves[0][i];
-			moves[0][i] = moves[0][j];
-			moves[0][j] = t;
-
-			t = 4 - moves[1][i];
-			moves[1][i] = 4 - moves[1][j];
-			moves[1][j] = t;
-		}
-	}
-
-	private String convertToNames() {
-		StringBuffer sb = new StringBuffer();
-		for (int i = 0; i < moves[0].length; i++) {
-			if (moves[0][i] == -1)
-				break;
-			switch (moves[0][i]) {
-			case 0:
-				sb.append("U");
-				break;
-			case 1:
-				sb.append("R");
-				break;
-			case 2:
-				sb.append("F");
-			}
-			switch (moves[1][i]) {
-			case 1:
-				sb.append(" ");
-				break;
-			case 2:
-				sb.append("2 ");
-				break;
-			case 3:
-				sb.append("' ");
-				break;
-			}
-		}
-		return sb.toString().trim();
-	}
-
-	public static void main(String[] args) {
-		// TODO Auto-generated method stub
-		_222Scramble scr = new _222Scramble();
-		long start = System.currentTimeMillis();
-		// for (int code = 0; code < 100000; code++) {
-		// if ((code % 729) % 3 != 0)
-		// continue;
-		// for (int i = 0; i < 12; i++) {
-		// for (int j = 0; j < 11; j++) {
-		// scr.moves[0][j] = -1;
-		// scr.moves[1][j] = 0;
-		// }
-		// // System.out.println("Solve at Length " + i);
-		// if (scr.solve(code, i, -1, 0)) {
-		// // System.out.println(System.currentTimeMillis() - start);
-		// break;
-		// }
-		// }
-		// }
-		System.out.println(scr.scramble());
-		System.out.println((System.currentTimeMillis() - start));
-	}
 }
