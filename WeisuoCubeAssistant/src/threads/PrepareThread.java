@@ -17,7 +17,7 @@ public class PrepareThread extends Thread {
 		// TODO Auto-generated method stub
 		super.run();
 		while (preparing) {
-			if (System.currentTimeMillis() - pressedTime >= 1000) {
+			if (System.currentTimeMillis() - pressedTime >= 500) {
 				caller.setState(2);
 				break;
 			}
