@@ -24,7 +24,7 @@ public class GlobalData {
 	public static boolean randomPosition333 = false;
 	public static boolean randomPositionPyraminx = false;
 	public static byte randomPosition222MinLength = 0;
-	public static byte randomPosition333MaxLength = 25;
+	public static byte randomPosition333MaxLength = 21;
 	public static byte randomPositionPyraminxMinLength = 0;
 
 	public static WeisuoCubeAssistantMain mainMIDlet = null;
@@ -82,6 +82,7 @@ public class GlobalData {
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+			System.out.println("RSError");
 		}
 		if (data == null || data.length < 6)
 			return;

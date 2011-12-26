@@ -32,7 +32,7 @@ public class SettingForm extends Form implements CommandListener,
 	private TextField randomPosition222MinLength = new TextField("最短打乱步骤", "0",
 			1, TextField.NUMERIC);
 	private TextField randomPosition333MaxLength = new TextField("最长打乱步骤",
-			"25", 2, TextField.NUMERIC);
+			"21", 2, TextField.NUMERIC);
 	private TextField randomPositionPyraminxMinLength = new TextField("最短打乱步骤",
 			"0", 1, TextField.NUMERIC);
 
