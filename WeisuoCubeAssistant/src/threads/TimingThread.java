@@ -9,7 +9,7 @@ public class TimingThread extends Thread {
 	private long hundredths = 0;
 	private long startTime = -1;
 	private boolean running = false;
-	private String time = "0:0.00";
+	private String time = "0.00";
 	private TimerCanvas caller = null;
 
 	public TimingThread(TimerCanvas caller, long startTime) {
@@ -37,12 +37,20 @@ public class TimingThread extends Thread {
 				minutes = seconds / 60;
 				seconds %= 60;
 			}
-			time = minutes
-					+ ":"
-					+ seconds
-					+ "."
-					+ (hundredths < 10 ? ("0" + Long.toString(hundredths))
-							: Long.toString(hundredths));
+			if (minutes == 0) {
+				time = seconds
+						+ "."
+						+ (hundredths < 10 ? ("0" + Long.toString(hundredths))
+								: Long.toString(hundredths));
+			} else {
+				time = minutes
+						+ ":"
+						+ (seconds < 10 ? ("0" + Long.toString(seconds)) : Long
+								.toString(seconds))
+						+ "."
+						+ (hundredths < 10 ? ("0" + Long.toString(hundredths))
+								: Long.toString(hundredths));
+			}
 			caller.setTime(time);
 			caller.repaint();
 		} while (running);

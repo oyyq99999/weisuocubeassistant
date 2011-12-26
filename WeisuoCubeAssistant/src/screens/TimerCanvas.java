@@ -19,7 +19,7 @@ public class TimerCanvas extends GameCanvas implements CommandListener {
 	private int bgColorPressed = 0xffff0000;
 	private int bgColorOK = 0xff00ff00;
 	private int fontColor = 0xff000000;
-	private String time = "0:0.00";
+	private String time = "0.00";
 	private Command backCommand = new Command("返回", Command.BACK, 1);
 	private Command continueCommmand = new Command("继续", Command.OK, 1);
 	private TimingThread timingThread = null;
@@ -145,7 +145,7 @@ public class TimerCanvas extends GameCanvas implements CommandListener {
 			prepareThread.interrupt();
 			prepareThread = null;
 		}
-		time = "0:0.00";
+		time = "0.00";
 	}
 
 	public void commandAction(Command c, Displayable d) {
