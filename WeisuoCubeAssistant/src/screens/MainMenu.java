@@ -14,6 +14,7 @@ import scramble.LatchScramble;
 import scramble.MegaminxScramble;
 import scramble.OldPyraminxScramble;
 import scramble.SQ1Scramble;
+import scramble.SQ2Scramble;
 
 public class MainMenu extends List implements CommandListener {
 
@@ -34,6 +35,7 @@ public class MainMenu extends List implements CommandListener {
 		this.append("九阶", null);
 		this.append("十一阶", null);
 		this.append("SQ1", null);
+		this.append("SQ2", null);
 		this.append("五魔", null);
 		this.append("金字塔", null);
 		this.append("魔表", null);
@@ -58,22 +60,6 @@ public class MainMenu extends List implements CommandListener {
 			GlobalData.mainMIDlet.notifyDestroyed();
 		}
 		if (c == List.SELECT_COMMAND) {
-			if (this.getString(this.getSelectedIndex()).equals("秒表")) {
-				// 选择“秒表”时的动作
-				if (GlobalData.timerCanvas == null) {
-					GlobalData.timerCanvas = new TimerCanvas(false, this);
-				}
-				GlobalData.display.setCurrent(GlobalData.timerCanvas);
-			}
-			if (this.getString(this.getSelectedIndex()).equals("插销(LatchCube)")) {
-				// 选择“插销(LatchCube)”时的动作
-				if (GlobalData.scramblerLatch == null) {
-					GlobalData.scramblerLatch = new LatchScramble();
-				}
-				GlobalData.scrambleForm = new ScrambleForm("插销打乱",
-						GlobalData.scramblerLatch);
-				GlobalData.display.setCurrent(GlobalData.scrambleForm);
-			}
 			if (this.getString(this.getSelectedIndex()).equals("二阶")) {
 				// 选择“二阶”时的动作
 				if (GlobalData.randomPosition222) {
@@ -96,8 +82,7 @@ public class MainMenu extends List implements CommandListener {
 							GlobalData.randomMoveScrambler222);
 					GlobalData.display.setCurrent(GlobalData.scrambleForm);
 				}
-			}
-			if (this.getString(this.getSelectedIndex()).equals("三阶")) {
+			} else if (this.getString(this.getSelectedIndex()).equals("三阶")) {
 				// 选择“三阶”时的动作
 				if (GlobalData.randomPosition333) {
 					if (GlobalData.randomStateScrambler333 == null) {
@@ -119,8 +104,7 @@ public class MainMenu extends List implements CommandListener {
 							GlobalData.scrambler333);
 					GlobalData.display.setCurrent(GlobalData.scrambleForm);
 				}
-			}
-			if (this.getString(this.getSelectedIndex()).equals("四阶")) {
+			} else if (this.getString(this.getSelectedIndex()).equals("四阶")) {
 				// 选择“四阶”时的动作
 				if (GlobalData.scrambler444 == null) {
 					GlobalData.scrambler444 = new CubeScramble(4);
@@ -128,8 +112,7 @@ public class MainMenu extends List implements CommandListener {
 				GlobalData.scrambleForm = new ScrambleForm("四阶打乱",
 						GlobalData.scrambler444);
 				GlobalData.display.setCurrent(GlobalData.scrambleForm);
-			}
-			if (this.getString(this.getSelectedIndex()).equals("五阶")) {
+			} else if (this.getString(this.getSelectedIndex()).equals("五阶")) {
 				// 选择“五阶”时的动作
 				if (GlobalData.scrambler555 == null) {
 					GlobalData.scrambler555 = new CubeScramble(5);
@@ -137,8 +120,7 @@ public class MainMenu extends List implements CommandListener {
 				GlobalData.scrambleForm = new ScrambleForm("五阶打乱",
 						GlobalData.scrambler555);
 				GlobalData.display.setCurrent(GlobalData.scrambleForm);
-			}
-			if (this.getString(this.getSelectedIndex()).equals("六阶")) {
+			} else if (this.getString(this.getSelectedIndex()).equals("六阶")) {
 				// 选择“六阶”时的动作
 				if (GlobalData.scrambler666 == null) {
 					GlobalData.scrambler666 = new CubeScramble(6);
@@ -146,8 +128,7 @@ public class MainMenu extends List implements CommandListener {
 				GlobalData.scrambleForm = new ScrambleForm("六阶打乱",
 						GlobalData.scrambler666);
 				GlobalData.display.setCurrent(GlobalData.scrambleForm);
-			}
-			if (this.getString(this.getSelectedIndex()).equals("七阶")) {
+			} else if (this.getString(this.getSelectedIndex()).equals("七阶")) {
 				// 选择“七阶”时的动作
 				if (GlobalData.scrambler777 == null) {
 					GlobalData.scrambler777 = new CubeScramble(7);
@@ -155,8 +136,7 @@ public class MainMenu extends List implements CommandListener {
 				GlobalData.scrambleForm = new ScrambleForm("七阶打乱",
 						GlobalData.scrambler777);
 				GlobalData.display.setCurrent(GlobalData.scrambleForm);
-			}
-			if (this.getString(this.getSelectedIndex()).equals("九阶")) {
+			} else if (this.getString(this.getSelectedIndex()).equals("九阶")) {
 				// 选择“九阶”时的动作
 				if (GlobalData.scrambler999 == null) {
 					GlobalData.scrambler999 = new CubeScramble(9);
@@ -164,8 +144,7 @@ public class MainMenu extends List implements CommandListener {
 				GlobalData.scrambleForm = new ScrambleForm("九阶打乱",
 						GlobalData.scrambler999);
 				GlobalData.display.setCurrent(GlobalData.scrambleForm);
-			}
-			if (this.getString(this.getSelectedIndex()).equals("十一阶")) {
+			} else if (this.getString(this.getSelectedIndex()).equals("十一阶")) {
 				// 选择“十一阶”时的动作
 				if (GlobalData.scrambler111111 == null) {
 					GlobalData.scrambler111111 = new CubeScramble(11);
@@ -173,8 +152,7 @@ public class MainMenu extends List implements CommandListener {
 				GlobalData.scrambleForm = new ScrambleForm("十一阶打乱",
 						GlobalData.scrambler111111);
 				GlobalData.display.setCurrent(GlobalData.scrambleForm);
-			}
-			if (this.getString(this.getSelectedIndex()).equals("SQ1")) {
+			} else if (this.getString(this.getSelectedIndex()).equals("SQ1")) {
 				// 选择“SQ1”时的动作
 				if (GlobalData.scramblerSQ1 == null) {
 					GlobalData.scramblerSQ1 = new SQ1Scramble();
@@ -182,8 +160,15 @@ public class MainMenu extends List implements CommandListener {
 				GlobalData.scrambleForm = new ScrambleForm("SQ1打乱",
 						GlobalData.scramblerSQ1);
 				GlobalData.display.setCurrent(GlobalData.scrambleForm);
-			}
-			if (this.getString(this.getSelectedIndex()).equals("五魔")) {
+			} else if (this.getString(this.getSelectedIndex()).equals("SQ2")) {
+				// 选择“SQ2”时的动作
+				if (GlobalData.scramblerSQ2 == null) {
+					GlobalData.scramblerSQ2 = new SQ2Scramble();
+				}
+				GlobalData.scrambleForm = new ScrambleForm("SQ2打乱",
+						GlobalData.scramblerSQ2);
+				GlobalData.display.setCurrent(GlobalData.scrambleForm);
+			} else if (this.getString(this.getSelectedIndex()).equals("五魔")) {
 				// 选择“五魔”时的动作
 				if (GlobalData.scramblerMegaminx == null) {
 					GlobalData.scramblerMegaminx = new MegaminxScramble();
@@ -191,8 +176,7 @@ public class MainMenu extends List implements CommandListener {
 				GlobalData.scrambleForm = new ScrambleForm("五魔打乱",
 						GlobalData.scramblerMegaminx);
 				GlobalData.display.setCurrent(GlobalData.scrambleForm);
-			}
-			if (this.getString(this.getSelectedIndex()).equals("金字塔")) {
+			} else if (this.getString(this.getSelectedIndex()).equals("金字塔")) {
 				// 选择“金字塔”时的动作
 				if (GlobalData.randomPositionPyraminx) {
 					if (GlobalData.scramblerPyraminx == null) {
@@ -214,8 +198,7 @@ public class MainMenu extends List implements CommandListener {
 							GlobalData.randomMoveScramblerPyraminx);
 					GlobalData.display.setCurrent(GlobalData.scrambleForm);
 				}
-			}
-			if (this.getString(this.getSelectedIndex()).equals("魔表")) {
+			} else if (this.getString(this.getSelectedIndex()).equals("魔表")) {
 				// 选择“魔表”时的动作
 				if (GlobalData.scramblerClock == null) {
 					GlobalData.scramblerClock = new ClockScramble();
@@ -223,8 +206,22 @@ public class MainMenu extends List implements CommandListener {
 				GlobalData.scrambleForm = new ScrambleForm("魔表打乱",
 						GlobalData.scramblerClock);
 				GlobalData.display.setCurrent(GlobalData.scrambleForm);
-			}
-			if (this.getString(this.getSelectedIndex()).equals("设置")) {
+			} else if (this.getString(this.getSelectedIndex()).equals(
+					"插销(LatchCube)")) {
+				// 选择“插销(LatchCube)”时的动作
+				if (GlobalData.scramblerLatch == null) {
+					GlobalData.scramblerLatch = new LatchScramble();
+				}
+				GlobalData.scrambleForm = new ScrambleForm("插销打乱",
+						GlobalData.scramblerLatch);
+				GlobalData.display.setCurrent(GlobalData.scrambleForm);
+			} else if (this.getString(this.getSelectedIndex()).equals("秒表")) {
+				// 选择“秒表”时的动作
+				if (GlobalData.timerCanvas == null) {
+					GlobalData.timerCanvas = new TimerCanvas(false, this);
+				}
+				GlobalData.display.setCurrent(GlobalData.timerCanvas);
+			} else if (this.getString(this.getSelectedIndex()).equals("设置")) {
 				// 选择“设置”时的动作
 				if (GlobalData.settingForm == null) {
 					GlobalData.settingForm = new SettingForm(this);

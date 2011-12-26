@@ -11,6 +11,7 @@ import scramble.MegaminxScramble;
 import scramble.OldPyraminxScramble;
 import scramble.PyraminxScramble;
 import scramble.SQ1Scramble;
+import scramble.SQ2Scramble;
 import scramble._222Scramble;
 import scramble._333Scramble;
 import screens.MainMenu;
@@ -44,6 +45,7 @@ public class GlobalData {
 	public static CubeScramble scrambler999 = null;
 	public static CubeScramble scrambler111111 = null;
 	public static SQ1Scramble scramblerSQ1 = null;
+	public static SQ2Scramble scramblerSQ2 = null;
 	public static MegaminxScramble scramblerMegaminx = null;
 	public static PyraminxScramble scramblerPyraminx = null;
 	public static OldPyraminxScramble randomMoveScramblerPyraminx = null;
