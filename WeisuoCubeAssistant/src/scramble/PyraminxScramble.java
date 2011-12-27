@@ -11,9 +11,9 @@ public class PyraminxScramble extends Scramble {
 	private static char[][] twstmv = new char[2592][4];
 	private static byte[] permprun = new byte[360];
 	private static byte[] twstprun = new byte[2592];
-	private static String[] move2str = { "U  ", "U' ", "L  ", "L' ", "R  ", "R' ", "B  ", "B' "};
-	private static boolean inited = false;
-	private int[] sol = new int[12];
+
+	protected static String[] move2str = { "U  ", "U' ", "L  ", "L' ", "R  ", "R' ", "B  ", "B' "};
+	protected int[] sol = new int[12];
 
 	public PyraminxScramble(byte length) {
 		this.length = length;
@@ -119,10 +119,7 @@ public class PyraminxScramble extends Scramble {
 		return idx;
 	}
 
-	private static void init() {
-		if (inited) {
-			return;
-		}
+	static {
 		for (int i = 0; i < 360; i++) {
 			permprun[i] = -1;
 			for (int j = 0; j < 4; j++) {
@@ -167,29 +164,25 @@ public class PyraminxScramble extends Scramble {
 				}
 			}
 		}
-		inited = true;
 	}
 
-	private boolean search(int d, int q, int t, int l, int lm) {
+	protected boolean search(int d, int q, int t, int l, int lm) {
 		if (l == 0) {
-			if (q == 0 && t == 0) {
-				return true;
-			}
-		} else {
-			if (permprun[q] > l || twstprun[t] > l) {
-				return false;
-			}
-			for (int m = 0; m < 4; m++) {
-				if (m != lm) {
-					int p = q;
-					int s = t;
-					for (int a = 0; a < 2; a++) {
-						p = permmv[p][m];
-						s = twstmv[s][m];
-						sol[d] = m * 2 + a;
-						if (search(d + 1, p, s, l - 1, m)) {
-							return true;
-						}
+			return (q == 0 && t == 0);
+		}
+		if (permprun[q] > l || twstprun[t] > l) {
+			return false;
+		}
+		for (int m = 0; m < 4; m++) {
+			if (m != lm) {
+				int p = q;
+				int s = t;
+				for (int a = 0; a < 2; a++) {
+					p = permmv[p][m];
+					s = twstmv[s][m];
+					sol[d] = m * 2 + a;
+					if (search(d + 1, p, s, l - 1, m)) {
+						return true;
 					}
 				}
 			}
@@ -198,7 +191,6 @@ public class PyraminxScramble extends Scramble {
 	}
 
 	public String scramble() {
-		init();
 		Random gen = new Random();
 		int perm = gen.nextInt(360);
 		int twst = gen.nextInt(2592);

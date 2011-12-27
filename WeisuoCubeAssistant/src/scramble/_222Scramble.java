@@ -9,14 +9,18 @@ public class _222Scramble extends Scramble {
 	private static char[][] twstmv = new char[729][3];
 	private static byte[] permprun = new byte[5040];
 	private static byte[] twstprun = new byte[729];
-	private static String[] move2str = { "U  ", "U2 ", "U' ", "R  ", "R2 ",
-			"R' ", "F  ", "F2 ", "F' " };
-	private static boolean inited = false;
 
-	private int[] sol = new int[12];
+	protected static String[] move2str = { "U  ", "U2 ", "U' ", "R  ", "R2 ",
+			"R' ", "F  ", "F2 ", "F' " };
+	protected int[] sol = new int[12];
 
 	public _222Scramble(byte length) {
 		this.length = length;
+	}
+
+	public static void main(String[] args) {
+		for (int i=0; i<1000; i++)
+		System.out.println((new _222Scramble((byte)0)).scramble());
 	}
 
 	private static int getpermmv(int idx, int move) {
@@ -94,10 +98,7 @@ public class _222Scramble extends Scramble {
 		return idx;
 	}
 
-	private static void init() {
-		if (inited) {
-			return;
-		}
+	static {
 		for (int i = 0; i < 729; i++) {
 			twstprun[i] = -1;
 			for (int j = 0; j < 3; j++) {
@@ -141,29 +142,25 @@ public class _222Scramble extends Scramble {
 				}
 			}
 		}
-		inited = true;
 	}
 
-	private boolean search(int d, int q, int t, int l, int lm) {
+	protected boolean search(int d, int q, int t, int l, int lm) {
 		if (l == 0) {
-			if (q == 0 && t == 0) {
-				return true;
-			}
-		} else {
-			if (permprun[q] > l || twstprun[t] > l) {
-				return false;
-			}
-			for (int m = 0; m < 3; m++) {
-				if (m != lm) {
-					int p = q;
-					int s = t;
-					for (int a = 0; a < 3; a++) {
-						p = permmv[p][m];
-						s = twstmv[s][m];
-						sol[d] = m * 3 + a;
-						if (search(d + 1, p, s, l - 1, m)) {
-							return true;
-						}
+			return (q == 0 && t == 0);
+		}
+		if (permprun[q] > l || twstprun[t] > l) {
+			return false;
+		}
+		for (int m = 0; m < 3; m++) {
+			if (m != lm) {
+				int p = q;
+				int s = t;
+				for (int a = 0; a < 3; a++) {
+					p = permmv[p][m];
+					s = twstmv[s][m];
+					sol[d] = m * 3 + a;
+					if (search(d + 1, p, s, l - 1, m)) {
+						return true;
 					}
 				}
 			}
@@ -172,7 +169,6 @@ public class _222Scramble extends Scramble {
 	}
 
 	public String scramble() {
-		init();
 		Random gen = new Random();
 		int perm = gen.nextInt(5040);
 		int twst = gen.nextInt(729);
