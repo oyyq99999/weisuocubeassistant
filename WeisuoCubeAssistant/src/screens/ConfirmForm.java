@@ -56,7 +56,7 @@ public class ConfirmForm extends Form implements CommandListener {
 				this.removeCommand(okCommand);
 				this.removeCommand(cancelCommand);
 				GlobalData.scramblerPyraminx = new PyraminxScramble(
-						GlobalData.randomPositionPyraminxMinLength, this);
+						GlobalData.randomPositionPyraminxMinLength);
 				ScrambleForm scrambleForm = new ScrambleForm("金字塔打乱",
 						GlobalData.scramblerPyraminx);
 				GlobalData.display.setCurrent(scrambleForm);

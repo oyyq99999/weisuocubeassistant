@@ -2,305 +2,193 @@ package scramble;
 
 import java.util.Random;
 
-import javax.microedition.lcdui.Form;
-
-import util.EnDeCoderPyra;
-
 public class PyraminxScramble extends Scramble {
+	private static int[] perm = new int[6];
+	private static int[] flip = new int[6];
+	private static int[] twst = new int[4];
+	private static int[] fact = { 1, 1, 2/2, 6/2, 24/2, 120/2, 720/2 };
+	private static int[][] permmv = new int[360][4];
+	private static int[][] twstmv = new int[2592][4];
+	private static int[] permprun = new int[360];
+	private static int[] twstprun = new int[2592];
+	private static String[] move2str = { "U  ", "U' ", "L  ", "L' ", "R  ", "R' ", "B  ", "B' "};
+	private static boolean inited = false;
+	private int[] sol = new int[12];
 
-	// length表示最短从length步开始搜索
-	// DF, DL, DR, FL, FR, RL
-	// U, L, R, B
-	private int[][] state = { { 0, 1, 2, 3, 4, 5 }, // 棱位置
-			{ 0, 0, 0, 0, 0, 0 },// 棱方向
-			{ 0, 0, 0, 0, -1, -1 } };// 大角方向
-	// u, l, r, b
-	private int[] tips = { 0, 0, 0, 0 };
-	private char[] permCost = new char[720];
-	private char[] orientCost = new char[81 * 32];
-	private EnDeCoderPyra coder = new EnDeCoderPyra();
-	private int moves[][] = new int[2][100];
-	private Form prepare = null;
-
-	public PyraminxScramble() {
-		this(0);
+	public PyraminxScramble(byte length) {
+		this.length = length;
 	}
 
-	public PyraminxScramble(int minLength) {
-		this.length = minLength;
-		initCostTable();
+	public static void main(String[] args) {
+		for (int i=0; i<1000; i++)
+		System.out.println((new PyraminxScramble((byte)0)).scramble());
 	}
 
-	public PyraminxScramble(int minLength, Form prepare) {
-		this.prepare = prepare;
-		this.length = minLength;
-		initCostTable();
-	}
-
-	private void initCostTable() {
-		// TODO Auto-generated method stub
-		reset();
-		for (int i = 0; i < 81 * 32; i++) {
-			orientCost[i] = 255;
-			if (i < 720)
-				permCost[i] = 255;
+	private static int getpermmv(int idx, int move) {
+		int val = 0x543210;
+		int parity = 0;
+		for (int i=0; i<5; i++) {
+			int p = fact[5-i];
+			int v = idx / p;
+			idx -= v*p;
+			parity ^= v;
+			v <<= 2;
+			perm[i] = (val >> v) & 0xf;
+			int m = (1 << v) - 1;
+			val = (val & m) + ((val >> 4) & ~m);
 		}
-		int permCount = 0;
-		int orientCount = 0;
-		for (char depth = 0; permCount < 360 || orientCount < 81 * 32; depth++) {
-			if (depth == 0) {
-				permCost[0] = 0;
-				orientCost[0] = 0;
-				permCount++;
-				orientCount++;
-				// System.out.println("Depth " + (int) depth + " initialized "
-				// + permCount + " perms " + orientCount + " orients");
-				if (prepare != null) {
-					prepare.deleteAll();
-					prepare.append("Depth: " + (int) depth + "\n" + permCount
-							+ "/360\n" + orientCount + "/2592\n");
-				}
-				continue;
-			} else {
-				for (int i = 0; i < 81 * 32; i++) {
-					if (orientCost[i] == depth - 1) {
-						int orient = i;
-						int code = orient;
-						int[][] codeState = decode(code);
-						int axis = -1;
-						int turns = 0;
-						for (axis = 0; axis < 4; axis++) {
-							for (turns = 1; turns < 3; turns++) {
-								for (int j = 0; j < 6; j++) {
-									this.state[0][j] = codeState[0][j];
-									this.state[1][j] = codeState[1][j];
-									this.state[2][j] = codeState[2][j];
-								}
-								doMove(axis, turns);
-								int newOrient = encode(state) % (81 * 32);
-								if (orientCost[newOrient] == 255) {
-									orientCost[newOrient] = depth;
-									orientCount++;
-								}
-							}
-						}
-					}
-					if (i < 720) {
-						if (permCost[i] == depth - 1) {
-							int perm = i;
-							int code = perm * 81 * 32;
-							int[][] codeState = decode(code);
-							int axis = -1;
-							int turns = 0;
-							for (axis = 0; axis < 4; axis++) {
-								for (turns = 1; turns < 3; turns++) {
-									for (int j = 0; j < 6; j++) {
-										this.state[0][j] = codeState[0][j];
-										this.state[1][j] = codeState[1][j];
-										this.state[2][j] = codeState[2][j];
-									}
-									doMove(axis, turns);
-									int newPerm = encode(state) / 81 / 32;
-									if (permCost[newPerm] == 255) {
-										permCost[newPerm] = depth;
-										permCount++;
-									}
-								}
-							}
-						}
-					}
-				}
-			}
-			// System.out.println("Depth " + (int) depth + " initialized "
-			// + permCount + " perms " + orientCount + " orients");
-			if (prepare != null) {
-				prepare.deleteAll();
-				prepare.append("Depth: " + (int) depth + "\n" + permCount
-						+ "/360\n" + orientCount + "/2592\n");
-			}
-		}
-	}
-
-	private int encode(int[][] state2) {
-		// TODO Auto-generated method stub
-		return coder.encode(state);
-	}
-
-	private int[][] decode(int code) {
-		// TODO Auto-generated method stub
-		return coder.decode(code);
-	}
-
-	private void doMove(int axis, int turns) {
-		// TODO Auto-generated method stub
-		switch (axis) {
-		case 0:
-			moveU(turns);
-			break;
-		case 1:
-			moveL(turns);
-			break;
-		case 2:
-			moveR(turns);
-			break;
-		case 3:
-			moveB(turns);
-			break;
-		}
-	}
-
-	private void moveU(int turns) {
-		// TODO Auto-generated method stub
-		for (int i = 0; i < turns; i++) {
-			int t = state[0][3];
-			state[0][3] = state[0][4];
-			state[0][4] = state[0][5];
-			state[0][5] = t;
-
-			t = state[1][3];
-			state[1][3] = (state[1][4] + 1) % 2;
-			state[1][4] = state[1][5];
-			state[1][5] = (t + 1) % 2;
-
-			state[2][0]++;
-			state[2][0] %= 3;
-		}
-	}
-
-	private void moveL(int turns) {
-		// TODO Auto-generated method stub
-		for (int i = 0; i < turns; i++) {
-			int t = state[0][3];
-			state[0][3] = state[0][1];
-			state[0][1] = state[0][0];
-			state[0][0] = t;
-
-			t = state[1][3];
-			state[1][3] = (state[1][1] + 1) % 2;
-			state[1][1] = (state[1][0] + 1) % 2;
-			state[1][0] = t;
-
-			state[2][1]++;
-			state[2][1] %= 3;
-		}
-	}
-
-	private void moveR(int turns) {
-		// TODO Auto-generated method stub
-		for (int i = 0; i < turns; i++) {
-			int t = state[0][4];
-			state[0][4] = state[0][0];
-			state[0][0] = state[0][2];
-			state[0][2] = t;
-
-			t = state[1][4];
-			state[1][4] = state[1][0];
-			state[1][0] = (state[1][2] + 1) % 2;
-			state[1][2] = (t + 1) % 2;
-
-			state[2][2]++;
-			state[2][2] %= 3;
-		}
-	}
-
-	private void moveB(int turns) {
-		// TODO Auto-generated method stub
-		for (int i = 0; i < turns; i++) {
-			int t = state[0][5];
-			state[0][5] = state[0][2];
-			state[0][2] = state[0][1];
-			state[0][1] = t;
-
-			t = state[1][5];
-			state[1][5] = state[1][2];
-			state[1][2] = (state[1][1] + 1) % 2;
-			state[1][1] = (t + 1) % 2;
-
-			state[2][3]++;
-			state[2][3] %= 3;
-		}
-	}
-
-	private void reset() {
-		// TODO Auto-generated method stub
-		for (int i = 0; i < 6; i++) {
-			state[0][i] = i;
-			state[1][i] = 0;
-			state[2][i] = 0;
-		}
-		state[2][4] = state[2][5] = -1;
-		for (int i = 0; i < 4; i++)
-			tips[i] = 0;
-		for (int i = 0; i < moves[0].length; i++) {
-			moves[0][i] = -1;
-			moves[1][i] = 0;
-		}
-	}
-
-	private void randomState() {
-		Random rand = new Random();
-		int code;
-		do {
-			code = rand.nextInt(720);
-			int[][] state = decode(code * 81 * 32);
-			int total = 0;
-			for (int i = 0; i < 6; i++) {
-				for (int j = i + 1; j < 6; j++) {
-					if (state[0][i] > state[0][j])
-						total++;
-				}
-			}
-			if (total % 2 == 0)
-				break;
-		} while (true);
-		code *= 81 * 32;
-		code += rand.nextInt(81) * 32 + rand.nextInt(32);
-		this.state = decode(code);
-		randomTips();
-		for (int i = 0; i < 6; i++) {
-			// System.out.print(state[0][i] + " ");
-		}
-		// System.out.println();
-		for (int i = 0; i < 6; i++) {
-			// System.out.print(state[1][i] + " ");
-		}
-		// System.out.println();
-		for (int i = 0; i < 4; i++) {
-			// System.out.print(state[2][i] + " ");
-		}
-		// System.out.println();
-		for (int i = 0; i < 4; i++) {
-			// System.out.print(tips[i] + " ");
-		}
-		// System.out.println();
-	}
-
-	private boolean solve(int stateCode, int moveCount, int lastAxis, int depth) {
-		if (moveCount == 0) {
-			if (stateCode == 0)
-				return true;
+		if ((parity & 1) == 0) {
+			perm[5] = val;
 		} else {
-			if (permCost[stateCode / 81 / 32] > moveCount
-					|| orientCost[stateCode % (81 * 32)] > moveCount)
-				return false;
-			else {
-				int[][] stateNow = decode(stateCode);
-				int axis = -1;
-				int turns = 0;
-				for (axis = 0; axis < 4; axis++) {
-					if (axis != lastAxis) {
-						for (turns = 1; turns < 3; turns++) {
-							for (int i = 0; i < 6; i++) {
-								this.state[0][i] = stateNow[0][i];
-								this.state[1][i] = stateNow[1][i];
-								this.state[2][i] = stateNow[2][i];
+			perm[5] = perm[4];
+			perm[4] = val;
+		}
+		int t;
+		if (move == 0) {
+			t = perm[0];
+			perm[0] = perm[3];
+			perm[3] = perm[1];
+			perm[1] = t;
+		} else if (move == 1) {
+			t = perm[1];
+			perm[1] = perm[5];
+			perm[5] = perm[2];
+			perm[2] = t;
+		} else if (move == 2) {
+			t = perm[0];
+			perm[0] = perm[2];
+			perm[2] = perm[4];
+			perm[4] = t;
+		} else if (move == 3) {
+			t = perm[3];
+			perm[3] = perm[4];
+			perm[4] = perm[5];
+			perm[5] = t;		
+		}
+		val = 0x543210;
+		for (int i=0; i<4; i++) {
+			int v = perm[i] << 2;
+			idx *= 6-i;
+			idx += (val >> v) & 0xf;
+			val -= 0x111110L << v;
+		}
+		return idx;	
+	}
+
+	private static int gettwstmv(int idx, int move) {
+		for (int i=0; i<4; i++) {
+			twst[i] = idx % 3;
+			idx /= 3;
+		}
+		flip[5] = 0;
+		for (int i=0; i<5; i++) {
+			flip[5] ^= flip[i] = idx & 1;
+			idx >>= 1;
+		}
+	
+		twst[move] = (twst[move] + 1) % 3;
+		int t;
+		if (move == 0) {
+			t = flip[0];
+			flip[0] = flip[3];
+			flip[3] = flip[1] ^ 1;
+			flip[1] = t ^ 1;
+		} else if (move == 1) {
+			t = flip[1];
+			flip[1] = flip[5];
+			flip[5] = flip[2] ^ 1;
+			flip[2] = t ^ 1;
+		} else if (move == 2) {
+			t = flip[0];
+			flip[0] = flip[2] ^ 1;
+			flip[2] = flip[4] ^ 1;
+			flip[4] = t;
+		} else if (move == 3) {
+			t = flip[3];
+			flip[3] = flip[4] ^ 1;
+			flip[4] = flip[5] ^ 1;
+			flip[5] = t;
+		}
+		
+		for (int i=4; i>=0; i--) {
+			idx = idx << 1 | flip[i];
+		}
+		for (int i=3; i>=0; i--) {
+			idx = idx * 3 + twst[i];
+		}
+		return idx;
+	}
+
+	private static void init() {
+		if (inited) {
+			return;
+		}
+		for (int i = 0; i < 360; i++) {
+			permprun[i] = -1;
+			for (int j = 0; j < 4; j++) {
+				permmv[i][j] = getpermmv(i, j);
+			}
+		}
+		for (int i = 0; i < 2592; i++) {
+			twstprun[i] = -1;
+			for (int j = 0; j < 4; j++) {
+				twstmv[i][j] = gettwstmv(i, j);
+			}
+		}
+		twstprun[0] = permprun[0] = 0;
+		for (int l = 0; l < 5; l++) {
+			for (int p = 0; p < 360; p++) {
+				if (permprun[p] == l) {
+					for (int m = 0; m < 4; m++) {
+						int q = p;
+						for (int c = 0; c < 2; c++) {
+							q = permmv[q][m];
+							if (permprun[q] == -1) {
+								permprun[q] = l + 1;
 							}
-							moves[0][depth] = axis;
-							moves[1][depth] = turns;
-							doMove(axis, turns);
-							if (solve(encode(this.state), moveCount - 1, axis,
-									depth + 1))
-								return true;
+						}
+					}
+				}
+			}
+		}
+		twstprun[0] = 0;
+		for (int l = 0; l < 7; l++) {
+			for (int p = 0; p < 2592; p++) {
+				if (twstprun[p] == l) {
+					for (int m = 0; m < 4; m++) {
+						int q = p;
+						for (int c = 0; c < 2; c++) {
+							q = twstmv[q][m];
+							if (twstprun[q] == -1) {
+								twstprun[q] = l + 1;
+							}
+						}
+					}
+				}
+			}
+		}
+		inited = true;
+	}
+
+	private boolean search(int d, int q, int t, int l, int lm) {
+		if (l == 0) {
+			if (q == 0 && t == 0) {
+				return true;
+			}
+		} else {
+			if (permprun[q] > l || twstprun[t] > l) {
+				return false;
+			}
+			for (int m = 0; m < 4; m++) {
+				if (m != lm) {
+					int p = q;
+					int s = t;
+					for (int a = 0; a < 2; a++) {
+						p = permmv[p][m];
+						s = twstmv[s][m];
+						sol[d] = m * 2 + a;
+						if (search(d + 1, p, s, l - 1, m)) {
+							return true;
 						}
 					}
 				}
@@ -310,111 +198,28 @@ public class PyraminxScramble extends Scramble {
 	}
 
 	public String scramble() {
-		// TODO Auto-generated method stub
-		reset();
-		randomState();
-		int code = encode(this.state);
-		int i = 0;
-		do {
-			for (i = length; i < moves[0].length + 1; i++) {
-				for (int j = 0; j < moves[0].length; j++) {
-					moves[0][j] = -1;
-					moves[1][j] = 0;
-				}
-				if (solve(code, i, -1, 0)) {
-					inverseSolution();
-					break;
-				}
+		init();
+		Random gen = new Random();
+		int perm = gen.nextInt(360);
+		int twst = gen.nextInt(2592);
+		int depth;
+		for (depth = 0; depth < 12; depth++) {
+			if (search(0, perm, twst, depth, -1)) {
+				break;
 			}
-		} while (i == moves[0].length);
-		this.scrambleSequence = convertToNames();
-		return this.scrambleSequence;
-	}
-
-	private String convertToNames() {
-		// TODO Auto-generated method stub
+		}
 		StringBuffer sb = new StringBuffer();
-		for (int i = 0; i < moves[0].length; i++) {
-			if (moves[0][i] == -1)
-				break;
-			switch (moves[0][i]) {
-			case 0:
-				sb.append("U");
-				break;
-			case 1:
-				sb.append("L");
-				break;
-			case 2:
-				sb.append("R");
-				break;
-			case 3:
-				sb.append("B");
-				break;
-			}
-			switch (moves[1][i]) {
-			case 1:
-				sb.append(" ");
-				break;
-			case 2:
-				sb.append("' ");
-				break;
+		for (int i = 0; i < depth; i++) {
+			sb.append(move2str[sol[i]]);
+		}
+		for (int i=0; i < 4; i++) {
+			int t = gen.nextInt(3);
+			if (t != 0) {
+				sb.append("lrbu".charAt(i));
+				sb.append(" '".charAt(t-1));
+				sb.append(' ');
 			}
 		}
-		for (int i = 0; i < 4; i++) {
-			switch (tips[i]) {
-			case 0:
-				break;
-			case 1:
-				sb.append("ulrb".charAt(i));
-				sb.append(" ");
-				break;
-			case 2:
-				sb.append("ulrb".charAt(i));
-				sb.append("' ");
-				break;
-			}
-		}
-		return sb.toString().trim();
+		return sb.toString();
 	}
-
-	private void randomTips() {
-		// TODO Auto-generated method stub
-		Random rand = new Random();
-		for (int i = 0; i < 4; i++) {
-			tips[i] = rand.nextInt(3);
-		}
-	}
-
-	private void inverseSolution() {
-		// TODO Auto-generated method stub
-		int endIndex;
-		for (endIndex = moves[0].length - 1; endIndex >= 0; endIndex--) {
-			if (moves[0][endIndex] >= 0)
-				break;
-		}
-		int i;
-		int j;
-		for (i = 0, j = endIndex; i <= j; i++, j--) {
-			int t = moves[0][i];
-			moves[0][i] = moves[0][j];
-			moves[0][j] = t;
-
-			t = 3 - moves[1][i];
-			moves[1][i] = 3 - moves[1][j];
-			moves[1][j] = t;
-		}
-	}
-
-	/**
-	 * @param args
-	 */
-	public static void main(String[] args) {
-		// TODO Auto-generated method stub
-		PyraminxScramble scr = new PyraminxScramble();
-		long start = System.currentTimeMillis();
-		// for (int i = 0; i < 100; i++)
-		System.out.println(scr.scramble());
-		System.out.println(System.currentTimeMillis() - start);
-	}
-
 }
