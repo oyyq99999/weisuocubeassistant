@@ -7,10 +7,10 @@ public class PyraminxScramble extends Scramble {
 	private static int[] flip = new int[6];
 	private static int[] twst = new int[4];
 	private static int[] fact = { 1, 1, 2/2, 6/2, 24/2, 120/2, 720/2 };
-	private static int[][] permmv = new int[360][4];
-	private static int[][] twstmv = new int[2592][4];
-	private static int[] permprun = new int[360];
-	private static int[] twstprun = new int[2592];
+	private static char[][] permmv = new char[360][4];
+	private static char[][] twstmv = new char[2592][4];
+	private static byte[] permprun = new byte[360];
+	private static byte[] twstprun = new byte[2592];
 	private static String[] move2str = { "U  ", "U' ", "L  ", "L' ", "R  ", "R' ", "B  ", "B' "};
 	private static boolean inited = false;
 	private int[] sol = new int[12];
@@ -126,13 +126,13 @@ public class PyraminxScramble extends Scramble {
 		for (int i = 0; i < 360; i++) {
 			permprun[i] = -1;
 			for (int j = 0; j < 4; j++) {
-				permmv[i][j] = getpermmv(i, j);
+				permmv[i][j] = (char)getpermmv(i, j);
 			}
 		}
 		for (int i = 0; i < 2592; i++) {
 			twstprun[i] = -1;
 			for (int j = 0; j < 4; j++) {
-				twstmv[i][j] = gettwstmv(i, j);
+				twstmv[i][j] = (char)gettwstmv(i, j);
 			}
 		}
 		twstprun[0] = permprun[0] = 0;
@@ -144,7 +144,7 @@ public class PyraminxScramble extends Scramble {
 						for (int c = 0; c < 2; c++) {
 							q = permmv[q][m];
 							if (permprun[q] == -1) {
-								permprun[q] = l + 1;
+								permprun[q] = (byte) (l + 1);
 							}
 						}
 					}
@@ -160,7 +160,7 @@ public class PyraminxScramble extends Scramble {
 						for (int c = 0; c < 2; c++) {
 							q = twstmv[q][m];
 							if (twstprun[q] == -1) {
-								twstprun[q] = l + 1;
+								twstprun[q] = (byte) (l + 1);
 							}
 						}
 					}
@@ -209,7 +209,7 @@ public class PyraminxScramble extends Scramble {
 			}
 		}
 		StringBuffer sb = new StringBuffer();
-		for (int i = 0; i < depth; i++) {
+		for (int i = length; i < depth; i++) {
 			sb.append(move2str[sol[i]]);
 		}
 		for (int i=0; i < 4; i++) {

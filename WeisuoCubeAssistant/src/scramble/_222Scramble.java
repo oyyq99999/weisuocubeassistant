@@ -5,10 +5,10 @@ import java.util.Random;
 public class _222Scramble extends Scramble {
 	private static int[] perm = new int[7];
 	private static int[] fact = { 1, 1, 2, 6, 24, 120, 720 };
-	private static int[][] permmv = new int[5040][3];
-	private static int[][] twstmv = new int[729][3];
-	private static int[] permprun = new int[5040];
-	private static int[] twstprun = new int[729];
+	private static char[][] permmv = new char[5040][3];
+	private static char[][] twstmv = new char[729][3];
+	private static byte[] permprun = new byte[5040];
+	private static byte[] twstprun = new byte[729];
 	private static String[] move2str = { "U  ", "U2 ", "U' ", "R  ", "R2 ",
 			"R' ", "F  ", "F2 ", "F' " };
 	private static boolean inited = false;
@@ -101,13 +101,13 @@ public class _222Scramble extends Scramble {
 		for (int i = 0; i < 729; i++) {
 			twstprun[i] = -1;
 			for (int j = 0; j < 3; j++) {
-				twstmv[i][j] = gettwstmv(i, j);
+				twstmv[i][j] = (char)gettwstmv(i, j);
 			}
 		}
 		for (int i = 0; i < 5040; i++) {
 			permprun[i] = -1;
 			for (int j = 0; j < 3; j++) {
-				permmv[i][j] = getpermmv(i, j);
+				permmv[i][j] = (char)getpermmv(i, j);
 			}
 		}
 		twstprun[0] = permprun[0] = 0;
@@ -119,7 +119,7 @@ public class _222Scramble extends Scramble {
 						for (int c = 0; c < 3; c++) {
 							q = permmv[q][m];
 							if (permprun[q] == -1) {
-								permprun[q] = l + 1;
+								permprun[q] = (byte) (l + 1);
 							}
 						}
 					}
@@ -134,7 +134,7 @@ public class _222Scramble extends Scramble {
 						for (int c = 0; c < 3; c++) {
 							q = twstmv[q][m];
 							if (twstprun[q] == -1) {
-								twstprun[q] = l + 1;
+								twstprun[q] = (byte) (l + 1);
 							}
 						}
 					}
@@ -177,7 +177,7 @@ public class _222Scramble extends Scramble {
 		int perm = gen.nextInt(5040);
 		int twst = gen.nextInt(729);
 		int depth;
-		for (depth = 0; depth < 12; depth++) {
+		for (depth = length; depth < 12; depth++) {
 			if (search(0, perm, twst, depth, -1)) {
 				break;
 			}
