@@ -421,7 +421,7 @@ class CubieCube {
 		CornMult(urf2, this, temps);
 		CornMult(temps, urf1, this);		
 		EdgeMult(urf2, this, temps);
-		EdgeMult(temps, urf1, this);		    		
+		EdgeMult(temps, urf1, this);					
 	}
 	
 	static void initMove() {
