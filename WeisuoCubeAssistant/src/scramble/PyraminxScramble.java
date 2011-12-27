@@ -203,13 +203,13 @@ public class PyraminxScramble extends Scramble {
 		int perm = gen.nextInt(360);
 		int twst = gen.nextInt(2592);
 		int depth;
-		for (depth = 0; depth < 12; depth++) {
+		for (depth = length; depth < 12; depth++) {
 			if (search(0, perm, twst, depth, -1)) {
 				break;
 			}
 		}
 		StringBuffer sb = new StringBuffer();
-		for (int i = length; i < depth; i++) {
+		for (int i = 0; i < depth; i++) {
 			sb.append(move2str[sol[i]]);
 		}
 		for (int i=0; i < 4; i++) {
