@@ -13,23 +13,7 @@ public class PrepareThread extends Thread {
 		this.caller = caller;
 	}
 
-<<<<<<< .mine	public void run() {
-		// TODO Auto-generated method stub
-		super.run();
-		while (preparing) {
-			if (System.currentTimeMillis() - pressedTime >= 500) {
-				caller.setState(2);
-				break;
-			}
-			try {
-				Thread.sleep(10);
-			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		}
-	}
-=======	public void run() {
+	public void run() {
 		// TODO Auto-generated method stub
 		super.run();
 		while (preparing) {
@@ -45,7 +29,7 @@ public class PrepareThread extends Thread {
 			}
 		}
 	}
->>>>>>> .theirs
+
 	public boolean isPreparing() {
 		return preparing;
 	}
