@@ -6,31 +6,42 @@ public class PyraminxScramble extends Scramble {
 	private static int[] perm = new int[6];
 	private static int[] flip = new int[6];
 	private static int[] twst = new int[4];
-	private static int[] fact = { 1, 1, 2/2, 6/2, 24/2, 120/2, 720/2 };
+	private static int[] fact = { 1, 1, 2 / 2, 6 / 2, 24 / 2, 120 / 2, 720 / 2 };
 	private static char[][] permmv = new char[360][4];
 	private static char[][] twstmv = new char[2592][4];
 	private static byte[] permprun = new byte[360];
 	private static byte[] twstprun = new byte[2592];
 
-	protected static String[] move2str = { "U  ", "U' ", "L  ", "L' ", "R  ", "R' ", "B  ", "B' "};
+	protected static String[] move2str = { "U  ", "U' ", "L  ", "L' ", "R  ",
+			"R' ", "B  ", "B' " };
 	protected int[] sol = new int[12];
 
-	public PyraminxScramble(byte length) {
+	private static boolean inited = false;
+
+	private static PyraminxScramble instance = null;
+
+	protected PyraminxScramble(byte length) {
 		this.length = length;
+		init();
 	}
 
-	public static void main(String[] args) {
-		for (int i=0; i<1000; i++)
-		System.out.println((new PyraminxScramble((byte)0)).scramble());
+	public static PyraminxScramble getInstance(byte length) {
+		if (instance == null) {
+			instance = new PyraminxScramble(length);
+		}
+		if (instance.length != length) {
+			instance.length = length;
+		}
+		return instance;
 	}
 
 	private static int getpermmv(int idx, int move) {
 		int val = 0x543210;
 		int parity = 0;
-		for (int i=0; i<5; i++) {
-			int p = fact[5-i];
+		for (int i = 0; i < 5; i++) {
+			int p = fact[5 - i];
 			int v = idx / p;
-			idx -= v*p;
+			idx -= v * p;
 			parity ^= v;
 			v <<= 2;
 			perm[i] = (val >> v) & 0xf;
@@ -63,29 +74,29 @@ public class PyraminxScramble extends Scramble {
 			t = perm[3];
 			perm[3] = perm[4];
 			perm[4] = perm[5];
-			perm[5] = t;		
+			perm[5] = t;
 		}
 		val = 0x543210;
-		for (int i=0; i<4; i++) {
+		for (int i = 0; i < 4; i++) {
 			int v = perm[i] << 2;
-			idx *= 6-i;
+			idx *= 6 - i;
 			idx += (val >> v) & 0xf;
 			val -= 0x111110L << v;
 		}
-		return idx;	
+		return idx;
 	}
 
 	private static int gettwstmv(int idx, int move) {
-		for (int i=0; i<4; i++) {
+		for (int i = 0; i < 4; i++) {
 			twst[i] = idx % 3;
 			idx /= 3;
 		}
 		flip[5] = 0;
-		for (int i=0; i<5; i++) {
+		for (int i = 0; i < 5; i++) {
 			flip[5] ^= flip[i] = idx & 1;
 			idx >>= 1;
 		}
-	
+
 		twst[move] = (twst[move] + 1) % 3;
 		int t;
 		if (move == 0) {
@@ -109,27 +120,30 @@ public class PyraminxScramble extends Scramble {
 			flip[4] = flip[5] ^ 1;
 			flip[5] = t;
 		}
-		
-		for (int i=4; i>=0; i--) {
+
+		for (int i = 4; i >= 0; i--) {
 			idx = idx << 1 | flip[i];
 		}
-		for (int i=3; i>=0; i--) {
+		for (int i = 3; i >= 0; i--) {
 			idx = idx * 3 + twst[i];
 		}
 		return idx;
 	}
 
-	static {
+	private static void init() {
+		if (inited) {
+			return;
+		}
 		for (int i = 0; i < 360; i++) {
 			permprun[i] = -1;
 			for (int j = 0; j < 4; j++) {
-				permmv[i][j] = (char)getpermmv(i, j);
+				permmv[i][j] = (char) getpermmv(i, j);
 			}
 		}
 		for (int i = 0; i < 2592; i++) {
 			twstprun[i] = -1;
 			for (int j = 0; j < 4; j++) {
-				twstmv[i][j] = (char)gettwstmv(i, j);
+				twstmv[i][j] = (char) gettwstmv(i, j);
 			}
 		}
 		twstprun[0] = permprun[0] = 0;
@@ -164,6 +178,7 @@ public class PyraminxScramble extends Scramble {
 				}
 			}
 		}
+		inited = true;
 	}
 
 	protected boolean search(int d, int q, int t, int l, int lm) {
@@ -204,11 +219,11 @@ public class PyraminxScramble extends Scramble {
 		for (int i = 0; i < depth; i++) {
 			sb.append(move2str[sol[i]]);
 		}
-		for (int i=0; i < 4; i++) {
+		for (int i = 0; i < 4; i++) {
 			int t = gen.nextInt(3);
 			if (t != 0) {
 				sb.append("lrbu".charAt(i));
-				sb.append(" '".charAt(t-1));
+				sb.append(" '".charAt(t - 1));
 				sb.append(' ');
 			}
 		}

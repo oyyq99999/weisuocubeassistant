@@ -36,7 +36,8 @@ public class ConfirmForm extends Form implements CommandListener {
 				this.deleteAll();
 				this.removeCommand(okCommand);
 				this.removeCommand(cancelCommand);
-				GlobalData.scrambler222 = new _222Scramble(GlobalData.randomPosition222MinLength);
+				GlobalData.scrambler222 = new _222Scramble(
+						GlobalData.randomPosition222MinLength);
 				ScrambleForm scrambleForm = new ScrambleForm("二阶打乱",
 						GlobalData.scrambler222);
 				GlobalData.display.setCurrent(scrambleForm);
@@ -55,8 +56,8 @@ public class ConfirmForm extends Form implements CommandListener {
 				this.deleteAll();
 				this.removeCommand(okCommand);
 				this.removeCommand(cancelCommand);
-				GlobalData.scramblerPyraminx = new PyraminxScramble(
-						GlobalData.randomPositionPyraminxMinLength);
+				GlobalData.scramblerPyraminx = PyraminxScramble
+						.getInstance(GlobalData.randomPositionPyraminxMinLength);
 				ScrambleForm scrambleForm = new ScrambleForm("金字塔打乱",
 						GlobalData.scramblerPyraminx);
 				GlobalData.display.setCurrent(scrambleForm);
