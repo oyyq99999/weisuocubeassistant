@@ -32,6 +32,7 @@ public class MainMenu extends List implements CommandListener {
 		this.append("五阶", null);
 		this.append("六阶", null);
 		this.append("七阶", null);
+		this.append("八阶", null);
 		this.append("九阶", null);
 		this.append("十一阶", null);
 		this.append("SQ1", null);
@@ -135,6 +136,14 @@ public class MainMenu extends List implements CommandListener {
 				}
 				GlobalData.scrambleForm = new ScrambleForm("七阶打乱",
 						GlobalData.scrambler777);
+				GlobalData.display.setCurrent(GlobalData.scrambleForm);
+			} else if (this.getString(this.getSelectedIndex()).equals("八阶")) {
+				// 选择“八阶”时的动作
+				if (GlobalData.scrambler888 == null) {
+					GlobalData.scrambler888 = new CubeScramble(8);
+				}
+				GlobalData.scrambleForm = new ScrambleForm("八阶打乱",
+						GlobalData.scrambler888);
 				GlobalData.display.setCurrent(GlobalData.scrambleForm);
 			} else if (this.getString(this.getSelectedIndex()).equals("九阶")) {
 				// 选择“九阶”时的动作

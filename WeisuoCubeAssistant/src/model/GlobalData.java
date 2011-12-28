@@ -42,6 +42,7 @@ public class GlobalData {
 	public static CubeScramble scrambler555 = null;
 	public static CubeScramble scrambler666 = null;
 	public static CubeScramble scrambler777 = null;
+	public static CubeScramble scrambler888 = null;
 	public static CubeScramble scrambler999 = null;
 	public static CubeScramble scrambler111111 = null;
 	public static SQ1Scramble scramblerSQ1 = null;
