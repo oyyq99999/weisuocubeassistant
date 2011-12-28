@@ -29,9 +29,7 @@ public class PyraminxScramble extends Scramble {
 		if (instance == null) {
 			instance = new PyraminxScramble(length);
 		}
-		if (instance.length != length) {
-			instance.length = length;
-		}
+		instance.length = length;
 		return instance;
 	}
 

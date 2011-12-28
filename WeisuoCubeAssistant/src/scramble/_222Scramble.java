@@ -14,13 +14,21 @@ public class _222Scramble extends Scramble {
 			"R' ", "F  ", "F2 ", "F' " };
 	protected int[] sol = new int[12];
 
-	public _222Scramble(byte length) {
+	private static boolean inited = false;
+
+	private static _222Scramble instance = null;
+
+	protected _222Scramble(byte length) {
 		this.length = length;
+		init();
 	}
 
-	public static void main(String[] args) {
-		for (int i=0; i<1000; i++)
-		System.out.println((new _222Scramble((byte)0)).scramble());
+	public static _222Scramble getInstance(byte length) {
+		if (instance == null) {
+			instance = new _222Scramble(length);
+		}
+		instance.length = length;
+		return instance;
 	}
 
 	private static int getpermmv(int idx, int move) {
@@ -98,17 +106,20 @@ public class _222Scramble extends Scramble {
 		return idx;
 	}
 
-	static {
+	private static void init() {
+		if (inited) {
+			return;
+		}
 		for (int i = 0; i < 729; i++) {
 			twstprun[i] = -1;
 			for (int j = 0; j < 3; j++) {
-				twstmv[i][j] = (char)gettwstmv(i, j);
+				twstmv[i][j] = (char) gettwstmv(i, j);
 			}
 		}
 		for (int i = 0; i < 5040; i++) {
 			permprun[i] = -1;
 			for (int j = 0; j < 3; j++) {
-				permmv[i][j] = (char)getpermmv(i, j);
+				permmv[i][j] = (char) getpermmv(i, j);
 			}
 		}
 		twstprun[0] = permprun[0] = 0;
@@ -142,6 +153,7 @@ public class _222Scramble extends Scramble {
 				}
 			}
 		}
+		inited = true;
 	}
 
 	protected boolean search(int d, int q, int t, int l, int lm) {
