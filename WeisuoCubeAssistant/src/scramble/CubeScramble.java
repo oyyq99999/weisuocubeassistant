@@ -20,7 +20,7 @@ public class CubeScramble extends Scramble {
 	}
 
 	public CubeScramble() {
-		this(25, 3);
+		this(3, 25);
 	}
 
 	public String scramble() {
