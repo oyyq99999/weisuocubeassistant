@@ -24,53 +24,49 @@ public class CubeScramble extends Scramble {
 	}
 
 	public String scramble() {
-		int lastAxis = -1;
 		StringBuffer sequence = new StringBuffer();
-		int moved = 0;
 		Random rand = new Random();
-		for (int i = 0; i < length; i += moved) {
-			moved = 0;
-			int axis = rand.nextInt(3);
-			while (axis == lastAxis) {
-				axis = rand.nextInt(3);
-			}
-			int[] shiftMoved = new int[size - 1];
-			for (int j = 0; j < shiftMoved.length; j++)
-				shiftMoved[j] = 0;
+		int lastAxis = -1;
+		int[] shiftMove = new int[size - 1];
+		for (int i = 0; i < size - 1; i++)
+			shiftMove[i] = -1;
+		for (int i = 0; i < length; i++) {
+			int axis, shift, count;
 			do {
-				int shift = rand.nextInt(size - 1);
-				if (shiftMoved[shift] == 1)
-					continue;
-				int count = rand.nextInt(3);
-				sequence.append(getMoveName(size, axis, shift, count));
-				moved++;
-				shiftMoved[shift] = 1;
-			} while (rand.nextInt(2) != 0 && moved + i < length
-					&& moved < shiftMoved.length);
-			lastAxis = axis;
+				axis = rand.nextInt(3);
+				shift = rand.nextInt(size - 1);
+				count = rand.nextInt(3);
+			} while (axis == lastAxis && shiftMove[shift] != -1);
+			if (axis == lastAxis) {
+				shiftMove[shift] = count;
+			} else {
+				for (int j = 0; j < size - 1; j++) {
+					if (shiftMove[j] != -1) {
+						sequence.append(getMoveName(lastAxis, j, shiftMove[j]));
+					}
+					shiftMove[j] = -1;
+				}
+				shiftMove[shift] = count;
+				lastAxis = axis;
+			}
+		}
+		for (int i = 0; i < size - 1; i++) {
+			if (shiftMove[i] != -1) {
+				sequence.append(getMoveName(lastAxis, i, shiftMove[i]));
+			}
 		}
 		this.scrambleSequence = sequence.toString().trim();
 		return scrambleSequence;
 	}
 
-	private String getMoveName(int size, int axis, int shift, int count) {
+	private String getMoveName(int axis, int shift, int count) {
 		StringBuffer sb = new StringBuffer();
 		if (shift < size / 2) {
-			if (size > 5 && shift > 0) {
-				sb.append(shift + 1);
+			if (size > 5 && shift != size / 2 - 1) {
+				sb.append(size / 2 - shift);
 			}
-			switch (axis) {
-			case 0:
-				sb.append("R");
-				break;
-			case 1:
-				sb.append("U");
-				break;
-			case 2:
-				sb.append("F");
-				break;
-			}
-			if (size > 3 && size < 6 && shift > 0) {
+			sb.append("RUF".charAt(axis));
+			if (size < 6 && shift != size / 2 - 1) {
 				sb.append("w");
 			}
 			switch (count) {
@@ -84,22 +80,11 @@ public class CubeScramble extends Scramble {
 				break;
 			}
 		} else {
-			shift -= size / 2;
-			if (size > 5 && shift > 0) {
-				sb.append(shift + 1);
+			if (size > 5 && shift != size - 2) {
+				sb.append(size - shift - 1);
 			}
-			switch (axis) {
-			case 0:
-				sb.append("L");
-				break;
-			case 1:
-				sb.append("D");
-				break;
-			case 2:
-				sb.append("B");
-				break;
-			}
-			if (size > 3 && size < 6 && shift > 0) {
+			sb.append("LDB".charAt(axis));
+			if (size < 6 && shift != size - 2) {
 				sb.append("w");
 			}
 			switch (count) {
