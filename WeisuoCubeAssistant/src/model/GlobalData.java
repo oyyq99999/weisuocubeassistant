@@ -12,6 +12,7 @@ import scramble.OldPyraminxScramble;
 import scramble.PyraminxScramble;
 import scramble.SQ1Scramble;
 import scramble.SQ2Scramble;
+import scramble.SkewbScramble;
 import scramble._222Scramble;
 import scramble._333Scramble;
 import screens.MainMenu;
@@ -51,6 +52,7 @@ public class GlobalData {
 	public static PyraminxScramble scramblerPyraminx = null;
 	public static OldPyraminxScramble randomMoveScramblerPyraminx = null;
 	public static ClockScramble scramblerClock = null;
+	public static SkewbScramble scramblerSkewb = null;
 	public static LatchScramble scramblerLatch = null;
 	public static Display display = null;
 

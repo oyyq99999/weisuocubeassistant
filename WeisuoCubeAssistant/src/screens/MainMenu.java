@@ -15,6 +15,7 @@ import scramble.MegaminxScramble;
 import scramble.OldPyraminxScramble;
 import scramble.SQ1Scramble;
 import scramble.SQ2Scramble;
+import scramble.SkewbScramble;
 
 public class MainMenu extends List implements CommandListener {
 
@@ -40,6 +41,7 @@ public class MainMenu extends List implements CommandListener {
 		this.append("五魔", null);
 		this.append("金字塔", null);
 		this.append("魔表", null);
+		this.append("Skewb", null);
 		this.append("插销(LatchCube)", null);
 		this.append("秒表", null);
 		this.append("设置", null);
@@ -214,6 +216,15 @@ public class MainMenu extends List implements CommandListener {
 				}
 				GlobalData.scrambleForm = new ScrambleForm("魔表打乱",
 						GlobalData.scramblerClock);
+				GlobalData.display.setCurrent(GlobalData.scrambleForm);
+			} else if (this.getString(this.getSelectedIndex()).equals(
+					"Skewb")) {
+				// 选择“Skewb”时的动作
+				if (GlobalData.scramblerSkewb == null) {
+					GlobalData.scramblerSkewb = new SkewbScramble();
+				}
+				GlobalData.scrambleForm = new ScrambleForm("Skewb打乱",
+						GlobalData.scramblerSkewb);
 				GlobalData.display.setCurrent(GlobalData.scrambleForm);
 			} else if (this.getString(this.getSelectedIndex()).equals(
 					"插销(LatchCube)")) {
