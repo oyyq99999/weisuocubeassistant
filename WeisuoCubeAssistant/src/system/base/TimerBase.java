@@ -1,25 +1,64 @@
 package system.base;
 
+import system.exception.TimerStateException;
+
 /**
  * @author ouyangyunqi
- *
+ * 
  */
 public abstract class TimerBase {
 
-	public static byte TIMER_STATE_RUNNING = 0;
-	public static byte TIMER_STATE_STOPPED = 1;
-	public static byte TIMER_STATE_RESET = 2;
-	
-	protected long startTime = 0L;
-	protected long endTime = 0L;
+	public static final byte TIMER_STATE_RUNNING = 0;
+	public static final byte TIMER_STATE_STOPPED = 1;
+	public static final byte TIMER_STATE_RESET = 2;
+
+	protected long startTime = -1L;
+	protected long elapsedTime = -1L;
 	protected byte status = TimerBase.TIMER_STATE_RESET;
-	
+
 	/**
 	 * starts the timer
+	 * 
+	 * @throws TimerStateException
 	 */
-	protected abstract void start();
+	public void start() throws TimerStateException {
+		if (status == TimerBase.TIMER_STATE_RUNNING) {
+			throw new TimerStateException("Timer is already running!");
+		} else if (status == TimerBase.TIMER_STATE_STOPPED) {
+			reset();
+		}
+		startTime = System.currentTimeMillis();
+		elapsedTime = -1;
+		status = TimerBase.TIMER_STATE_RUNNING;
+	}
+
 	/**
-	 * stop the timer
+	 * @return elapsed time
+	 * @throws TimerStateException
 	 */
-	protected abstract void stop();
+	public long stop() throws TimerStateException {
+		if (status != TimerBase.TIMER_STATE_RUNNING) {
+			throw new TimerStateException("Timer is not running!");
+		}
+		elapsedTime = System.currentTimeMillis() - startTime;
+		return elapsedTime;
+	}
+
+	/**
+	 * reset the timer
+	 */
+	public void reset() {
+		startTime = -1;
+		elapsedTime = -1;
+		status = TimerBase.TIMER_STATE_RESET;
+	}
+
+	public long getElapsedTime() {
+		if (status == TimerBase.TIMER_STATE_RUNNING) {
+			elapsedTime = System.currentTimeMillis() - startTime;
+		}
+
+		return elapsedTime;
+	}
+
 }

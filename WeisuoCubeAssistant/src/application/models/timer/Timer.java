@@ -1,7 +1,10 @@
-
+/**
+ * 
+ */
 package application.models.timer;
 
 import system.base.TimerBase;
+import system.exception.TimerStateException;
 
 /**
  * @author ouyangyunqi
@@ -9,21 +12,14 @@ import system.base.TimerBase;
  */
 public class Timer extends TimerBase {
 
+	public Timer() {
+		reset();
+	}
 	
-	/* (non-Javadoc)
-	 * @see system.base.TimerBase#start()
-	 */
-	protected void start() {
-		// TODO Auto-generated method stub
-
+	public Timer(boolean startImmediately) throws TimerStateException {
+		reset();
+		if (startImmediately) {
+			start();
+		}
 	}
-
-	/* (non-Javadoc)
-	 * @see system.base.TimerBase#stop()
-	 */
-	protected void stop() {
-		// TODO Auto-generated method stub
-
-	}
-
 }
