@@ -17,9 +17,9 @@ public abstract class TimerBase {
 	protected byte status = TimerBase.TIMER_STATE_RESET;
 
 	/**
-	 * starts the timer
+	 * start the timer
 	 * 
-	 * @throws TimerStateException
+	 * @throws TimerStateException when the timer is already running
 	 */
 	public void start() throws TimerStateException {
 		if (status == TimerBase.TIMER_STATE_RUNNING) {
@@ -34,7 +34,7 @@ public abstract class TimerBase {
 
 	/**
 	 * @return elapsed time
-	 * @throws TimerStateException
+	 * @throws TimerStateException when the time is not running
 	 */
 	public long stop() throws TimerStateException {
 		if (status != TimerBase.TIMER_STATE_RUNNING) {
@@ -53,6 +53,9 @@ public abstract class TimerBase {
 		status = TimerBase.TIMER_STATE_RESET;
 	}
 
+	/**
+	 * @return elapsed time at the moment
+	 */
 	public long getElapsedTime() {
 		if (status == TimerBase.TIMER_STATE_RUNNING) {
 			elapsedTime = System.currentTimeMillis() - startTime;

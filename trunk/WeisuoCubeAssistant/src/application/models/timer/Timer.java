@@ -16,6 +16,10 @@ public class Timer extends TimerBase {
 		reset();
 	}
 	
+	/**
+	 * @param startImmediately
+	 * @throws TimerStateException
+	 */
 	public Timer(boolean startImmediately) throws TimerStateException {
 		reset();
 		if (startImmediately) {
