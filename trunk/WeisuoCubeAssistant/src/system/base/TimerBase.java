@@ -41,6 +41,7 @@ public abstract class TimerBase {
 			throw new TimerStateException("Timer is not running!");
 		}
 		elapsedTime = System.currentTimeMillis() - startTime;
+		status = TimerBase.TIMER_STATE_STOPPED;
 		return elapsedTime;
 	}
 
@@ -62,6 +63,10 @@ public abstract class TimerBase {
 		}
 
 		return elapsedTime;
+	}
+
+	public byte getStatus() {
+		return status;
 	}
 
 }
