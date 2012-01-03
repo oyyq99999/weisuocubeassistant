@@ -207,14 +207,14 @@ final class Util {
 		return (byte) (i & 1);
 	}
 	
-	static int numberOfTrailingZeros(char i) {
+    static int numberOfTrailingZeros(char i) {
 		char y;
 		int n = 15;
 		y = (char)(i << 8); if (y != 0) { n -= 8; i = y; }
 		y = (char)(i << 4); if (y != 0) { n -= 4; i = y; }
 		y = (char)(i << 2); if (y != 0) { n -= 2; i = y; }
 		return n - ((i>>>14)&1);
-	}
+    }
 	
 	final static char binarySearch(char[] arr, char key) {
 		int length = arr.length;

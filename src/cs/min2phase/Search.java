@@ -42,16 +42,16 @@ final public class Search {
 	 * Computes the solver string for a given cube.
 	 *
 	 * @param facelets
-	 *		  is the cube definition string format.
+	 *          is the cube definition string format.
 	 * <pre>
 	 * The names of the facelet positions of the cube
-	 *			 |************|
-	 *			 |*U1**U2**U3*|
-	 *			 |************|
-	 *			 |*U4**U5**U6*|
-	 *			 |************|
-	 *			 |*U7**U8**U9*|
-	 *			 |************|
+	 *             |************|
+	 *             |*U1**U2**U3*|
+	 *             |************|
+	 *             |*U4**U5**U6*|
+	 *             |************|
+	 *             |*U7**U8**U9*|
+	 *             |************|
 	 * ************|************|************|************|
 	 * *L1**L2**L3*|*F1**F2**F3*|*R1**R2**F3*|*B1**B2**B3*|
 	 * ************|************|************|************|
@@ -59,39 +59,39 @@ final public class Search {
 	 * ************|************|************|************|
 	 * *L7**L8**L9*|*F7**F8**F9*|*R7**R8**R9*|*B7**B8**B9*|
 	 * ************|************|************|************|
-	 *			 |************|
-	 *			 |*D1**D2**D3*|
-	 *			 |************|
-	 *			 |*D4**D5**D6*|
-	 *			 |************|
-	 *			 |*D7**D8**D9*|
-	 *			 |************|
+	 *             |************|
+	 *             |*D1**D2**D3*|
+	 *             |************|
+	 *             |*D4**D5**D6*|
+	 *             |************|
+	 *             |*D7**D8**D9*|
+	 *             |************|
 	 * </pre>
 	 * A cube definition string "UBL..." means for example: In position U1 we have the U-color, in position U2 we have the
 	 * B-color, in position U3 we have the L color etc. according to the order U1, U2, U3, U4, U5, U6, U7, U8, U9, R1, R2,
 	 * R3, R4, R5, R6, R7, R8, R9, F1, F2, F3, F4, F5, F6, F7, F8, F9, D1, D2, D3, D4, D5, D6, D7, D8, D9, L1, L2, L3, L4,
 	 * L5, L6, L7, L8, L9, B1, B2, B3, B4, B5, B6, B7, B8, B9 of the enum constants.
 	 * @param maxDepth
-	 *		  defines the maximal allowed maneuver length. For random cubes, a maxDepth of 21 usually will return a
-	 *		  solution in less than 0.5 seconds. With a maxDepth of 20 it takes a few seconds on average to find a
-	 *		  solution, but it may take much longer for specific cubes.
+	 *          defines the maximal allowed maneuver length. For random cubes, a maxDepth of 21 usually will return a
+	 *          solution in less than 0.5 seconds. With a maxDepth of 20 it takes a few seconds on average to find a
+	 *          solution, but it may take much longer for specific cubes.
 	 *
 	 * @param timeOut
-	 *		  defines the maximum computing time of the method in seconds. If it does not return with a solution, it returns with
-	 *		  an error code.
+	 *          defines the maximum computing time of the method in seconds. If it does not return with a solution, it returns with
+	 *          an error code.
 	 *
 	 * @param useSeparator
-	 *		  determines if a " . " separates the phase1 and phase2 parts of the solver string like in F' R B R L2 F .
-	 *		  U2 U D for example.<br>
+	 *          determines if a " . " separates the phase1 and phase2 parts of the solver string like in F' R B R L2 F .
+	 *          U2 U D for example.<br>
 	 * @return The solution string or an error code:<br>
-	 *		 Error 1: There is not exactly one facelet of each colour<br>
-	 *		 Error 2: Not all 12 edges exist exactly once<br>
-	 *		 Error 3: Flip error: One edge has to be flipped<br>
-	 *		 Error 4: Not all corners exist exactly once<br>
-	 *		 Error 5: Twist error: One corner has to be twisted<br>
-	 *		 Error 6: Parity error: Two corners or two edges have to be exchanged<br>
-	 *		 Error 7: No solution exists for the given maxDepth<br>
-	 *		 Error 8: Timeout, no solution within given time
+	 *         Error 1: There is not exactly one facelet of each colour<br>
+	 *         Error 2: Not all 12 edges exist exactly once<br>
+	 *         Error 3: Flip error: One edge has to be flipped<br>
+	 *         Error 4: Not all corners exist exactly once<br>
+	 *         Error 5: Twist error: One corner has to be twisted<br>
+	 *         Error 6: Parity error: Two corners or two edges have to be exchanged<br>
+	 *         Error 7: No solution exists for the given maxDepth<br>
+	 *         Error 8: Timeout, no solution within given time
 	 */
 	public synchronized String solution(String facelets, int maxDepth, long timeOut, boolean useSeparator, boolean inverse) {
 		int s;
@@ -145,9 +145,8 @@ final public class Search {
 			mid30[i] = c.getMid3();
 			e10[i] = c.getURtoUL();
 			e20[i] = c.getDRtoDL();
-			prun[i] = Math.max(Math.max(CoordCube.UDSliceTwistPrun[twist[i] * 495 + CoordCube.UDSliceConj[slice[i]][tsym[i]]],
-							CoordCube.UDSliceFlipPrun[flip[i] * 495 + CoordCube.UDSliceConj[slice[i]][fsym[i]]]),
-							CoordCube.TwistFlipPrun[twist[i] * 2688 + (flip[i] << 3 | CubieCube.Sym8MultInv[fsym[i]][tsym[i]])]);
+			prun[i] = Math.max(CoordCube.UDSliceTwistPrun[twist[i] * 495 + CoordCube.UDSliceConj[slice[i]][tsym[i]]],
+							CoordCube.UDSliceFlipPrun[flip[i] * 495 + CoordCube.UDSliceConj[slice[i]][fsym[i]]]);
 			c.URFConjugate();
 			if (i==2) {
 				c.invCubieCube();
@@ -195,8 +194,7 @@ final public class Search {
 			int flipx = CoordCube.FlipMove[flip][CubieCube.Sym8Move[fsym][m]];
 			int fsymx = CubieCube.Sym8Mult[flipx & 7][fsym];
 			flipx >>>= 3;
-			if (CoordCube.TwistFlipPrun[twistx * 2688 + (flipx << 3 | CubieCube.Sym8MultInv[fsymx][tsymx])] >= maxl
-					||CoordCube.UDSliceFlipPrun[flipx * 495 + CoordCube.UDSliceConj[slicex][fsymx]] >= maxl) {
+			if (CoordCube.UDSliceFlipPrun[flipx * 495 + CoordCube.UDSliceConj[slicex][fsymx]] >= maxl) {
 				continue;
 			}
 
