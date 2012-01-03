@@ -14,6 +14,8 @@ public class PyraminxScramble extends Scramble {
 
 	protected static String[] move2str = { "U  ", "U' ", "L  ", "L' ", "R  ",
 			"R' ", "B  ", "B' " };
+	protected static String[] invmove2str = { "U' ", "U  ", "L' ", "L  ",
+			"R' ", "R  ", "B' ", "B  " };
 	protected int[] sol = new int[12];
 
 	private static boolean inited = false;
@@ -214,8 +216,8 @@ public class PyraminxScramble extends Scramble {
 			}
 		}
 		StringBuffer sb = new StringBuffer();
-		for (int i = 0; i < depth; i++) {
-			sb.append(move2str[sol[i]]);
+		for (int i = depth - 1; i >= 0; i++) {
+			sb.append(invmove2str[sol[i]]);
 		}
 		for (int i = 0; i < 4; i++) {
 			int t = gen.nextInt(3);

@@ -12,6 +12,8 @@ public class _222Scramble extends Scramble {
 
 	protected static String[] move2str = { "U  ", "U2 ", "U' ", "R  ", "R2 ",
 			"R' ", "F  ", "F2 ", "F' " };
+	protected static String[] invmove2str = { "U' ", "U2 ", "U  ", "R' ",
+			"R2 ", "R  ", "F' ", "F2 ", "F  " };
 	protected int[] sol = new int[12];
 
 	private static boolean inited = false;
@@ -191,8 +193,8 @@ public class _222Scramble extends Scramble {
 			}
 		}
 		StringBuffer sb = new StringBuffer();
-		for (int i = 0; i < depth; i++) {
-			sb.append(move2str[sol[i]]);
+		for (int i = depth - 1; i >= 0; i--) {
+			sb.append(invmove2str[sol[i]]);
 		}
 		return sb.toString();
 	}
