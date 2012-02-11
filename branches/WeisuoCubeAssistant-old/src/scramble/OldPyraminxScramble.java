@@ -13,59 +13,41 @@ public class OldPyraminxScramble extends Scramble {
 	}
 
 	public String scramble() {
-		StringBuffer sequence = new StringBuffer();
-		int lastAxis = -1;
+		sequence = new byte[length];
+		StringBuffer sb = new StringBuffer();
 		Random rand = new Random();
 		int tipCount = 0;
 		for (int i = 0; i < 4; i++) {
 			int count = rand.nextInt(3);
 			if (count != 0) {
-				switch (i) {
-				case 0:
-					sequence.append("u");
-					break;
-				case 1:
-					sequence.append("r");
-					break;
-				case 2:
-					sequence.append("l");
-					break;
-				case 3:
-					sequence.append("b");
-					break;
+				sb.append("ulrb".charAt(i));
+				sequence[tipCount] = (byte) (2 * count);
+				if (count == 2) {
+					sb.append("'");
+					sequence[tipCount] = (byte) (2 * count + 1);
 				}
-				if (count == 2)
-					sequence.append("'");
-				sequence.append(" ");
+				sb.append(' ');
 				tipCount++;
 			}
 		}
-		for (int i = 0; i < length - tipCount; i++) {
-			int axis;
-			do {
-				axis = rand.nextInt(4);
-			} while (axis == lastAxis);
-			switch (axis) {
-			case 0:
-				sequence.append("U");
-				break;
-			case 1:
-				sequence.append("R");
-				break;
-			case 2:
-				sequence.append("L");
-				break;
-			case 3:
-				sequence.append("B");
-				break;
-			}
-			int count = rand.nextInt(2);
-			if (count == 1)
-				sequence.append("'");
-			sequence.append(" ");
-			lastAxis = axis;
-		}
-		scrambleSequence = sequence.toString().trim();
+		length -= tipCount;
+		String[][][] generator = new String[][][] { { { "U" }, { "", "'" } },
+				{ { "L" }, { "", "'" } }, { { "R" }, { "", "'" } },
+				{ { "B" }, { "", "'" } } };
+		byte[][][] seq = new byte[][][] { { { 8 }, { 0, 1 } },
+				{ { 10 }, { 0, 1 } }, { { 12 }, { 0, 1 } },
+				{ { 14 }, { 0, 1 } } };
+		sb.append(generatorScramble(generator, seq, tipCount));
+		length += tipCount;
+		scrambleSequence = sb.toString().trim();
 		return scrambleSequence;
+	}
+
+	public byte[] getSequence() {
+		return sequence;
+	}
+
+	public String getName() {
+		return "Pyraminx";
 	}
 }

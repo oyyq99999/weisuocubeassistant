@@ -6,10 +6,17 @@ public abstract class Scramble {
 
 	protected int length = 0;
 	protected String scrambleSequence = null;
+	protected byte[] sequence;
 
 	public abstract String scramble();
 
-	protected String generatorScramble(String[][][] generator) {
+	public abstract byte[] getSequence();
+
+	public abstract String getName();
+
+	protected String generatorScramble(String[][][] generator, byte[][][] seq,
+			int startMove) {
+		int move = startMove;
 		int[][] index = new int[100][3];
 		int totalMoves = 0;
 		for (int i = 0; i < generator.length; i++) {
@@ -24,7 +31,7 @@ public abstract class Scramble {
 			totalMoves += generator[i][0].length * generator[i][1].length;
 		}
 
-		StringBuffer sequence = new StringBuffer();
+		StringBuffer sb = new StringBuffer();
 		Random rand = new Random();
 		int lastAxis = -1;
 		boolean[] shiftMoved = null;
@@ -36,9 +43,10 @@ public abstract class Scramble {
 				shift = index[code][1];
 				count = index[code][2];
 			} while (axis == lastAxis && shiftMoved[shift]);
-			sequence.append(generator[axis][0][shift]);
-			sequence.append(generator[axis][1][count]);
-			sequence.append(' ');
+			sb.append(generator[axis][0][shift]);
+			sb.append(generator[axis][1][count]);
+			sb.append(' ');
+			sequence[move++] = (byte) (seq[axis][0][shift] + seq[axis][1][count]);
 			if (axis == lastAxis) {
 				shiftMoved[shift] = true;
 			} else {
@@ -49,6 +57,6 @@ public abstract class Scramble {
 				lastAxis = axis;
 			}
 		}
-		return sequence.toString().trim();
+		return sb.toString().trim();
 	}
 }

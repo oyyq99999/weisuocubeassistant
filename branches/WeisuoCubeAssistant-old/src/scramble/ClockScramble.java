@@ -5,10 +5,7 @@ import java.util.Random;
 public class ClockScramble extends Scramble {
 
 	private boolean verbose;
-	private String ul = "U";
-	private String ur = "U";
-	private String dl = "d";
-	private String dr = "d";
+	private String button;
 
 	public ClockScramble() {
 		this.length = 14;
@@ -21,108 +18,109 @@ public class ClockScramble extends Scramble {
 	}
 
 	public String scramble() {
-		StringBuffer sequence = new StringBuffer();
+		sequence = new byte[14];
+		StringBuffer sb = new StringBuffer();
 		Random rand = new Random();
-		ul = "U";
-		ur = "U";
-		dl = "d";
-		dr = "d";
+		button = "UUdd";
 		int u = rand.nextInt(12) - 5;
 		int d = rand.nextInt(12) - 5;
-		addMove(sequence, u, d);
-		ul = "d";
-		ur = "U";
-		dl = "d";
-		dr = "U";
+		addMove(sb, u, d);
+		sequence[0] = (byte) u;
+		sequence[1] = (byte) d;
+		button = "dUdU";
 		u = rand.nextInt(12) - 5;
 		d = rand.nextInt(12) - 5;
-		addMove(sequence, u, d);
-		ul = "d";
-		ur = "d";
-		dl = "U";
-		dr = "U";
+		addMove(sb, u, d);
+		sequence[2] = (byte) u;
+		sequence[3] = (byte) d;
+		sb.append("\n");
+		button = "ddUU";
 		u = rand.nextInt(12) - 5;
 		d = rand.nextInt(12) - 5;
-		addMove(sequence, u, d);
-		ul = "U";
-		ur = "d";
-		dl = "U";
-		dr = "d";
+		addMove(sb, u, d);
+		sequence[4] = (byte) u;
+		sequence[5] = (byte) d;
+		button = "UdUd";
 		u = rand.nextInt(12) - 5;
 		d = rand.nextInt(12) - 5;
-		addMove(sequence, u, d);
-		ul = "d";
-		ur = "U";
-		dl = "U";
-		dr = "U";
+		addMove(sb, u, d);
+		sequence[6] = (byte) u;
+		sequence[7] = (byte) d;
+		sb.append("\n");
+		button = "dUUU";
 		u = rand.nextInt(12) - 5;
-		addMoveU(sequence, u);
-		ul = "U";
-		ur = "d";
-		dl = "U";
-		dr = "U";
+		addMoveU(sb, u);
+		sequence[8] = (byte) u;
+		button = "UdUU";
 		u = rand.nextInt(12) - 5;
-		addMoveU(sequence, u);
-		ul = "U";
-		ur = "U";
-		dl = "U";
-		dr = "d";
+		addMoveU(sb, u);
+		sequence[9] = (byte) u;
+		sb.append("\n");
+		button = "UUUd";
 		u = rand.nextInt(12) - 5;
-		addMoveU(sequence, u);
-		ul = "U";
-		ur = "U";
-		dl = "d";
-		dr = "U";
+		sequence[10] = (byte) u;
+		addMoveU(sb, u);
+		button = "UUdU";
 		u = rand.nextInt(12) - 5;
-		addMoveU(sequence, u);
-		ul = "U";
-		ur = "U";
-		dl = "U";
-		dr = "U";
+		addMoveU(sb, u);
+		sequence[11] = (byte) u;
+		sb.append("\n");
+		button = "UUUU";
 		u = rand.nextInt(12) - 5;
-		addMoveU(sequence, u);
-		ul = "d";
-		ur = "d";
-		dl = "d";
-		dr = "d";
+		addMoveU(sb, u);
+		sequence[12] = (byte) u;
+		button = "dddd";
 		d = rand.nextInt(12) - 5;
-		addMoveD(sequence, d);
-		ul = rand.nextInt(2) == 0 ? "U" : "d";
-		ur = rand.nextInt(2) == 0 ? "U" : "d";
-		dl = rand.nextInt(2) == 0 ? "U" : "d";
-		dr = rand.nextInt(2) == 0 ? "U" : "d";
-		addMovePins(sequence);
-		scrambleSequence = sequence.toString().trim();
+		addMoveD(sb, d);
+		sequence[13] = (byte) d;
+		sb.append("\n");
+		String[] randomButton = new String[] { "UUUU", "UUUd", "UUdU", "UUdd",
+				"UdUU", "UdUd", "UddU", "Uddd", "dUUU", "dUUd", "dUdU", "dUdd",
+				"ddUU", "ddUd", "dddU", "dddd" };
+		button = randomButton[rand.nextInt(16)];
+		addMovePins(sb);
+		scrambleSequence = sb.toString().trim();
 		return scrambleSequence;
 	}
 
 	private void addMovePins(StringBuffer sequence) {
-		sequence.append(ul + ur + dl + dr);
+		sequence.append(button);
 	}
 
 	private void addMoveD(StringBuffer sequence, int d) {
 		if (verbose) {
-			sequence.append(ul + ur + dl + dr + " ");
+			sequence.append(button + " ");
 		}
-		sequence.append("d=" + d + " / ");
+		sequence.append("d="
+				+ (d >= 0 ? (" " + Integer.toString(d)) : Integer.toString(d))
+				+ " / ");
 	}
 
 	private void addMoveU(StringBuffer sequence, int u) {
 		if (verbose) {
-			sequence.append(ul + ur + dl + dr + " ");
+			sequence.append(button + " ");
 		}
-		sequence.append("U=" + u + " / ");
+		sequence.append("U="
+				+ (u >= 0 ? (" " + Integer.toString(u)) : Integer.toString(u))
+				+ " / ");
 	}
 
 	private void addMove(StringBuffer sequence, int u, int d) {
 		if (verbose) {
-			sequence.append(ul + ur + dl + dr + " ");
+			sequence.append(button + " ");
 		}
-		sequence.append("U=" + u + ", d=" + d + " / ");
+		sequence.append("U="
+				+ (u >= 0 ? (" " + Integer.toString(u)) : Integer.toString(u))
+				+ ", d="
+				+ (d >= 0 ? (" " + Integer.toString(d)) : Integer.toString(d))
+				+ " / ");
 	}
 
-	public static void main(String[] args) {
-		System.out.println(new ClockScramble(false).scramble());
+	public byte[] getSequence() {
+		return sequence;
 	}
 
+	public String getName() {
+		return "Clock";
+	}
 }

@@ -29,24 +29,24 @@ public class SettingForm extends Form implements CommandListener,
 			ChoiceGroup.EXCLUSIVE, scramblersFor333, null);
 	private ChoiceGroup scramblerChoiceForPyraminx = new ChoiceGroup("金字塔打乱方式",
 			ChoiceGroup.EXCLUSIVE, scramblersForPyraminx, null);
+	private ChoiceGroup scramblerChoiceForSkewb = new ChoiceGroup("Skewb打乱方式",
+			ChoiceGroup.EXCLUSIVE, scramblersForPyraminx, null);
 	private TextField randomPosition222MinLength = new TextField("最短打乱步骤", "0",
 			1, TextField.NUMERIC);
 	private TextField randomPosition333MaxLength = new TextField("最长打乱步骤",
 			"21", 2, TextField.NUMERIC);
 	private TextField randomPositionPyraminxMinLength = new TextField("最短打乱步骤",
 			"0", 1, TextField.NUMERIC);
+	private TextField randomPositionSkewbMinLength = new TextField("最短打乱步骤",
+			"0", 1, TextField.NUMERIC);
 
 	public SettingForm(Displayable former) {
 		super("设置");
 		this.addCommand(okCommand);
 		this.addCommand(cancelCommand);
-		// scramblerChoiceFor222.addCommand(chooseCommand);
-		// scramblerChoiceFor333.addCommand(chooseCommand);
-		// scramblerChoiceForPyraminx.addCommand(chooseCommand);
 		this.setCommandListener(this);
 		this.setItemStateListener(this);
 		this.former = former;
-		// TODO Auto-generated constructor stub
 	}
 
 	public void refresh() {
@@ -83,10 +83,20 @@ public class SettingForm extends Form implements CommandListener,
 					.toString(GlobalData.randomPositionPyraminxMinLength));
 			this.append(randomPositionPyraminxMinLength);
 		}
+
+		if (GlobalData.randomPositionSkewb) {
+			scramblerChoiceForSkewb.setSelectedIndex(0, true);
+		} else
+			scramblerChoiceForSkewb.setSelectedIndex(1, true);
+		this.append(scramblerChoiceForSkewb);
+		if (GlobalData.randomPositionSkewb) {
+			randomPositionSkewbMinLength.setString(Integer
+					.toString(GlobalData.randomPositionSkewbMinLength));
+			this.append(randomPositionSkewbMinLength);
+		}
 	}
 
 	public void commandAction(Command c, Displayable d) {
-		// TODO Auto-generated method stub
 		if (c == okCommand) {
 			if (scramblerChoiceFor333.isSelected(0)) {
 				if (Integer.parseInt(randomPosition333MaxLength.getString()) < 20) {
@@ -102,6 +112,8 @@ public class SettingForm extends Form implements CommandListener,
 			GlobalData.randomPosition333 = scramblerChoiceFor333.isSelected(0);
 			GlobalData.randomPositionPyraminx = scramblerChoiceForPyraminx
 					.isSelected(0);
+			GlobalData.randomPositionSkewb = scramblerChoiceForSkewb
+					.isSelected(0);
 			if (GlobalData.randomPosition222MinLength != (byte) (Integer
 					.parseInt(randomPosition222MinLength.getString()))) {
 				GlobalData.randomPosition222MinLength = (byte) (Integer
@@ -112,13 +124,19 @@ public class SettingForm extends Form implements CommandListener,
 					.parseInt(randomPosition333MaxLength.getString()))) {
 				GlobalData.randomPosition333MaxLength = (byte) (Integer
 						.parseInt(randomPosition333MaxLength.getString()));
-				GlobalData.randomStateScrambler333 = null;
+				GlobalData.scrambler333 = null;
 			}
 			if (GlobalData.randomPositionPyraminxMinLength != (byte) (Integer
 					.parseInt(randomPositionPyraminxMinLength.getString()))) {
 				GlobalData.randomPositionPyraminxMinLength = (byte) (Integer
 						.parseInt(randomPositionPyraminxMinLength.getString()));
 				GlobalData.scramblerPyraminx = null;
+			}
+			if (GlobalData.randomPositionSkewbMinLength != (byte) (Integer
+					.parseInt(randomPositionSkewbMinLength.getString()))) {
+				GlobalData.randomPositionSkewbMinLength = (byte) (Integer
+						.parseInt(randomPositionSkewbMinLength.getString()));
+				GlobalData.scramblerSkewb = null;
 			}
 		}
 		if (c == cancelCommand) {
@@ -131,7 +149,6 @@ public class SettingForm extends Form implements CommandListener,
 	}
 
 	public void itemStateChanged(Item item) {
-		// TODO Auto-generated method stub
 		if (item instanceof ChoiceGroup) {
 			this.deleteAll();
 			this.append(scramblerChoiceFor222);
@@ -145,6 +162,10 @@ public class SettingForm extends Form implements CommandListener,
 			this.append(scramblerChoiceForPyraminx);
 			if (scramblerChoiceForPyraminx.getSelectedIndex() == 0)
 				this.append(randomPositionPyraminxMinLength);
+
+			this.append(scramblerChoiceForSkewb);
+			if (scramblerChoiceForSkewb.getSelectedIndex() == 0)
+				this.append(randomPositionSkewbMinLength);
 		}
 	}
 

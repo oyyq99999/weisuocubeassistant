@@ -23,7 +23,7 @@ public class LatchScramble extends Scramble {
 	private int[] movableFaces = { 0, 1, 2, 3, 4, 5 };
 	private int movableFaceCount = 0;
 	private boolean bothDirections = false;
-	private StringBuffer sequence = new StringBuffer();
+	private StringBuffer sb = new StringBuffer();
 
 	private int[][] label = { { 0, -1, -1, 0 }, { 0, 1, 1, 0 },
 			{ 0, -1, -1, 0 }, { 0, 1, 1, 0 }, { -1, 0, 0, -1 }, { 1, 0, 0, 1 }, };
@@ -232,7 +232,7 @@ public class LatchScramble extends Scramble {
 			movableFaces[i] = i;
 		}
 		moveCount = 0;
-		sequence.delete(0, sequence.length());
+		sb.delete(0, sb.length());
 	}
 
 	private void undoLastMove() {
@@ -263,8 +263,9 @@ public class LatchScramble extends Scramble {
 	}
 
 	public String scramble() {
+		sequence = new byte[25];
 		reset();
-		Random rand = new Random(System.currentTimeMillis());
+		Random rand = new Random();
 		for (int i = 0; i < this.length; i++, moveCount++) {
 			determineMovableFaces();
 			currentMove = rand.nextInt(18);
@@ -307,9 +308,38 @@ public class LatchScramble extends Scramble {
 			addMove(currentFace, currentTime);
 		}
 		for (int i = 0; i < 25; i++) {
-			sequence.append(moveNames[i]);
+			sb.append(moveNames[i]);
+			sb.append(' ');
+			switch (moveNames[i].charAt(0)) {
+			case 'U':
+				sequence[i] = 0;
+				break;
+			case 'R':
+				sequence[i] = 3;
+				break;
+			case 'F':
+				sequence[i] = 6;
+				break;
+			case 'D':
+				sequence[i] = 9;
+				break;
+			case 'L':
+				sequence[i] = 12;
+				break;
+			case 'B':
+				sequence[i] = 15;
+				break;
+			}
+			if (moveNames[i].length() >= 2) {
+				if (moveNames[i].charAt(1) == '2') {
+					sequence[i]++;
+				} else if (moveNames[i].length() == 2) {
+					sequence[i] += 2;
+				}
+			}
+			System.out.println((int) sequence[i]);
 		}
-		this.scrambleSequence = sequence.toString().trim();
+		scrambleSequence = sb.toString().trim();
 		return scrambleSequence;
 	}
 
@@ -346,27 +376,35 @@ public class LatchScramble extends Scramble {
 		moveTimes[moveCount] = time;
 		switch (time) {
 		case -3:
-			moveNames[moveCount] = moveNames[moveCount] + "3' ";
+			moveNames[moveCount] += "3'";
 			break;
 		case -2:
-			moveNames[moveCount] = moveNames[moveCount] + "2' ";
+			moveNames[moveCount] += "2'";
 			break;
 		case -1:
-			moveNames[moveCount] = moveNames[moveCount] + "' ";
+			moveNames[moveCount] += "'";
 			break;
 		case 1:
-			moveNames[moveCount] = moveNames[moveCount] + " ";
 			break;
 		case 2:
-			moveNames[moveCount] = moveNames[moveCount] + "2 ";
+			moveNames[moveCount] += "2";
 			break;
 		case 3:
 			if (bothDirections) {
-				moveNames[moveCount] = moveNames[moveCount] + "' ";
+				moveNames[moveCount] += "'";
 			} else {
-				moveNames[moveCount] = moveNames[moveCount] + "3 ";
+				moveNames[moveCount] += "3";
 			}
 			break;
 		}
 	}
+
+	public byte[] getSequence() {
+		return sequence;
+	}
+
+	public String getName() {
+		return "Cube3";
+	}
+
 }

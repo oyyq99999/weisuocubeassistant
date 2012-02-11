@@ -12,26 +12,24 @@ public class PyraminxScramble extends Scramble {
 	private static byte[] permprun = new byte[360];
 	private static byte[] twstprun = new byte[2592];
 
-	protected static String[] move2str = { "U  ", "U' ", "L  ", "L' ", "R  ",
-			"R' ", "B  ", "B' " };
-	protected static String[] invmove2str = { "U' ", "U  ", "L' ", "L  ",
-			"R' ", "R  ", "B' ", "B  " };
+	protected static String[] move2str = { "U ", "U' ", "L ", "L' ", "R ",
+			"R' ", "B ", "B' " };
 	protected int[] sol = new int[12];
 
 	private static boolean inited = false;
 
 	private static PyraminxScramble instance = null;
 
-	protected PyraminxScramble(byte length) {
-		this.length = length;
+	protected PyraminxScramble(byte minLength) {
+		this.length = minLength;
 		init();
 	}
 
-	public static PyraminxScramble getInstance(byte length) {
+	public static PyraminxScramble getInstance(byte minLength) {
 		if (instance == null) {
-			instance = new PyraminxScramble(length);
+			instance = new PyraminxScramble(minLength);
 		}
-		instance.length = length;
+		instance.length = minLength;
 		return instance;
 	}
 
@@ -146,7 +144,7 @@ public class PyraminxScramble extends Scramble {
 				twstmv[i][j] = (char) gettwstmv(i, j);
 			}
 		}
-		twstprun[0] = permprun[0] = 0;
+		permprun[0] = 0;
 		for (int l = 0; l < 5; l++) {
 			for (int p = 0; p < 360; p++) {
 				if (permprun[p] == l) {
@@ -206,6 +204,7 @@ public class PyraminxScramble extends Scramble {
 	}
 
 	public String scramble() {
+		byte[] seq = new byte[15];
 		Random gen = new Random();
 		int perm = gen.nextInt(360);
 		int twst = gen.nextInt(2592);
@@ -216,17 +215,37 @@ public class PyraminxScramble extends Scramble {
 			}
 		}
 		StringBuffer sb = new StringBuffer();
-		for (int i = depth - 1; i >= 0; i++) {
-			sb.append(invmove2str[sol[i]]);
+		for (int i = 0; i < depth; i++) {
+			sb.append(move2str[sol[i]]);
+			seq[i] = (byte) (sol[i] + 8);
 		}
+		int move = depth;
 		for (int i = 0; i < 4; i++) {
 			int t = gen.nextInt(3);
 			if (t != 0) {
 				sb.append("lrbu".charAt(i));
-				sb.append(" '".charAt(t - 1));
+				seq[move] = (byte) (i == 3 ? 0 : (i + 1 << 1));
+				if (t == 2) {
+					sb.append("'");
+					seq[move]++;
+				}
+				move++;
 				sb.append(' ');
 			}
 		}
-		return sb.toString();
+		sequence = new byte[move];
+		for (int i = 0; i < move; i++) {
+			sequence[i] = seq[i];
+		}
+		scrambleSequence = sb.toString().trim();
+		return scrambleSequence;
+	}
+
+	public byte[] getSequence() {
+		return sequence;
+	}
+
+	public String getName() {
+		return "Pyraminx";
 	}
 }

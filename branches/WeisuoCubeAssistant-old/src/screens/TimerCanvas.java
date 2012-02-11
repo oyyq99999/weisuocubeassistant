@@ -19,9 +19,9 @@ public class TimerCanvas extends GameCanvas implements CommandListener {
 	private int bgColorPressed = 0xffff0000;
 	private int bgColorOK = 0xff00ff00;
 	private int fontColor = 0xff000000;
-	private String time = "0.00";
+	private String time = "0.000";
 	private Command backCommand = new Command("返回", Command.BACK, 1);
-	private Command continueCommmand = new Command("继续", Command.OK, 1);
+	private Command continueCommand = new Command("继续", Command.OK, 1);
 	private TimingThread timingThread = null;
 	private PrepareThread prepareThread = null;
 	private CustomFont timeFont = null;
@@ -29,18 +29,16 @@ public class TimerCanvas extends GameCanvas implements CommandListener {
 	protected TimerCanvas(boolean suppressKeyEvents, Displayable backTo) {
 		super(suppressKeyEvents);
 		this.backTo = backTo;
-		this.setTitle("秒表");
+		this.setTitle("计时器");
 		this.addCommand(backCommand);
 		if (!backTo.getClass().equals(GlobalData.mainMenu.getClass())) {
-			this.addCommand(continueCommmand);
+			this.addCommand(continueCommand);
 		}
 		this.setCommandListener(this);
 		timeFont = new CustomFont("/digiface.png");
-		// TODO Auto-generated constructor stub
 	}
 
 	protected void keyPressed(int keyCode) {
-		// TODO Auto-generated method stub
 		super.keyPressed(keyCode);
 		if (state == 0) {
 			setState(1);
@@ -57,7 +55,6 @@ public class TimerCanvas extends GameCanvas implements CommandListener {
 	}
 
 	protected void keyReleased(int keyCode) {
-		// TODO Auto-generated method stub
 		long startTime = System.currentTimeMillis();
 		super.keyReleased(keyCode);
 		if (prepareThread != null) {
@@ -77,7 +74,6 @@ public class TimerCanvas extends GameCanvas implements CommandListener {
 	}
 
 	protected void pointerPressed(int x, int y) {
-		// TODO Auto-generated method stub
 		super.pointerPressed(x, y);
 		if (state == 0) {
 			setState(1);
@@ -94,7 +90,6 @@ public class TimerCanvas extends GameCanvas implements CommandListener {
 	}
 
 	protected void pointerReleased(int x, int y) {
-		// TODO Auto-generated method stub
 		long startTime = System.currentTimeMillis();
 		super.pointerReleased(x, y);
 		if (prepareThread != null) {
@@ -114,7 +109,6 @@ public class TimerCanvas extends GameCanvas implements CommandListener {
 	}
 
 	public void paint(Graphics g) {
-		// TODO Auto-generated method stub
 		super.paint(g);
 		switch (state) {
 		case 0:
@@ -125,9 +119,18 @@ public class TimerCanvas extends GameCanvas implements CommandListener {
 			break;
 		case 2:
 			g.setColor(bgColorOK);
-			if (time.substring(time.indexOf(".") + 1, time.indexOf(".") + 2)
-					.equals("0")) {
-				GlobalData.display.flashBacklight(1);
+			if (time.equals("0.00")) {
+				break;
+			}
+			int index;
+			int ch;
+			if ((index = time.indexOf(".")) >= 0) {
+				if ((time.charAt(index - 1) == '0' || time.charAt(index - 1) == '5')) {
+					GlobalData.display.flashBacklight(0);
+				}
+			} else if ((ch = time.charAt(time.length() - 1)) == '0'
+					|| ch == '5') {
+				GlobalData.display.flashBacklight(0);
 			}
 			break;
 		}
@@ -149,13 +152,12 @@ public class TimerCanvas extends GameCanvas implements CommandListener {
 	}
 
 	public void commandAction(Command c, Displayable d) {
-		// TODO Auto-generated method stub
 		if (c == backCommand) {
 			resetTimer();
 			setState(0);
 			GlobalData.display.setCurrent(GlobalData.mainMenu);
 		}
-		if (c == continueCommmand) {
+		if (c == continueCommand) {
 			resetTimer();
 			setState(0);
 			GlobalData.display.setCurrent(backTo);
