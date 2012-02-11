@@ -24,7 +24,9 @@ public class CubeScramble extends Scramble {
 	}
 
 	public String scramble() {
-		StringBuffer sequence = new StringBuffer();
+		sequence = new byte[length];
+		int move = 0;
+		StringBuffer sb = new StringBuffer();
 		Random rand = new Random();
 		int lastAxis = -1;
 		int[] shiftMove = new int[size - 1];
@@ -37,12 +39,17 @@ public class CubeScramble extends Scramble {
 				shift = rand.nextInt(size - 1);
 				count = rand.nextInt(3);
 			} while (axis == lastAxis && shiftMove[shift] != -1);
+			if (shift < size / 2) {
+				sequence[move++] = (byte) ((size / 2 - shift - 1) * 18 + axis * 3 + count);
+			} else {
+				sequence[move++] = (byte) ((size - shift - 2) * 18 + 9 + axis * 3 + count);
+			}
 			if (axis == lastAxis) {
 				shiftMove[shift] = count;
 			} else {
 				for (int j = 0; j < size - 1; j++) {
 					if (shiftMove[j] != -1) {
-						sequence.append(getMoveName(lastAxis, j, shiftMove[j]));
+						sb.append(getMoveName(lastAxis, j, shiftMove[j]));
 					}
 					shiftMove[j] = -1;
 				}
@@ -52,10 +59,10 @@ public class CubeScramble extends Scramble {
 		}
 		for (int i = 0; i < size - 1; i++) {
 			if (shiftMove[i] != -1) {
-				sequence.append(getMoveName(lastAxis, i, shiftMove[i]));
+				sb.append(getMoveName(lastAxis, i, shiftMove[i]));
 			}
 		}
-		this.scrambleSequence = sequence.toString().trim();
+		scrambleSequence = sb.toString().trim();
 		return scrambleSequence;
 	}
 
@@ -65,7 +72,7 @@ public class CubeScramble extends Scramble {
 			if (size > 5 && shift != size / 2 - 1) {
 				sb.append(size / 2 - shift);
 			}
-			sb.append("RUF".charAt(axis));
+			sb.append("URF".charAt(axis));
 			if (size < 6 && shift != size / 2 - 1) {
 				sb.append("w");
 			}
@@ -83,7 +90,7 @@ public class CubeScramble extends Scramble {
 			if (size > 5 && shift != size - 2) {
 				sb.append(size - shift - 1);
 			}
-			sb.append("LDB".charAt(axis));
+			sb.append("DLB".charAt(axis));
 			if (size < 6 && shift != size - 2) {
 				sb.append("w");
 			}
@@ -98,7 +105,15 @@ public class CubeScramble extends Scramble {
 				break;
 			}
 		}
-		sb.append(" ");
+		sb.append(' ');
 		return sb.toString();
+	}
+
+	public byte[] getSequence() {
+		return sequence;
+	}
+
+	public String getName() {
+		return "Cube" + Integer.toString(size);
 	}
 }

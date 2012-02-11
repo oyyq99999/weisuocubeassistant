@@ -5,23 +5,18 @@ import javax.microedition.midlet.MIDlet;
 import javax.microedition.midlet.MIDletStateChangeException;
 
 import model.GlobalData;
-
 import screens.MainMenu;
 
 public class WeisuoCubeAssistantMain extends MIDlet {
 
 	public void destroyApp(boolean arg0) throws MIDletStateChangeException {
-		// TODO Auto-generated method stub
 		GlobalData.saveData();
 	}
 
 	public void pauseApp() {
-		// TODO Auto-generated method stub
-
 	}
 
 	public void startApp() throws MIDletStateChangeException {
-		// TODO Auto-generated method stub
 		new Thread() {
 			public void run() {
 				while (true) {
@@ -29,7 +24,6 @@ public class WeisuoCubeAssistantMain extends MIDlet {
 					try {
 						Thread.sleep(60000);
 					} catch (InterruptedException e) {
-						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
 				}
@@ -37,12 +31,14 @@ public class WeisuoCubeAssistantMain extends MIDlet {
 		}.start();
 		GlobalData.loadData();
 		GlobalData.mainMIDlet = this;
-		if (GlobalData.mainMenu == null)
-			GlobalData.mainMenu = new MainMenu("WeisuoCubeAssistant");
+		if (GlobalData.mainMenu == null) {
+			GlobalData.mainMenu = new MainMenu("Weisuo Cube Assistant");
+		}
 		if (GlobalData.display == null) {
 			GlobalData.display = Display.getDisplay(this);
 		}
+		GlobalData.width = GlobalData.mainMenu.getWidth();
+		GlobalData.height = GlobalData.mainMenu.getHeight();
 		GlobalData.display.setCurrent(GlobalData.mainMenu);
 	}
-
 }

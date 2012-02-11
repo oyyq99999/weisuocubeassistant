@@ -10,10 +10,8 @@ public class _222Scramble extends Scramble {
 	private static byte[] permprun = new byte[5040];
 	private static byte[] twstprun = new byte[729];
 
-	protected static String[] move2str = { "U  ", "U2 ", "U' ", "R  ", "R2 ",
-			"R' ", "F  ", "F2 ", "F' " };
-	protected static String[] invmove2str = { "U' ", "U2 ", "U  ", "R' ",
-			"R2 ", "R  ", "F' ", "F2 ", "F  " };
+	protected static String[] move2str = { "U ", "U2 ", "U' ", "R ", "R2 ",
+			"R' ", "F ", "F2 ", "F' " };
 	protected int[] sol = new int[12];
 
 	private static boolean inited = false;
@@ -124,7 +122,7 @@ public class _222Scramble extends Scramble {
 				permmv[i][j] = (char) getpermmv(i, j);
 			}
 		}
-		twstprun[0] = permprun[0] = 0;
+		permprun[0] = 0;
 		for (int l = 0; l < 7; l++) {
 			for (int p = 0; p < 5040; p++) {
 				if (permprun[p] == l) {
@@ -140,6 +138,7 @@ public class _222Scramble extends Scramble {
 				}
 			}
 		}
+		twstprun[0] = 0;
 		for (int l = 0; l < 6; l++) {
 			for (int p = 0; p < 729; p++) {
 				if (twstprun[p] == l) {
@@ -193,10 +192,20 @@ public class _222Scramble extends Scramble {
 			}
 		}
 		StringBuffer sb = new StringBuffer();
-		for (int i = depth - 1; i >= 0; i--) {
-			sb.append(invmove2str[sol[i]]);
+		sequence = new byte[depth];
+		for (int i = 0; i < depth; i++) {
+			sb.append(move2str[sol[i]]);
+			sequence[i] = (byte) sol[i];
 		}
-		return sb.toString();
+		scrambleSequence = sb.toString().trim();
+		return scrambleSequence;
 	}
 
+	public byte[] getSequence() {
+		return sequence;
+	}
+
+	public String getName() {
+		return "Cube2";
+	}
 }

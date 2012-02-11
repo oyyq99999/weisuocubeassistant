@@ -14,7 +14,6 @@ public class PrepareThread extends Thread {
 	}
 
 	public void run() {
-		// TODO Auto-generated method stub
 		super.run();
 		while (preparing) {
 			if (System.currentTimeMillis() - pressedTime >= 550) {
@@ -24,7 +23,6 @@ public class PrepareThread extends Thread {
 			try {
 				Thread.sleep(10);
 			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}
@@ -39,9 +37,8 @@ public class PrepareThread extends Thread {
 	}
 
 	public void interrupt() {
-		// TODO Auto-generated method stub
 		this.setPreparing(false);
-		super.interrupt();
+		super.interrupt(); // delete when s40 java.lang.InterruptedException
 	}
 
 }

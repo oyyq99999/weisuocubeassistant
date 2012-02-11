@@ -1,6 +1,7 @@
 package util;
 
 import java.io.IOException;
+
 import javax.microedition.lcdui.Graphics;
 import javax.microedition.lcdui.Image;
 
@@ -21,7 +22,6 @@ public class CustomFont {
 		try {
 			fontImage = Image.createImage(fontSource);
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 			return false;
 		}
