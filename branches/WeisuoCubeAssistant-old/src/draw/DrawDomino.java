@@ -8,9 +8,7 @@ public class DrawDomino {
 
 	private byte[] sequence;
 	private byte[][][] facelet;
-
-	private final int[] color = new int[] { 0xffffff, 0xffff00, 0xff0000,
-			0xff9000, 0x00ff00, 0x0000ff };
+	private int[] color = ColourScheme.cube;
 
 	public DrawDomino(byte[] scrambleSequence) {
 		sequence = new byte[scrambleSequence.length];

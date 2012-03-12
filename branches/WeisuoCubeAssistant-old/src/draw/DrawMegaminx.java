@@ -9,9 +9,7 @@ public class DrawMegaminx {
 	private byte[] sequence;
 	private byte[][] facelet = new byte[12][10];
 	private byte[] center = new byte[] { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11 };
-	private final int[] color = new int[] { 0xffffff, 0x6c676b, 0x1e7608,
-			0x2bbd00, 0x5d028b, 0xe281b6, 0xeeee00, 0xfff063, 0x1b3fb7,
-			0x1c90f7, 0xd81207, 0xf59c02 };
+	private int[] color = ColourScheme.megaminx;
 
 	public DrawMegaminx(byte[] scrambleSequence) {
 		sequence = new byte[scrambleSequence.length];

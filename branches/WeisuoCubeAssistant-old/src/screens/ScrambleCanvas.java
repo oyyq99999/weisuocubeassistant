@@ -8,6 +8,7 @@ import javax.microedition.lcdui.game.GameCanvas;
 
 import draw.*;
 
+
 import model.GlobalData;
 
 public class ScrambleCanvas extends GameCanvas implements CommandListener {
