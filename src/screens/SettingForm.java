@@ -18,7 +18,6 @@ public class SettingForm extends Form implements CommandListener,
 
 	private final Command okCommand = new Command("确定", Command.OK, 1);
 	private final Command cancelCommand = new Command("取消", Command.CANCEL, 1);
-	// private final Command chooseCommand = new Command("", Command.ITEM, 1);
 	private Displayable former;
 	private final String[] scramblersFor222 = { "随机状态", "随机步骤" };
 	private final String[] scramblersFor333 = { "随机状态", "随机步骤" };

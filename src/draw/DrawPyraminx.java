@@ -12,9 +12,7 @@ public class DrawPyraminx {
 			{ { 1 }, { 1, 1, 1 }, { 1, 1, 1, 1, 1 } },
 			{ { 2 }, { 2, 2, 2 }, { 2, 2, 2, 2, 2 } },
 			{ { 3 }, { 3, 3, 3 }, { 3, 3, 3, 3, 3 } } };
-
-	private final int[] color = new int[] { 0xff0000, 0xffff00, 0x00ff00,
-			0x0000ff };
+	private int[] color = ColourScheme.pyraminx;
 
 	public DrawPyraminx(byte[] scrambleSequence) {
 		sequence = new byte[scrambleSequence.length];

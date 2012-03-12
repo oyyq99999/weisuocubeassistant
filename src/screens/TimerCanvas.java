@@ -119,7 +119,7 @@ public class TimerCanvas extends GameCanvas implements CommandListener {
 			break;
 		case 2:
 			g.setColor(bgColorOK);
-			if (time.equals("0.00")) {
+			if (time.equals("0.000")) {
 				break;
 			}
 			int index;
@@ -148,7 +148,7 @@ public class TimerCanvas extends GameCanvas implements CommandListener {
 			prepareThread.interrupt();
 			prepareThread = null;
 		}
-		time = "0.00";
+		time = "0.000";
 	}
 
 	public void commandAction(Command c, Displayable d) {

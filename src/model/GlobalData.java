@@ -5,10 +5,8 @@ import javax.microedition.rms.RecordStore;
 
 import main.WeisuoCubeAssistantMain;
 import scramble.*;
-import screens.MainMenu;
-import screens.ScrambleForm;
-import screens.SettingForm;
-import screens.TimerCanvas;
+import screens.*;
+import statistics.Statistics;
 
 public class GlobalData {
 
@@ -30,6 +28,7 @@ public class GlobalData {
 	public static TimerCanvas timerCanvas = null;
 	public static ScrambleForm scrambleForm = null;
 	public static SettingForm settingForm = null;
+	public static Statistics stats;
 
 	public static boolean randomstate333Scrambled = false;
 	public static boolean randomstatePyraminxScrambled = false;

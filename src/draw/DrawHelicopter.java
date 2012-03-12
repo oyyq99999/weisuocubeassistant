@@ -8,9 +8,7 @@ public class DrawHelicopter {
 
 	private byte[] sequence;
 	private byte[][][] facelet = new byte[6][2][4];
-
-	private int[] color = new int[] { 0xffffff, 0xffff00, 0xff0000, 0xff9000,
-			0x00ff00, 0x0000ff };
+	private int[] color = ColourScheme.cube;
 
 	public DrawHelicopter(byte[] scrambleSequence) {
 		sequence = new byte[scrambleSequence.length];

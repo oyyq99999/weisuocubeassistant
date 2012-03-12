@@ -9,10 +9,8 @@ public class DrawSQ2 {
 	private byte[] sequence;
 	private byte[] facelet = new byte[] { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11,
 			12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23 };
-
-	private final int[] color = new int[] { 0xffffff, 0xffff00 };
-	private final int[] faceletcolor = new int[] { 0x00ff00, 0xff0000,
-			0x0000ff, 0xff9000 };
+	private final int[] color = ColourScheme.sq1topbottom;
+	private final int[] faceletcolor = ColourScheme.sq1side;
 
 	public DrawSQ2(byte[] scrambleSequence) {
 		sequence = new byte[scrambleSequence.length];
@@ -22,7 +20,7 @@ public class DrawSQ2 {
 		scramble();
 	}
 
-	private byte[] temp = new byte[12];
+	private static byte[] temp = new byte[12];
 
 	private void twistUp(int twst) {
 		for (int i = 0; i < 12; i++) {
@@ -43,9 +41,8 @@ public class DrawSQ2 {
 	}
 
 	private void twist() {
-		byte temp;
 		for (int i = 0; i < 6; i++) {
-			temp = facelet[i];
+			byte temp = facelet[i];
 			facelet[i] = facelet[17 - i];
 			facelet[17 - i] = temp;
 		}
@@ -68,7 +65,8 @@ public class DrawSQ2 {
 		}
 	}
 
-	private double[] dx = new double[] { (Math.sqrt(2) - Math.sqrt(6)) / 4,
+	private static double[] dx = new double[] {
+			(Math.sqrt(2) - Math.sqrt(6)) / 4,
 			(Math.sqrt(6) - Math.sqrt(2)) / 4, (Math.sqrt(2)) / 2,
 			(Math.sqrt(6) + Math.sqrt(2)) / 4,
 			(Math.sqrt(6) + Math.sqrt(2)) / 4, (Math.sqrt(2)) / 2,
@@ -77,7 +75,8 @@ public class DrawSQ2 {
 			(-Math.sqrt(6) - Math.sqrt(2)) / 4,
 			(-Math.sqrt(6) - Math.sqrt(2)) / 4, (-Math.sqrt(2)) / 2 };
 
-	private double[] dy = new double[] { (Math.sqrt(6) + Math.sqrt(2)) / 4,
+	private static double[] dy = new double[] {
+			(Math.sqrt(6) + Math.sqrt(2)) / 4,
 			(Math.sqrt(6) + Math.sqrt(2)) / 4, (Math.sqrt(2)) / 2,
 			(Math.sqrt(6) - Math.sqrt(2)) / 4,
 			(Math.sqrt(2) - Math.sqrt(6)) / 4, (-Math.sqrt(2)) / 2,

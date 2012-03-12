@@ -13,9 +13,11 @@ import scramble.Scramble;
 public class ScrambleForm extends Form implements CommandListener {
 	private Command drawCommand = new Command("显示打乱图", Command.SCREEN, 1);
 	private Command scrambleCommand = new Command("新打乱", Command.SCREEN, 2);
+	private Command statsCommand = new Command("查看成绩", Command.SCREEN, 3);
 	private Command backCommand = new Command("返回", Command.BACK, 1);
 	private Command continueCommand = new Command("继续", Command.OK, 1);
 	private StringItem scrambleStringItem = new StringItem("", "");
+	private Displayable statsForm = null;
 	private TimerCanvas timerCanvas = null;
 	private ScrambleCanvas scrambleCanvas = null;
 	private Font scrambleFont = Font.getFont(Font.FACE_MONOSPACE,
@@ -28,6 +30,7 @@ public class ScrambleForm extends Form implements CommandListener {
 		this.addCommand(drawCommand);
 		this.addCommand(continueCommand);
 		this.addCommand(scrambleCommand);
+		this.addCommand(statsCommand);
 		this.addCommand(backCommand);
 		this.setCommandListener(this);
 		this.scrambleStringItem.setText(scrambler.scramble());
@@ -43,6 +46,12 @@ public class ScrambleForm extends Form implements CommandListener {
 		} else if (c == this.scrambleCommand) {
 			this.scrambleStringItem.setText("打乱中...");
 			this.scrambleStringItem.setText(scrambler.scramble());
+		} else if (c == this.statsCommand) {
+			if (statsForm == null) {
+				statsForm = new StatsForm("成绩", this);
+			}
+			this.scrambleStringItem.setText(GlobalData.stats.toString());
+			GlobalData.display.setCurrent(statsForm);
 		} else if (c == this.backCommand) {
 			GlobalData.display.setCurrent(GlobalData.mainMenu);
 			this.scrambleStringItem.setText(scrambler.scramble());

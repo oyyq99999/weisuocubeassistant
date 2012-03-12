@@ -10,9 +10,7 @@ public class DrawSkewb {
 	private byte[][] facelet = new byte[][] { { 0, 0, 0, 0, 0 },
 			{ 1, 1, 1, 1, 1 }, { 2, 2, 2, 2, 2 }, { 3, 3, 3, 3, 3 },
 			{ 4, 4, 4, 4, 4 }, { 5, 5, 5, 5, 5 } };
-
-	private int[] color = new int[] { 0xffffff, 0xffff00, 0xff0000, 0xff9000,
-			0x00ff00, 0x0000ff };
+	private int[] color = ColourScheme.cube;
 
 	public DrawSkewb(byte[] scrambleSequence) {
 		sequence = new byte[scrambleSequence.length];
