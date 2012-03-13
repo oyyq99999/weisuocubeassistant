@@ -17,7 +17,6 @@ public class ScrambleForm extends Form implements CommandListener {
 	private Command backCommand = new Command("返回", Command.BACK, 1);
 	private Command continueCommand = new Command("继续", Command.OK, 1);
 	private StringItem scrambleStringItem = new StringItem("", "");
-	private Displayable statsForm = null;
 	private TimerCanvas timerCanvas = null;
 	private ScrambleCanvas scrambleCanvas = null;
 	private Font scrambleFont = Font.getFont(Font.FACE_MONOSPACE,
@@ -47,11 +46,8 @@ public class ScrambleForm extends Form implements CommandListener {
 			this.scrambleStringItem.setText("打乱中...");
 			this.scrambleStringItem.setText(scrambler.scramble());
 		} else if (c == this.statsCommand) {
-			if (statsForm == null) {
-				statsForm = new StatsForm("成绩", this);
-			}
-			this.scrambleStringItem.setText(GlobalData.stats.toString());
-			GlobalData.display.setCurrent(statsForm);
+			GlobalData.statsForm = new StatsForm("成绩", this);
+			GlobalData.display.setCurrent(GlobalData.statsForm);
 		} else if (c == this.backCommand) {
 			GlobalData.display.setCurrent(GlobalData.mainMenu);
 			this.scrambleStringItem.setText(scrambler.scramble());
