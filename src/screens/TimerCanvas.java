@@ -7,6 +7,7 @@ import javax.microedition.lcdui.Graphics;
 import javax.microedition.lcdui.game.GameCanvas;
 
 import model.GlobalData;
+import statistics.Data;
 import threads.PrepareThread;
 import threads.TimingThread;
 import util.CustomFont;
@@ -19,7 +20,7 @@ public class TimerCanvas extends GameCanvas implements CommandListener {
 	private int bgColorPressed = 0xffff0000;
 	private int bgColorOK = 0xff00ff00;
 	private int fontColor = 0xff000000;
-	private String time = "0.000";
+	private int time = 0;
 	private Command backCommand = new Command("返回", Command.BACK, 1);
 	private Command continueCommand = new Command("继续", Command.OK, 1);
 	private TimingThread timingThread = null;
@@ -50,6 +51,7 @@ public class TimerCanvas extends GameCanvas implements CommandListener {
 		} else if (state == 2) {
 			timingThread.interrupt();
 			timingThread = null;
+			GlobalData.stats.addData(new Data(time, "Scramble"));
 			setState(0);
 		}
 	}
@@ -119,23 +121,18 @@ public class TimerCanvas extends GameCanvas implements CommandListener {
 			break;
 		case 2:
 			g.setColor(bgColorOK);
-			if (time.equals("0.000")) {
+			if (time == 0) {
 				break;
 			}
-			int index;
-			int ch;
-			if ((index = time.indexOf(".")) >= 0) {
-				if ((time.charAt(index - 1) == '0' || time.charAt(index - 1) == '5')) {
-					GlobalData.display.flashBacklight(0);
-				}
-			} else if ((ch = time.charAt(time.length() - 1)) == '0'
-					|| ch == '5') {
+			int second = time < 10 * 60 * 1000 ? ((time / 1000) % 10)
+					: time % 10;
+			if (second == 0 || second == 5) {
 				GlobalData.display.flashBacklight(0);
 			}
 			break;
 		}
 		g.fillRect(0, 0, getWidth(), getHeight());
-		timeFont.drawString(g, fontColor, time, getWidth() / 2,
+		timeFont.drawString(g, fontColor, Data.time2str(time), getWidth() / 2,
 				getHeight() / 2, Graphics.HCENTER | Graphics.VCENTER);
 	}
 
@@ -148,7 +145,7 @@ public class TimerCanvas extends GameCanvas implements CommandListener {
 			prepareThread.interrupt();
 			prepareThread = null;
 		}
-		time = "0.000";
+		time = 0;
 	}
 
 	public void commandAction(Command c, Displayable d) {
@@ -164,7 +161,7 @@ public class TimerCanvas extends GameCanvas implements CommandListener {
 		}
 	}
 
-	public void setTime(String time) {
+	public void setTime(int time) {
 		this.time = time;
 	}
 

@@ -28,7 +28,8 @@ public class GlobalData {
 	public static TimerCanvas timerCanvas = null;
 	public static ScrambleForm scrambleForm = null;
 	public static SettingForm settingForm = null;
-	public static Statistics stats;
+	public static StatsForm statsForm = null;
+	public static Statistics stats = new Statistics();
 
 	public static boolean randomstate333Scrambled = false;
 	public static boolean randomstatePyraminxScrambled = false;

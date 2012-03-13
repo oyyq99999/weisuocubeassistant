@@ -3,7 +3,7 @@ package statistics;
 import java.util.Vector;
 
 public class Statistics {
-	Vector data = new Vector(12);
+	Vector data = new Vector();
 
 	public Statistics() {
 	}
@@ -18,27 +18,30 @@ public class Statistics {
 
 	public String toString() {
 		if (data.isEmpty()) {
+			System.out.println("VisitedVisitedVisitedVisitedVisitedVisited");
 			return "没有成绩";
 		}
+		System.out.println("VisitedVisitedVisitedVisitedVisitedVisited2");
 		StringBuffer sb = new StringBuffer();
+		StringBuffer sb2 = new StringBuffer();
 		int sum = 0, sumwithoutDNF = 0, DNFs = 0;
 		int best = Integer.MAX_VALUE, worst = 0;
 		for (int i = 0; i < data.size(); ++i) {
 			StringBuffer seq = new StringBuffer();
 			Data d = (Data) data.elementAt(i);
-			seq.append(i + 1);
+			seq.append("\n").append(i + 1);
 			seq.append(": ");
 			if (d.time < Integer.MAX_VALUE) {
-				seq.append(d.time);
+				seq.append(Data.time2str(d.time));
 			} else {
 				seq.append("DNF");
 			}
 			if (d.time > d.originaltime) {
 				seq.append(" (");
-				seq.append(d.originaltime);
+				seq.append(Data.time2str(d.originaltime));
 				seq.append(")");
 			}
-			sb.insert(0, seq);
+			sb2.insert(0, seq);
 			if (d.time < Integer.MAX_VALUE) {
 				if (sum < Integer.MAX_VALUE) {
 					sum += d.time;
@@ -55,23 +58,22 @@ public class Statistics {
 				worst = d.time;
 			}
 		}
-		StringBuffer seq = new StringBuffer();
-		seq.append("最快：");
+		sb.append("最快：");
 		if (best < Integer.MAX_VALUE) {
-			seq.append(best);
+			sb.append(Data.time2str(best));
 		} else {
-			seq.append("DNF");
+			sb.append("DNF");
 		}
-		seq.append("最慢：");
+		sb.append("\n").append("最慢：");
 		if (worst < Integer.MAX_VALUE) {
-			seq.append(worst);
+			sb.append(Data.time2str(worst));
 		} else {
-			seq.append("DNF");
+			sb.append("DNF");
 		}
 		if (sum > 2) {
-			seq.append("去头尾平均：");
+			sb.append("\n").append("去头尾平均：");
 			if (DNFs > 1) {
-				seq.append("DNF");
+				sb.append("DNF");
 			} else {
 				double average;
 				if (DNFs == 1) {
@@ -81,23 +83,22 @@ public class Statistics {
 					average = ((double) (sum - best - worst))
 							/ (data.size() - 2);
 				}
-				seq.append((int) (average + 0.5));
+				sb.append(Data.time2str((int) (average + 0.5)));
 			}
 		}
-		seq.append("平均：");
+		sb.append("\n").append("平均：");
 		if (DNFs > 0) {
-			seq.append("DNF");
+			sb.append("DNF");
 		} else {
-			double average = ((double) sum) / (data.size() - 2);
-			seq.append((int) (average + 0.5));
+			double average = ((double) sum) / data.size();
+			sb.append(Data.time2str((int) (average + 0.5)));
 		}
 		if (DNFs != data.size()) {
-			seq.append("不计DNF平均：");
-			double average = ((double) (sumwithoutDNF - best))
-					/ (data.size() - 2);
-			seq.append((int) (average + 0.5));
+			sb.append("\n").append("不计DNF平均：");
+			double average = ((double) sumwithoutDNF) / (data.size() - DNFs);
+			sb.append(Data.time2str((int) (average + 0.5)));
 		}
-		sb.insert(0, seq);
+		sb.append(sb2);
 		return sb.toString();
 	}
 }
