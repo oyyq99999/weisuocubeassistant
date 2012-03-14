@@ -7,10 +7,16 @@ public class Data {
 	String scramble;
 	String comment;
 
-	public Data(int time, String scramble) {
-		this.originaltime = time;
+	public Data(int time) {
+		this.originaltime = this.time = time;
 		this.penalty = 0;
-		this.time = time;
+		this.scramble = "";
+		this.comment = "";
+	}
+
+	public Data(int time, String scramble) {
+		this.originaltime = this.time = time;
+		this.penalty = 0;
 		this.scramble = new String(scramble);
 		this.comment = "";
 	}
@@ -18,7 +24,8 @@ public class Data {
 	public Data(int time, int penalty, String scramble) {
 		this.originaltime = time;
 		this.penalty = penalty;
-		this.time = this.penalty == 0x7fffffff ? 0x7fffffff : time + penalty;
+		this.time = this.penalty == Integer.MAX_VALUE ? Integer.MAX_VALUE
+				: time + penalty;
 		this.scramble = new String(scramble);
 		this.comment = "";
 	}
@@ -26,9 +33,14 @@ public class Data {
 	public Data(int time, int penalty, String scramble, String comment) {
 		this.originaltime = time;
 		this.penalty = penalty;
-		this.time = this.penalty == 0x7fffffff ? 0x7fffffff : time + penalty;
+		this.time = this.penalty == Integer.MAX_VALUE ? Integer.MAX_VALUE
+				: time + penalty;
 		this.scramble = new String(scramble);
 		this.comment = new String(comment);
+	}
+
+	public boolean isDNF() {
+		return time == Integer.MAX_VALUE;
 	}
 
 	public static String time2str(int time) {

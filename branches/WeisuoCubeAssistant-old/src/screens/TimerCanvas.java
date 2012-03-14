@@ -22,10 +22,15 @@ public class TimerCanvas extends GameCanvas implements CommandListener {
 	private int fontColor = 0xff000000;
 	private int time = 0;
 	private Command backCommand = new Command("返回", Command.BACK, 1);
-	private Command continueCommand = new Command("继续", Command.OK, 1);
+	private Command continueCommand = new Command("无惩罚", Command.OK, 1);
+	private Command plus2Command = new Command("+2", Command.OK, 2);
+	private Command plus4Command = new Command("+4", Command.OK, 3);
+	private Command plus6Command = new Command("+6", Command.OK, 4);
+	private Command DNFCommand = new Command("DNF", Command.OK, 5);
 	private TimingThread timingThread = null;
 	private PrepareThread prepareThread = null;
 	private CustomFont timeFont = null;
+	private StatsForm statsForm = null;
 
 	protected TimerCanvas(boolean suppressKeyEvents, Displayable backTo) {
 		super(suppressKeyEvents);
@@ -34,6 +39,10 @@ public class TimerCanvas extends GameCanvas implements CommandListener {
 		this.addCommand(backCommand);
 		if (!backTo.getClass().equals(GlobalData.mainMenu.getClass())) {
 			this.addCommand(continueCommand);
+			this.addCommand(plus2Command);
+			this.addCommand(plus4Command);
+			this.addCommand(plus6Command);
+			this.addCommand(DNFCommand);
 		}
 		this.setCommandListener(this);
 		timeFont = new CustomFont("/digiface.png");
@@ -51,7 +60,6 @@ public class TimerCanvas extends GameCanvas implements CommandListener {
 		} else if (state == 2) {
 			timingThread.interrupt();
 			timingThread = null;
-			GlobalData.stats.addData(new Data(time, "Scramble"));
 			setState(0);
 		}
 	}
@@ -153,11 +161,37 @@ public class TimerCanvas extends GameCanvas implements CommandListener {
 			resetTimer();
 			setState(0);
 			GlobalData.display.setCurrent(GlobalData.mainMenu);
-		}
-		if (c == continueCommand) {
+		} else if (c == continueCommand) {
+			GlobalData.stats.push_back(new Data(time, "Scramble"));
 			resetTimer();
 			setState(0);
-			GlobalData.display.setCurrent(backTo);
+			statsForm = new StatsForm("成绩", backTo);
+			GlobalData.display.setCurrent(statsForm);
+		} else if (c == plus2Command) {
+			GlobalData.stats.push_back(new Data(time, 2000, "Scramble"));
+			resetTimer();
+			setState(0);
+			statsForm = new StatsForm("成绩", backTo);
+			GlobalData.display.setCurrent(statsForm);
+		} else if (c == plus4Command) {
+			GlobalData.stats.push_back(new Data(time, 4000, "Scramble"));
+			resetTimer();
+			setState(0);
+			statsForm = new StatsForm("成绩", backTo);
+			GlobalData.display.setCurrent(statsForm);
+		} else if (c == plus6Command) {
+			GlobalData.stats.push_back(new Data(time, 6000, "Scramble"));
+			resetTimer();
+			setState(0);
+			statsForm = new StatsForm("成绩", backTo);
+			GlobalData.display.setCurrent(statsForm);
+		} else if (c == DNFCommand) {
+			GlobalData.stats.push_back(new Data(time, Integer.MAX_VALUE,
+					"Scramble"));
+			resetTimer();
+			setState(0);
+			statsForm = new StatsForm("成绩", backTo);
+			GlobalData.display.setCurrent(statsForm);
 		}
 	}
 

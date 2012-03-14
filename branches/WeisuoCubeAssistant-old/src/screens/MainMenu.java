@@ -39,6 +39,7 @@ public class MainMenu extends List implements CommandListener {
 		for (int i = 0; i < this.size(); i++) {
 			this.setFont(i, listItemFont);
 		}
+		GlobalData.stats.reset();
 	}
 
 	public void commandAction(Command c, Displayable d) {
