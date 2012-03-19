@@ -44,6 +44,9 @@ public class Data {
 	}
 
 	public static String time2str(int time) {
+		if (time == Integer.MAX_VALUE) {
+			return "DNF";
+		}
 		StringBuffer sb = new StringBuffer();
 		if (time < 10 * 60 * 1000) {
 			int seconds = time / 1000;

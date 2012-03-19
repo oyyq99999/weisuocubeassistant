@@ -31,21 +31,22 @@ public class TimerCanvas extends GameCanvas implements CommandListener {
 	private PrepareThread prepareThread = null;
 	private CustomFont timeFont = null;
 	private StatsForm statsForm = null;
+	private String scramble = null;
 
 	protected TimerCanvas(boolean suppressKeyEvents, Displayable backTo) {
 		super(suppressKeyEvents);
 		this.backTo = backTo;
 		this.setTitle("计时器");
 		this.addCommand(backCommand);
-		if (!backTo.getClass().equals(GlobalData.mainMenu.getClass())) {
-			this.addCommand(continueCommand);
-			this.addCommand(plus2Command);
-			this.addCommand(plus4Command);
-			this.addCommand(plus6Command);
-			this.addCommand(DNFCommand);
-		}
 		this.setCommandListener(this);
 		timeFont = new CustomFont("/digiface.png");
+		this.scramble = "";
+	}
+
+	protected TimerCanvas(boolean suppressKeyEvents, Displayable backTo,
+			String scramble) {
+		this(suppressKeyEvents, backTo);
+		this.scramble = scramble;
 	}
 
 	protected void keyPressed(int keyCode) {
@@ -61,6 +62,13 @@ public class TimerCanvas extends GameCanvas implements CommandListener {
 			timingThread.interrupt();
 			timingThread = null;
 			setState(0);
+			if (!backTo.getClass().equals(GlobalData.mainMenu.getClass())) {
+				this.addCommand(continueCommand);
+				this.addCommand(plus2Command);
+				this.addCommand(plus4Command);
+				this.addCommand(plus6Command);
+				this.addCommand(DNFCommand);
+			}
 		}
 	}
 
@@ -75,7 +83,7 @@ public class TimerCanvas extends GameCanvas implements CommandListener {
 			if (timingThread == null) {
 				timingThread = new TimingThread(this, startTime);
 			}
-			if (timingThread.isRunning() == false) {
+			if (!timingThread.isRunning()) {
 				timingThread.start();
 			}
 		} else {
@@ -96,6 +104,13 @@ public class TimerCanvas extends GameCanvas implements CommandListener {
 			timingThread.interrupt();
 			timingThread = null;
 			setState(0);
+			if (!backTo.getClass().equals(GlobalData.mainMenu.getClass())) {
+				this.addCommand(continueCommand);
+				this.addCommand(plus2Command);
+				this.addCommand(plus4Command);
+				this.addCommand(plus6Command);
+				this.addCommand(DNFCommand);
+			}
 		}
 	}
 
@@ -110,7 +125,7 @@ public class TimerCanvas extends GameCanvas implements CommandListener {
 			if (timingThread == null) {
 				timingThread = new TimingThread(this, startTime);
 			}
-			if (timingThread.isRunning() == false) {
+			if (!timingThread.isRunning()) {
 				timingThread.start();
 			}
 		} else {
@@ -162,37 +177,24 @@ public class TimerCanvas extends GameCanvas implements CommandListener {
 			setState(0);
 			GlobalData.display.setCurrent(GlobalData.mainMenu);
 		} else if (c == continueCommand) {
-			GlobalData.stats.push_back(new Data(time, "Scramble"));
-			resetTimer();
-			setState(0);
-			statsForm = new StatsForm("成绩", backTo);
-			GlobalData.display.setCurrent(statsForm);
+			saveNewData(new Data(time, "Scramble"));
 		} else if (c == plus2Command) {
-			GlobalData.stats.push_back(new Data(time, 2000, "Scramble"));
-			resetTimer();
-			setState(0);
-			statsForm = new StatsForm("成绩", backTo);
-			GlobalData.display.setCurrent(statsForm);
+			saveNewData(new Data(time, 2000, scramble));
 		} else if (c == plus4Command) {
-			GlobalData.stats.push_back(new Data(time, 4000, "Scramble"));
-			resetTimer();
-			setState(0);
-			statsForm = new StatsForm("成绩", backTo);
-			GlobalData.display.setCurrent(statsForm);
+			saveNewData(new Data(time, 4000, scramble));
 		} else if (c == plus6Command) {
-			GlobalData.stats.push_back(new Data(time, 6000, "Scramble"));
-			resetTimer();
-			setState(0);
-			statsForm = new StatsForm("成绩", backTo);
-			GlobalData.display.setCurrent(statsForm);
+			saveNewData(new Data(time, 6000, scramble));
 		} else if (c == DNFCommand) {
-			GlobalData.stats.push_back(new Data(time, Integer.MAX_VALUE,
-					"Scramble"));
-			resetTimer();
-			setState(0);
-			statsForm = new StatsForm("成绩", backTo);
-			GlobalData.display.setCurrent(statsForm);
+			saveNewData(new Data(time, Integer.MAX_VALUE, scramble));
 		}
+	}
+
+	private void saveNewData(Data data) {
+		GlobalData.stats.push_back(data);
+		resetTimer();
+		setState(0);
+		statsForm = new StatsForm("成绩统计", backTo);
+		GlobalData.display.setCurrent(statsForm);
 	}
 
 	public void setTime(int time) {

@@ -337,7 +337,7 @@ public class LatchScramble extends Scramble {
 					sequence[i] += 2;
 				}
 			}
-			System.out.println((int) sequence[i]);
+			System.out.println(sequence[i]);
 		}
 		scrambleSequence = sb.toString().trim();
 		return scrambleSequence;
