@@ -30,7 +30,6 @@ public class TimerCanvas extends GameCanvas implements CommandListener {
 	private TimingThread timingThread = null;
 	private PrepareThread prepareThread = null;
 	private CustomFont timeFont = null;
-	private StatsForm statsForm = null;
 	private String scramble = null;
 
 	protected TimerCanvas(boolean suppressKeyEvents, Displayable backTo) {
@@ -177,7 +176,7 @@ public class TimerCanvas extends GameCanvas implements CommandListener {
 			setState(0);
 			GlobalData.display.setCurrent(GlobalData.mainMenu);
 		} else if (c == continueCommand) {
-			saveNewData(new Data(time, "Scramble"));
+			saveNewData(new Data(time, scramble));
 		} else if (c == plus2Command) {
 			saveNewData(new Data(time, 2000, scramble));
 		} else if (c == plus4Command) {
@@ -193,8 +192,9 @@ public class TimerCanvas extends GameCanvas implements CommandListener {
 		GlobalData.stats.push_back(data);
 		resetTimer();
 		setState(0);
-		statsForm = new StatsForm("成绩统计", backTo);
-		GlobalData.display.setCurrent(statsForm);
+		GlobalData.statsForm = new StatsForm("成绩统计", backTo);
+		GlobalData.detailStatsForm = new DetailStatsForm("成绩统计", backTo);
+		GlobalData.display.setCurrent(GlobalData.statsForm);
 	}
 
 	public void setTime(int time) {

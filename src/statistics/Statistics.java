@@ -27,7 +27,7 @@ public class Statistics {
 		Data[] recentstats;
 		int mo3 = 0, ao5 = 0, ao12 = 0;
 		if (n < 3) {
-			this.mo3.addElement("0");
+			this.mo3.addElement(new Integer(0));
 		} else {
 			recentstats = new Data[3];
 			int sum = 0;
@@ -36,7 +36,6 @@ public class Statistics {
 				recentstats[i] = (Data) this.data.elementAt(n - 3 + i);
 				if (recentstats[i].isDNF()) {
 					mo3 = Integer.MAX_VALUE;
-					this.mo3.addElement(Integer.toString(Integer.MAX_VALUE));
 					flag = false;
 					break;
 				}
@@ -44,11 +43,11 @@ public class Statistics {
 			}
 			if (flag) {
 				mo3 = (int) ((double) sum / 3 + 0.5);
-				this.mo3.addElement(Integer.toString(mo3));
 			}
+			this.mo3.addElement(new Integer(mo3));
 		}
 		if (n < 5) {
-			this.ao5.addElement("0");
+			this.ao5.addElement(new Integer(0));
 		} else {
 			recentstats = new Data[5];
 			int sum = 0, best = Integer.MAX_VALUE, worst = 0, DNFs = 0;
@@ -74,10 +73,10 @@ public class Statistics {
 			} else {
 				ao5 = (int) ((double) (sum - best - worst) / 3 + 0.5);
 			}
-			this.ao5.addElement(Integer.toString(ao5));
+			this.ao5.addElement(new Integer(ao5));
 		}
 		if (n < 12) {
-			this.ao12.addElement("0");
+			this.ao12.addElement(new Integer(0));
 		} else {
 			recentstats = new Data[12];
 			int sum = 0, best = Integer.MAX_VALUE, worst = 0, DNFs = 0;
@@ -103,7 +102,7 @@ public class Statistics {
 			} else {
 				ao12 = (int) ((double) (sum - best - worst) / 10 + 0.5);
 			}
-			this.ao12.addElement(Integer.toString(ao12));
+			this.ao12.addElement(new Integer(ao12));
 		}
 		if (data.time == Integer.MAX_VALUE) {
 			++DNFs;
@@ -157,15 +156,15 @@ public class Statistics {
 					worst = d.time;
 				}
 			}
-			int mo3 = Integer.parseInt((String) this.mo3.elementAt(i));
+			int mo3 = ((Integer) this.mo3.elementAt(i)).intValue();
 			if (mo3 > 0 && mo3 < bestmo3) {
 				bestmo3 = mo3;
 			}
-			int ao5 = Integer.parseInt((String) this.ao5.elementAt(i));
+			int ao5 = ((Integer) this.ao5.elementAt(i)).intValue();
 			if (ao5 > 0 && ao5 < bestao5) {
 				bestao5 = ao5;
 			}
-			int ao12 = Integer.parseInt((String) this.ao12.elementAt(i));
+			int ao12 = ((Integer) this.ao12.elementAt(i)).intValue();
 			if (ao12 > 0 && ao12 < bestao12) {
 				bestao12 = ao12;
 			}
@@ -184,68 +183,79 @@ public class Statistics {
 		bestmo3 = bestao5 = bestao12 = Integer.MAX_VALUE;
 	}
 
-	public String toString() {
+	public String toString(boolean brief) {
 		if (data.isEmpty()) {
 			return "没有成绩";
 		}
 		int n = data.size();
 		StringBuffer sb = new StringBuffer();
-		sb.append("最快/最慢成绩：");
-		if (best < Integer.MAX_VALUE) {
-			sb.append(Data.time2str(best)).append("/")
-					.append(Data.time2str(worst));
-		} else {
-			sb.append("DNF/DNF");
-		}
-		if (n > 2) {
-			sb.append("\n").append("去头尾平均：");
-			if (DNFs > 1) {
-				sb.append("DNF");
+		if (brief) {
+			sb.append("最快/最慢成绩：");
+			if (best < Integer.MAX_VALUE) {
+				sb.append(Data.time2str(best)).append("/")
+						.append(Data.time2str(worst));
 			} else {
-				double average;
-				if (DNFs == 1) {
-					average = ((double) (sum - best)) / (n - 2);
+				sb.append("DNF/DNF");
+			}
+			if (n > 2) {
+				sb.append("\n").append("去头尾平均：");
+				if (DNFs > 1) {
+					sb.append("DNF");
 				} else {
-					average = ((double) (sum - best - worst)) / (n - 2);
-				}
-				sb.append(Data.time2str((int) (average + 0.5)));
-			}
-		}
-		if (DNFs != n) {
-			int m = n - DNFs;
-			sb.append("\n").append("平均/标准差： ");
-			double average = ((double) sum / m);
-			sb.append(Data.time2str((int) (average + 0.5))).append("/");
-			double stddev = Math.sqrt((double) (m * sos - (long) sum * sum)
-					/ (m * m));
-			sb.append(Data.time2str((int) (stddev + 0.5)));
-		}
-		if (n >= 3) {
-			sb.append("\n").append("最近/最好3次平均： ");
-			sb.append(Data.time2str(Integer.parseInt((String) mo3
-					.elementAt(n - 1))));
-			sb.append("/").append(Data.time2str(bestmo3));
-			if (n >= 5) {
-				sb.append("\n").append("最近/最好5次平均： ");
-				sb.append(Data.time2str(Integer.parseInt((String) ao5
-						.elementAt(n - 1))));
-				sb.append("/").append(Data.time2str(bestao5));
-				if (n >= 12) {
-					sb.append("\n").append("最近/最好12次平均： ");
-					sb.append(Data.time2str(Integer.parseInt((String) ao12
-							.elementAt(n - 1))));
-					sb.append("/").append(Data.time2str(bestao12));
+					double average;
+					if (DNFs == 1) {
+						average = ((double) (sum - best)) / (n - 2);
+					} else {
+						average = ((double) (sum - best - worst)) / (n - 2);
+					}
+					sb.append(Data.time2str((int) (average + 0.5)));
 				}
 			}
-		}
-		for (int i = data.size(); --i >= 0;) {
-			Data d = (Data) data.elementAt(i);
-			sb.append("\nNo.").append(i + 1).append(":  ");
-			sb.append(Data.time2str(d.time));
-			if (d.time > d.originaltime) {
-				sb.append(" (").append(Data.time2str(d.originaltime))
-						.append(")");
+			if (DNFs != n) {
+				int m = n - DNFs;
+				sb.append("\n").append("平均/标准差： ");
+				double average = ((double) sum / m);
+				sb.append(Data.time2str((int) (average + 0.5))).append("/");
+				double stddev = Math.sqrt(m * sos - (long) sum * sum) / m;
+				sb.append(Data.time2str((int) (stddev + 0.5)));
 			}
+			if (n >= 3) {
+				sb.append("\n").append("最近/最好3次平均： ");
+				sb.append(Data.time2str(((Integer) mo3.elementAt(n - 1))));
+				sb.append("/").append(Data.time2str(bestmo3));
+				if (n >= 5) {
+					sb.append("\n").append("最近/最好5次平均： ");
+					sb.append(Data.time2str(((Integer) ao5.elementAt(n - 1))));
+					sb.append("/").append(Data.time2str(bestao5));
+					if (n >= 12) {
+						sb.append("\n").append("最近/最好12次平均： ");
+						sb.append(Data.time2str(((Integer) ao12
+								.elementAt(n - 1))));
+						sb.append("/").append(Data.time2str(bestao12));
+					}
+				}
+			}
+			for (int i = data.size(); --i >= 0;) {
+				Data d = (Data) data.elementAt(i);
+				sb.append("\nNo.").append(i + 1).append(":  ");
+				sb.append(Data.time2str(d.time));
+				if (d.time > d.originaltime) {
+					sb.append(" (").append(Data.time2str(d.originaltime))
+							.append(")");
+				}
+			}
+		} else {
+			for (int i = data.size(); --i >= 0;) {
+				Data d = (Data) data.elementAt(i);
+				sb.append("No.").append(i + 1).append(":  ");
+				sb.append(Data.time2str(d.time));
+				if (d.time > d.originaltime) {
+					sb.append(" (").append(Data.time2str(d.originaltime))
+							.append(")");
+				}
+				sb.append("\n").append(d.scramble).append("\n\n");
+			}
+			sb.delete(sb.length() - 2, sb.length());
 		}
 		return sb.toString();
 	}

@@ -22,6 +22,7 @@ public class ScrambleForm extends Form implements CommandListener {
 	private Font scrambleFont = Font.getFont(Font.FACE_MONOSPACE,
 			Font.STYLE_PLAIN, Font.SIZE_SMALL);
 	private Scramble scrambler = null;
+	private String scramble = null;
 
 	public ScrambleForm(String title, Scramble scrambler) {
 		super(title);
@@ -32,7 +33,9 @@ public class ScrambleForm extends Form implements CommandListener {
 		this.addCommand(statsCommand);
 		this.addCommand(backCommand);
 		this.setCommandListener(this);
-		this.scrambleStringItem.setText(scrambler.scramble());
+		this.scrambleStringItem.setText("打乱中...");
+		scramble = scrambler.scramble();
+		this.scrambleStringItem.setText(scramble);
 		this.scrambleStringItem.setFont(scrambleFont);
 		this.append(scrambleStringItem);
 	}
@@ -44,19 +47,20 @@ public class ScrambleForm extends Form implements CommandListener {
 			GlobalData.display.setCurrent(scrambleCanvas);
 		} else if (c == this.scrambleCommand) {
 			this.scrambleStringItem.setText("打乱中...");
-			this.scrambleStringItem.setText(scrambler.scramble());
+			scramble = scrambler.scramble();
+			this.scrambleStringItem.setText(scramble);
 		} else if (c == this.statsCommand) {
-			GlobalData.statsForm = new StatsForm("成绩", this);
+			GlobalData.statsForm = new StatsForm("成绩统计", this);
+			GlobalData.detailStatsForm = new DetailStatsForm("成绩统计", this);
 			GlobalData.display.setCurrent(GlobalData.statsForm);
 		} else if (c == this.backCommand) {
 			GlobalData.display.setCurrent(GlobalData.mainMenu);
 			this.scrambleStringItem.setText(scrambler.scramble());
 		} else if (c == this.continueCommand) {
-			if (timerCanvas == null) {
-				timerCanvas = new TimerCanvas(false, this);
-			}
+			timerCanvas = new TimerCanvas(false, this, scramble);
 			GlobalData.display.setCurrent(timerCanvas);
-			this.scrambleStringItem.setText(scrambler.scramble());
+			scramble = scrambler.scramble();
+			this.scrambleStringItem.setText(scramble);
 		}
 	}
 

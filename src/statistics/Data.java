@@ -88,4 +88,8 @@ public class Data {
 		}
 		return sb.toString();
 	}
+
+	public static String time2str(Integer time) {
+		return time2str(time.intValue());
+	}
 }

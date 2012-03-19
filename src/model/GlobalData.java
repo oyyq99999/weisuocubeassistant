@@ -29,6 +29,7 @@ public class GlobalData {
 	public static ScrambleForm scrambleForm = null;
 	public static SettingForm settingForm = null;
 	public static StatsForm statsForm = null;
+	public static DetailStatsForm detailStatsForm = null;
 	public static Statistics stats = new Statistics();
 
 	public static boolean randomstate333Scrambled = false;
