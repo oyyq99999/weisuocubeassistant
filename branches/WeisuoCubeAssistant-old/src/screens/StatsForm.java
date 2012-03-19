@@ -12,6 +12,7 @@ import model.GlobalData;
 public class StatsForm extends Form implements CommandListener {
 	private Command continueCommand = new Command("继续", Command.BACK, 1);
 	private Command backCommand = new Command("返回", Command.BACK, 1);
+	private Command detailCommand = new Command("详细信息", Command.OK, 1);
 	private Command removeCommand = new Command("删除最近一次成绩", Command.SCREEN, 1);
 	private Command resetCommand = new Command("删除所有成绩", Command.SCREEN, 2);
 	private StringItem statStringItem = new StringItem("", "");
@@ -22,13 +23,14 @@ public class StatsForm extends Form implements CommandListener {
 	public StatsForm(String title, Displayable backTo) {
 		super(title);
 		this.backTo = backTo;
+		this.addCommand(removeCommand);
+		this.addCommand(resetCommand);
+		this.addCommand(detailCommand);
 		if (backTo.equals(GlobalData.mainMenu)) {
 			this.addCommand(backCommand);
 		} else {
 			this.addCommand(continueCommand);
 		}
-		this.addCommand(removeCommand);
-		this.addCommand(resetCommand);
 		this.setCommandListener(this);
 		this.statStringItem.setText(GlobalData.stats.toString());
 		this.statStringItem.setFont(statFont);

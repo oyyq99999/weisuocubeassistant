@@ -38,7 +38,7 @@ public class PrepareThread extends Thread {
 
 	public void interrupt() {
 		this.setPreparing(false);
-		super.interrupt(); // delete when s40 java.lang.InterruptedException
+		// super.interrupt(); // delete when s40 java.lang.InterruptedException
 	}
 
 }

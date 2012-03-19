@@ -43,7 +43,7 @@ public class TimingThread extends Thread {
 	}
 
 	public void interrupt() {
-		super.interrupt(); // delete when s40 java.lang.InterruptedException
+		// super.interrupt(); // delete when java.lang.InterruptedException
 		setRunning(false);
 		try {
 			Thread.sleep(20);
