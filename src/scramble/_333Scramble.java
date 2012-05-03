@@ -39,12 +39,12 @@ public class _333Scramble extends Scramble {
 	}
 
 	protected void init() {
-		if (!Tools.inited) {
+		if (!Tools.isInited()) {
 			// System.out.println("Initialization");
 			try {
 				FileConnection file;
 				file = (FileConnection) Connector.open(
-						"file:///e:/WCA/twophase.data", Connector.READ);
+						"file:///e:/WCA/twophasenew.data", Connector.READ);
 				DataInputStream dis;
 				if (file.exists()
 						&& Tools.initFrom(dis = file.openDataInputStream())) {
@@ -55,12 +55,12 @@ public class _333Scramble extends Scramble {
 						file.mkdir();
 					}
 					file = (FileConnection) Connector
-							.open("file:///e:/WCA/twophase.data");
+							.open("file:///e:/WCA/twophasenew.data");
 					if (file.exists())
 						file.delete();
 					file.create();
 					DataOutputStream dos;
-					Tools.initTo(dos = file.openDataOutputStream());
+					Tools.saveTo(dos = file.openDataOutputStream());
 					dos.flush();
 					dos.close();
 				}
@@ -71,8 +71,7 @@ public class _333Scramble extends Scramble {
 	}
 
 	public String scramble() {
-		scrambleSequence = new Search().solution(Tools.randomCube(), length,
-				10000, false, true);
+		scrambleSequence = new Search().solution(Tools.randomCube(), length, 10000, 0, 2);
 		str2seq();
 		return scrambleSequence;
 	}

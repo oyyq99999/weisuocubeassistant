@@ -1,77 +1,66 @@
 package cs.min2phase;
 
-//import static cs.min2phase.CubieCube.CubieCube.CornMult;
-//import static cs.min2phase.CubieCube.CubieCube.EdgeMult;
-//import static cs.min2phase.CubieCube.*;
-//import static cs.min2phase.Util.*;
-
 class CoordCube {
-	// phase1
-	static char[][] UDSliceMove = new char[495][18];
-	static char[][] TwistMove = new char[324][18];
-	static char[][] FlipMove = new char[336][18];
-	static char[][] UDSliceConj = new char[495][8];
-	static byte[] UDSliceTwistPrun = new byte[495 * 324];
-	static byte[] UDSliceFlipPrun = new byte[495 * 336];
-	// static byte[] TwistFlipPrun = new byte[336 * 324 * 8];
+	static final int N_MOVES = 18;
+	static final int N_MOVES2 = 10;
 
-	// phase1to2
-	static char[][] Mid3Move = new char[1320][18];
-	static byte[] Mid32MPerm = new byte[24];
-	static byte[] CParity = new byte[2768 / 8];
+	static final int N_SLICE = 495;
+	static final int N_TWIST_SYM = 324;
+	static final int N_FLIP_SYM = 336;
+	static final int N_PERM_SYM = 2768;
+	static final int N_MPERM = 24;
 
-	// phase2
-	static char[][] CPermMove = new char[2768][18];
-	static char[][] EPermMove = new char[2768][10];
-	static byte[][] MPermMove = new byte[24][10];
-	static byte[][] MPermConj = new byte[24][16];
-	static byte[] MCPermPrun = new byte[24 * 2768];
-	static byte[] MEPermPrun = new byte[24 * 2768];
+	//XMove = Move Table
+	//XPrun = Pruning Table
+	//XConj = Conjugate Table
+	
+	//phase1
+	static char[][] UDSliceMove = new char[N_SLICE][N_MOVES];
+	static char[][] TwistMove = new char[N_TWIST_SYM][N_MOVES];
+	static char[][] FlipMove = new char[N_FLIP_SYM][N_MOVES];
+	static char[][] UDSliceConj = new char[N_SLICE][8];
+	static int[] UDSliceTwistPrun = new int[N_SLICE * N_TWIST_SYM / 8 + 1];
+	static int[] UDSliceFlipPrun = new int[N_SLICE * N_FLIP_SYM / 8];
+	static int[] TwistFlipPrun = Tools.USE_TWIST_FLIP_PRUN ? new int[N_FLIP_SYM * N_TWIST_SYM * 8 / 8] : null;
 
-	static void init() {
-		initCPermMove();// 0
-		initEPermMove();// 1
-		initFlipMove();// 2
-		initTwistMove();// 3
-		CubieCube.EPermR2S = null;
-		CubieCube.FlipR2S = null;
-		CubieCube.TwistR2S = null;
+	//phase2
+	static char[][] CPermMove = new char[N_PERM_SYM][N_MOVES];
+	static char[][] EPermMove = new char[N_PERM_SYM][N_MOVES2];
+	static char[][] MPermMove = new char[N_MPERM][N_MOVES2];
+	static char[][] MPermConj = new char[N_MPERM][16];
+	static int[] MCPermPrun = new int[N_MPERM * N_PERM_SYM / 8];
+	static int[] MEPermPrun = new int[N_MPERM * N_PERM_SYM / 8];
 
-		initUDSliceMove();// 4
-		initUDSliceConj();// 5
-
-		initMid3Move();// 6
-		initMid32MPerm();// 7
-		initCParity();// 8
-
-		initMPermMove();// 9
-		initMPermConj();// 10
-
-		initTwistFlipSlicePrun();// 11
-		initMCEPermPrun();// 12
-
+	static void setPruning(int[] table, int index, int value) {
+		table[index >> 3] ^= (0x0f ^ value) << ((index & 7) << 2);
 	}
 
-	static void initUDSliceMove() {
+	static int getPruning(int[] table, int index) {
+		return (table[index >> 3] >> ((index & 7) << 2)) & 0x0f;
+	}
+
+	static void initUDSliceMoveConj() {
 		CubieCube c = new CubieCube();
 		CubieCube d = new CubieCube();
-		for (char i = 0; i < 495; i++) {
+		for (int i=0; i<N_SLICE; i++) {
 			c.setUDSlice(i);
-			for (byte j = 0; j < 18; j++) {
+			for (int j=0; j<N_MOVES; j+=3) {
 				CubieCube.EdgeMult(c, CubieCube.moveCube[j], d);
-				UDSliceMove[i][j] = d.getUDSlice();
+				UDSliceMove[i][j] = (char) d.getUDSlice();
+			}
+			for (int j=0; j<16; j+=2) {
+				CubieCube.EdgeConjugate(c, CubieCube.SymInv[j], d);
+				UDSliceConj[i][j>>>1] = (char) (d.getUDSlice() & 0x1ff);
 			}
 		}
-	}
-
-	static void initUDSliceConj() {
-		CubieCube c = new CubieCube();
-		CubieCube d = new CubieCube();
-		for (char i = 0; i < 495; i++) {
-			c.setUDSlice(i);
-			for (char j = 0; j < 16; j += 2) {
-				CubieCube.EdgeConjugate(c, CubieCube.SymInv[j], d);
-				UDSliceConj[i][j >>> 1] = d.getUDSlice();
+		for (int i=0; i<N_SLICE; i++) {
+			for (int j=0; j<N_MOVES; j+=3) {
+				int udslice = UDSliceMove[i][j];
+				for (int k=1; k<3; k++) {
+					int cx = UDSliceMove[udslice & 0x1ff][j];
+					udslice = Util.permMult[udslice>>>9][cx>>>9]<<9|cx&0x1ff;	
+					UDSliceMove[i][j+k] = (char)(udslice);
+				}
 			}
 		}
 	}
@@ -79,11 +68,11 @@ class CoordCube {
 	static void initFlipMove() {
 		CubieCube c = new CubieCube();
 		CubieCube d = new CubieCube();
-		for (char i = 0; i < 336; i++) {
+		for (int i=0; i<N_FLIP_SYM; i++) {
 			c.setFlip(CubieCube.FlipS2R[i]);
-			for (byte j = 0; j < 18; j++) {
+			for (int j=0; j<N_MOVES; j++) {
 				CubieCube.EdgeMult(c, CubieCube.moveCube[j], d);
-				FlipMove[i][j] = d.getFlipSym();
+				FlipMove[i][j] = (char) d.getFlipSym();
 			}
 		}
 	}
@@ -91,49 +80,23 @@ class CoordCube {
 	static void initTwistMove() {
 		CubieCube c = new CubieCube();
 		CubieCube d = new CubieCube();
-		for (char i = 0; i < 324; i++) {
+		for (int i=0; i<N_TWIST_SYM; i++) {
 			c.setTwist(CubieCube.TwistS2R[i]);
-			for (byte j = 0; j < 18; j++) {
+			for (int j=0; j<N_MOVES; j++) {
 				CubieCube.CornMult(c, CubieCube.moveCube[j], d);
-				TwistMove[i][j] = d.getTwistSym();
+				TwistMove[i][j] = (char) d.getTwistSym();
 			}
-		}
-	}
-
-	static void initMid3Move() {
-		CubieCube c = new CubieCube();
-		CubieCube d = new CubieCube();
-		for (char i = 0; i < 1320; i++) {
-			c.setMid3(i);
-			for (byte j = 0; j < 18; j++) {
-				CubieCube.EdgeMult(c, CubieCube.moveCube[j], d);
-				Mid3Move[i][j] = d.getMid3();
-			}
-		}
-	}
-
-	static void initMid32MPerm() {
-		CubieCube c = new CubieCube();
-		for (byte i = 0; i < 24; i++) {
-			c.setMPerm(i);
-			Mid32MPerm[c.getMid3() % 24] = i;
-		}
-	}
-
-	static void initCParity() {
-		for (char i = 0; i < 2768; i++) {
-			CParity[i >>> 3] |= (Util.get8Parity(CubieCube.CPermS2R[i])) << (i & 7);
 		}
 	}
 
 	static void initCPermMove() {
 		CubieCube c = new CubieCube();
 		CubieCube d = new CubieCube();
-		for (char i = 0; i < 2768; i++) {
-			CubieCube.set8Perm(c.cp, CubieCube.CPermS2R[i]);
-			for (byte j = 0; j < 18; j++) {
+		for (int i=0; i<N_PERM_SYM; i++) {
+			c.setCPerm(CubieCube.EPermS2R[i]);
+			for (int j=0; j<N_MOVES; j++) {
 				CubieCube.CornMult(c, CubieCube.moveCube[j], d);
-				CPermMove[i][j] = d.getCPermSym();
+				CPermMove[i][j] = (char) d.getCPermSym();
 			}
 		}
 	}
@@ -141,156 +104,84 @@ class CoordCube {
 	static void initEPermMove() {
 		CubieCube c = new CubieCube();
 		CubieCube d = new CubieCube();
-		for (char i = 0; i < 2768; i++) {
-			CubieCube.set8Perm(c.ep, CubieCube.EPermS2R[i]);
-			for (byte j = 0; j < 10; j++) {
+		for (int i=0; i<N_PERM_SYM; i++) {
+			c.setEPerm(CubieCube.EPermS2R[i]);
+			for (int j=0; j<N_MOVES2; j++) {
 				CubieCube.EdgeMult(c, CubieCube.moveCube[Util.ud2std[j]], d);
-				EPermMove[i][j] = d.getEPermSym();
+				EPermMove[i][j] = (char) d.getEPermSym();
 			}
 		}
 	}
 
-	static void initMPermMove() {
+	static void initMPermMoveConj() {
 		CubieCube c = new CubieCube();
 		CubieCube d = new CubieCube();
-		for (byte i = 0; i < 24; i++) {
+		for (int i=0; i<N_MPERM; i++) {
 			c.setMPerm(i);
-			for (byte j = 0; j < 10; j++) {
+			for (int j=0; j<N_MOVES2; j++) {
 				CubieCube.EdgeMult(c, CubieCube.moveCube[Util.ud2std[j]], d);
-				MPermMove[i][j] = d.getMPerm();
+				MPermMove[i][j] = (char) d.getMPerm();
 			}
-		}
-	}
-
-	static void initMPermConj() {
-		CubieCube c = new CubieCube();
-		CubieCube d = new CubieCube();
-		for (byte i = 0; i < 24; i++) {
-			c.setMPerm(i);
-			for (byte j = 0; j < 16; j++) {
+			for (int j=0; j<16; j++) {
 				CubieCube.EdgeConjugate(c, CubieCube.SymInv[j], d);
-				MPermConj[i][j] = d.getMPerm();
+				MPermConj[i][j] = (char) d.getMPerm();
 			}
 		}
 	}
 
-	static void initTwistFlipSlicePrun() {
-		byte[] SymState = new byte[324];
-		CubieCube c = new CubieCube();
-		CubieCube d = new CubieCube();
-		for (int i = 0; i < 324; i++) {
-			c.setTwist(CubieCube.TwistS2R[i]);
-			for (int j = 0; j < 8; j++) {
-				CubieCube.CornConjugate(c, j << 1, d);
-				if (d.getTwist() == CubieCube.TwistS2R[i]) {
-					SymState[i] |= (1 << j);
-				}
-			}
-		}
-		byte[] SymStateF = new byte[336];
-		for (int i = 0; i < 336; i++) {
-			c.setFlip(CubieCube.FlipS2R[i]);
-			for (int j = 0; j < 8; j++) {
-				CubieCube.EdgeConjugate(c, j << 1, d);
-				if (d.getFlip() == CubieCube.FlipS2R[i]) {
-					SymStateF[i] |= (1 << j);
-				}
-			}
-		}
-
-		byte depth = 0;
-		int done = 1;
+	static void initTwistFlipPrun() {
+		int depth = 0;
+		int done = 8;
 		boolean inv;
-		byte select;
-		byte check;
-
-		for (int i = 0; i < 495 * 324; i++) {
-			UDSliceTwistPrun[i] = -1;
+		int select;
+		int check;
+//		TwistFlipPrun = new int[N_FLIP_SYM * N_TWIST_SYM * 8 / 8];
+		for (int i=0; i<N_FLIP_SYM*N_TWIST_SYM*8/8; i++) {
+			TwistFlipPrun[i] = -1;
 		}
-		UDSliceTwistPrun[0] = 0;
-
-		while (done < 495 * 324) {
+		for (int i=0; i<8; i++) {
+			setPruning(TwistFlipPrun, i, 0);
+		}
+		while (done < N_FLIP_SYM*N_TWIST_SYM*8) {
 			inv = depth > 6;
-			select = inv ? -1 : depth;
-			check = inv ? depth : -1;
+			select = inv ? 0x0f : depth;
+			check = inv ? depth : 0x0f;
 			depth++;
-			for (int i = 0; i < 495 * 324; i++) {
-				if (UDSliceTwistPrun[i] == select) {
-					int slice = i % 495;
-					int twist = i / 495;
-					for (int m = 0; m < 18; m++) {
+			for (int i=0; i<N_FLIP_SYM*N_TWIST_SYM*8; i++) {
+				if (getPruning(TwistFlipPrun, i) == select) {
+					int twist = i / 2688;
+					int flip = i % 2688;
+					int fsym = i & 7;
+					flip >>>= 3;
+					for (int m=0; m<N_MOVES; m++) {
 						int twistx = TwistMove[twist][m];
-						int symx = twistx & 7;
-						int slicex = UDSliceConj[UDSliceMove[slice][m]][symx];
+						int tsymx = twistx & 7;
 						twistx >>>= 3;
-						int idx = twistx * 495 + slicex;
-						if (UDSliceTwistPrun[idx] == check) {
-							done++;
-							if (inv) {
-								UDSliceTwistPrun[i] = depth;
-								break;
-							} else {
-								UDSliceTwistPrun[idx] = depth;
-								byte sym = SymState[twistx];
-								if (sym != 1) {
-									for (int j = 1; j < 8; j++) {
-										sym >>= 1;
-										if ((sym & 1) == 1) {
-											int idxx = twistx * 495
-													+ UDSliceConj[slicex][j];
-											if (UDSliceTwistPrun[idxx] == -1) {
-												UDSliceTwistPrun[idxx] = depth;
-												done++;
-											}
-										}
-									}
-								}
-							}
-						}
-					}
-				}
-			}
-			// System.out.println(String.format("%2d%10d", depth, done));
-		}
-
-		for (int i = 0; i < 495 * 336; i++) {
-			UDSliceFlipPrun[i] = -1;
-		}
-		UDSliceFlipPrun[0] = 0;
-		depth = 0;
-		done = 1;
-		while (done < 495 * 336) {
-			inv = depth > 6;
-			select = inv ? -1 : depth;
-			check = inv ? depth : -1;
-			depth++;
-			for (int i = 0; i < 495 * 336; i++) {
-				if (UDSliceFlipPrun[i] == select) {
-					int slice = i % 495;
-					int flip = i / 495;
-					for (int m = 0; m < 18; m++) {
-						int flipx = FlipMove[flip][m];
-						int symx = flipx & 7;
-						int slicex = UDSliceConj[UDSliceMove[slice][m]][symx];
+						int flipx = FlipMove[flip][CubieCube.Sym8Move[fsym][m]];
+						int fsymx = CubieCube.Sym8MultInv[CubieCube.Sym8Mult[flipx & 7][fsym]][tsymx];
 						flipx >>>= 3;
-						int idx = flipx * 495 + slicex;
-						if (UDSliceFlipPrun[idx] == check) {
+						int idx = ((twistx * 336 + flipx) << 3 | fsymx);
+						if (getPruning(TwistFlipPrun, idx) == check) {
 							done++;
 							if (inv) {
-								UDSliceFlipPrun[i] = depth;
+								setPruning(TwistFlipPrun, i, depth);
 								break;
 							} else {
-								UDSliceFlipPrun[idx] = depth;
-								byte sym = SymStateF[flipx];
-								if (sym != 1) {
-									for (int j = 1; j < 8; j++) {
-										sym >>= 1;
-										if ((sym & 1) == 1) {
-											int idxx = flipx * 495
-													+ UDSliceConj[slicex][j];
-											if (UDSliceFlipPrun[idxx] == -1) {
-												UDSliceFlipPrun[idxx] = depth;
-												done++;
+								setPruning(TwistFlipPrun, idx, depth);
+								char sym = CubieCube.SymStateTwist[twistx];
+								char symF = CubieCube.SymStateFlip[flipx];
+								if (sym != 1 || symF != 1) {
+									for (int j=0; j<8; j++, symF >>= 1) {
+										if ((symF & 1) == 1) {
+											int fsymxx = CubieCube.Sym8MultInv[fsymx][j];
+											for (int k=0; k<8; k++) {
+												if ((sym & (1 << k)) != 0) {
+													int idxx = twistx * 2688 + (flipx << 3 | CubieCube.Sym8MultInv[fsymxx][k]);
+													if (getPruning(TwistFlipPrun, idxx) == 0x0f) {
+														setPruning(TwistFlipPrun, idxx, depth);
+														done++;
+													}
+												}
 											}
 										}
 									}
@@ -300,66 +191,55 @@ class CoordCube {
 					}
 				}
 			}
-			// System.out.println(String.format("%2d%10d", depth, done));
+//			System.out.println(String.format("%2d%10d", depth, done));
 		}
 	}
+	
+	static void initRawSymPrun(int[] PrunTable, final int INV_DEPTH, 
+			final char[][] RawMove, final char[][] RawConj,
+			final char[][] SymMove, final char[] SymState, 
+			final byte[] SymSwitch, final int[] moveMap, final int SYM_SHIFT) {
 
-	static void initMCEPermPrun() {
-		CubieCube c = new CubieCube();
-		CubieCube d = new CubieCube();
-		byte depth = 0;
+		final int SYM_MASK = (1 << SYM_SHIFT) - 1;
+		final int N_RAW = RawMove.length;
+		final int N_SYM = SymMove.length;
+		final int N_MOVES = RawMove[0].length;
+
+		for (int i=0; i<(N_RAW*N_SYM+7)/8; i++) {
+			PrunTable[i] = -1;
+		}
+		setPruning(PrunTable, 0, 0);
+
+		int depth = 0;
 		int done = 1;
-		boolean inv;
-		byte select;
-		byte check;
 
-		char[] SymState = new char[2768];
-		for (int i = 0; i < 2768; i++) {
-			CubieCube.set8Perm(c.ep, CubieCube.EPermS2R[i]);
-			for (int j = 1; j < 16; j++) {
-				CubieCube.EdgeConjugate(c, j, d);
-				if (CubieCube.EPermS2R[i] == CubieCube.get8Perm(d.ep)) {
-					SymState[i] |= (1 << j);
-				}
-			}
-		}
-		for (int i = 0; i < 24 * 2768; i++) {
-			MEPermPrun[i] = -1;
-		}
-		MEPermPrun[0] = 0;
-		while (done < 24 * 2768) {
-			inv = depth > 7;
-			select = inv ? -1 : depth;
-			check = inv ? depth : -1;
+		while (done < N_RAW * N_SYM) {
+			boolean inv = depth > INV_DEPTH;
+			int select = inv ? 0x0f : depth;
+			int check = inv ? depth : 0x0f;
 			depth++;
-			for (int i = 0; i < 24 * 2768; i++) {
-				if (MEPermPrun[i] == select) {
-					int mid = i % 24;
-					int edge = i / 24;
-					for (int m = 0; m < 10; m++) {
-						int edgex = EPermMove[edge][m];
-						int symx = edgex & 15;
-						int midx = MPermConj[MPermMove[mid][m]][symx];
-						edgex >>>= 4;
-						int idx = edgex * 24 + midx;
-						if (MEPermPrun[idx] == check) {
+			for (int i=0; i<N_RAW*N_SYM; i++) {
+				if (getPruning(PrunTable, i) == select) {
+					int raw = i % N_RAW;
+					int sym = i / N_RAW;
+					for (int m=0; m<N_MOVES; m++) {
+						int symx = SymMove[sym][moveMap == null ? m : moveMap[m]];
+						int rawx = RawConj[RawMove[raw][m] & 0x1ff][symx & SYM_MASK];
+						symx >>>= SYM_SHIFT;
+						int idx = symx * N_RAW + rawx;
+						if (getPruning(PrunTable, idx) == check) {
 							done++;
 							if (inv) {
-								MEPermPrun[i] = depth;
+								setPruning(PrunTable, i, depth);
 								break;
 							} else {
-								MEPermPrun[idx] = depth;
-								char sym = SymState[edgex];
-								if (sym != 0) {
-									for (int j = 1; j < 16; j++) {
-										sym >>= 1;
-										if ((sym & 1) == 1) {
-											int idxx = edgex * 24
-													+ MPermConj[midx][j];
-											if (MEPermPrun[idxx] == -1) {
-												MEPermPrun[idxx] = depth;
-												done++;
-											}
+								setPruning(PrunTable, idx, depth);
+								for (int j=1, symState = SymState[symx]; (symState >>= 1) != 0; j++) {
+									if ((symState & 1) == 1) {
+										int idxx = symx * N_RAW + RawConj[rawx][j ^ (SymSwitch == null ? 0 : SymSwitch[j])];
+										if (getPruning(PrunTable, idxx) == 0x0f) {
+											setPruning(PrunTable, idxx, depth);
+											done++;
 										}
 									}
 								}
@@ -368,59 +248,40 @@ class CoordCube {
 					}
 				}
 			}
-			// System.out.println(String.format("%2d%10d", depth, done));
+//			System.out.println(String.format("%2d%10d", depth, done));
 		}
+	
+	}
 
-		for (int i = 0; i < 24 * 2768; i++) {
-			MCPermPrun[i] = -1;
-		}
-		MCPermPrun[0] = 0;
-		depth = 0;
-		done = 1;
-		while (done < 24 * 2768) {
-			inv = depth > 7;
-			select = inv ? -1 : depth;
-			check = inv ? depth : -1;
-			depth++;
-			for (int i = 0; i < 24 * 2768; i++) {
-				if (MCPermPrun[i] == select) {
-					byte mid = (byte) (i % 24);
-					char corn = (char) (i / 24);
-					for (byte m = 0; m < 10; m++) {
-						char cornx = CPermMove[corn][Util.ud2std[m]];
-						byte symx = (byte) (cornx & 15);
-						byte midx = MPermConj[MPermMove[mid][m]][symx];
-						cornx >>>= 4;
-						int idx = cornx * 24 + midx;
-						if (MCPermPrun[idx] == check) {
-							done++;
-							if (inv) {
-								MCPermPrun[i] = depth;
-								break;
-							} else {
-								MCPermPrun[idx] = depth;
-								char sym = SymState[cornx];
-								if (sym != 0) {
-									for (byte j = 1; j < 16; j++) {
-										sym >>= 1;
-										if ((sym & 1) == 1) {
-											int idxx = cornx
-													* 24
-													+ MPermConj[midx][j
-															^ CubieCube.e2c[j]];
-											if (MCPermPrun[idxx] == -1) {
-												MCPermPrun[idxx] = depth;
-												done++;
-											}
-										}
-									}
-								}
-							}
-						}
-					}
-				}
-			}
-			// System.out.println(String.format("%2d%10d", depth, done));
-		}
+	static void initSliceTwistPrun() {	
+		initRawSymPrun(UDSliceTwistPrun, 6, 
+			UDSliceMove, UDSliceConj,
+			TwistMove, CubieCube.SymStateTwist, 
+			null, null, 3
+		);
+	}
+
+	static void initSliceFlipPrun() {
+		initRawSymPrun(UDSliceFlipPrun, 6, 
+			UDSliceMove, UDSliceConj,
+			FlipMove, CubieCube.SymStateFlip, 
+			null, null, 3
+		);
+	}
+
+	static void initMEPermPrun() {
+		initRawSymPrun(MEPermPrun, 7, 
+			MPermMove, MPermConj,
+			EPermMove, CubieCube.SymStatePerm, 
+			null, null, 4
+		);
+	}
+
+	static void initMCPermPrun() {
+		initRawSymPrun(MCPermPrun, 10, 
+			MPermMove, MPermConj,
+			CPermMove, CubieCube.SymStatePerm, 
+			CubieCube.e2c, Util.ud2std, 4
+		);
 	}
 }
