@@ -69,11 +69,11 @@ public class CubeScramble extends Scramble {
 	private String getMoveName(int axis, int shift, int count) {
 		StringBuffer sb = new StringBuffer();
 		if (shift < size / 2) {
-			if (size > 5 && shift != size / 2 - 1) {
+			if (shift < size / 2 - 2) {
 				sb.append(size / 2 - shift);
 			}
 			sb.append("URF".charAt(axis));
-			if (size < 6 && shift != size / 2 - 1) {
+			if (shift != size / 2 - 1) {
 				sb.append("w");
 			}
 			switch (count) {
@@ -87,11 +87,11 @@ public class CubeScramble extends Scramble {
 				break;
 			}
 		} else {
-			if (size > 5 && shift != size - 2) {
+			if (shift < size - 3) {
 				sb.append(size - shift - 1);
 			}
 			sb.append("DLB".charAt(axis));
-			if (size < 6 && shift != size - 2) {
+			if (shift != size - 2) {
 				sb.append("w");
 			}
 			switch (count) {
