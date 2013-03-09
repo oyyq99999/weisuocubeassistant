@@ -19,24 +19,37 @@ public class DrawClock {
 	}
 
 	private void scramble() {
-		String[] move = new String[] { "111111000101000000",
-				"000000101000111111", "011011011100000100",
-				"100000100011011011", "000111111000000101",
-				"101000000111111000", "110110110001000001",
-				"001000001110110110", "011111111100000101",
-				"110111111001000101", "111111110101000001",
-				"111111011101000100", "111111111101000101",
-				"101000101111111111" };
-		for (int i = 0; i < 14; i++) {
-			for (int j = 0; j < 18; j++) {
-				if (move[i].charAt(j) == '1') {
+		int[] move = new int[] { 0066001, 0660100, 0330400, 0033004, 0077005,
+				0666101, 0770500, 0333404, 0777505, 0005077, 0101666, 0500770,
+				0404333, 0505777 };
+
+		System.out.println(move.length);
+		for (int i = 0; i < 9; i++) {
+			for (int j = 0; j < 9; j++) {
+				if ((move[i] & (1 << j)) == 1 << j) {
+					needle[j] += 12 - sequence[i];
+				}
+			}
+			for (int j = 9; j < 18; j++) {
+				if ((move[i] & (1 << j)) == 1 << j) {
 					needle[j] += sequence[i];
 				}
 			}
 		}
-		for (int i = 0; i < 9; i++) {
-			needle[i] = (needle[i] + 47) % 12 + 1;
-			needle[i + 9] = 12 - (needle[i + 9] + 36) % 12;
+		for (int i = 9; i < 14; i++) {
+			for (int j = 0; j < 9; j++) {
+				if ((move[i] & (1 << j)) == 1 << j) {
+					needle[j] += sequence[i];
+				}
+			}
+			for (int j = 9; j < 18; j++) {
+				if ((move[i] & (1 << j)) == 1 << j) {
+					needle[j] += 12 - sequence[i];
+				}
+			}
+		}
+		for (int i = 0; i < 18; i++) {
+			needle[i] = (needle[i] + 11) % 12 + 1;
 		}
 	}
 
