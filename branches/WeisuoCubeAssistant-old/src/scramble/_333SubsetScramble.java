@@ -32,6 +32,9 @@ public class _333SubsetScramble extends _333Scramble {
 		} else if (subset.equals("LSLL")) {
 			scrambleSequence = new Search().solution(Tools.randomLastSlot(),
 					length, 10000, 0, Search.INVERSE_SOLUTION);
+		} else if (subset.equals("F2L")) {
+			scrambleSequence = new Search().solution(Tools.randomCrossSolved(),
+					length, 10000, 0, Search.INVERSE_SOLUTION);
 		}
 		str2seq();
 		return scrambleSequence;
