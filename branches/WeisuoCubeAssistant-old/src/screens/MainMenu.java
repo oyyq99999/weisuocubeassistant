@@ -215,7 +215,8 @@ public class MainMenu extends List implements CommandListener {
 									_333Confirm, this);
 							GlobalData.display.setCurrent(confirm);
 						} else {
-							GlobalData.scrambler333Corners = new _333CornerScramble(
+							GlobalData.scrambler333Corners = new _333SubsetScramble(
+									"Corner",
 									GlobalData.randomPosition333MaxLength, null);
 							GlobalData.scrambleForm = new ScrambleForm(
 									"三阶角块打乱", GlobalData.scrambler333Corners);
@@ -241,7 +242,8 @@ public class MainMenu extends List implements CommandListener {
 									_333Confirm, this);
 							GlobalData.display.setCurrent(confirm);
 						} else {
-							GlobalData.scrambler333Edges = new _333EdgeScramble(
+							GlobalData.scrambler333Edges = new _333SubsetScramble(
+									"Edge",
 									GlobalData.randomPosition333MaxLength, null);
 							GlobalData.scrambleForm = new ScrambleForm(
 									"三阶棱块打乱", GlobalData.scrambler333Edges);
@@ -267,7 +269,8 @@ public class MainMenu extends List implements CommandListener {
 									_333Confirm, this);
 							GlobalData.display.setCurrent(confirm);
 						} else {
-							GlobalData.scrambler333LL = new _333LLScramble(
+							GlobalData.scrambler333LL = new _333SubsetScramble(
+									"LL",
 									GlobalData.randomPosition333MaxLength, null);
 							GlobalData.scrambleForm = new ScrambleForm(
 									"三阶顶层打乱", GlobalData.scrambler333LL);
@@ -294,7 +297,8 @@ public class MainMenu extends List implements CommandListener {
 									"三阶最后一组F2L打乱", _333Confirm, this);
 							GlobalData.display.setCurrent(confirm);
 						} else {
-							GlobalData.scrambler333LSLL = new _333LSLLScramble(
+							GlobalData.scrambler333LSLL = new _333SubsetScramble(
+									"LSLL",
 									GlobalData.randomPosition333MaxLength, null);
 							GlobalData.scrambleForm = new ScrambleForm(
 									"三阶最后一组F2L打乱", GlobalData.scrambler333LSLL);

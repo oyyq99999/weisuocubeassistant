@@ -8,11 +8,8 @@ import javax.microedition.lcdui.Form;
 import model.GlobalData;
 import scramble.SkewbScramble;
 import scramble._222Scramble;
-import scramble._333CornerScramble;
-import scramble._333EdgeScramble;
-import scramble._333LLScramble;
-import scramble._333LSLLScramble;
 import scramble._333Scramble;
+import scramble._333SubsetScramble;
 import scramble.PyraminxScramble;
 import scramble.PyraminxLast4EdgesScramble;
 
@@ -61,8 +58,8 @@ public class ConfirmForm extends Form implements CommandListener {
 				this.deleteAll();
 				this.removeCommand(okCommand);
 				this.removeCommand(cancelCommand);
-				GlobalData.scrambler333Corners = new _333CornerScramble(
-						GlobalData.randomPosition333MaxLength, this);
+				GlobalData.scrambler333Corners = new _333SubsetScramble(
+						"Corner", GlobalData.randomPosition333MaxLength, this);
 				ScrambleForm scrambleForm = new ScrambleForm("三阶角块打乱",
 						GlobalData.scrambler333Corners);
 				GlobalData.randomstate333Scrambled = true;
@@ -72,7 +69,7 @@ public class ConfirmForm extends Form implements CommandListener {
 				this.deleteAll();
 				this.removeCommand(okCommand);
 				this.removeCommand(cancelCommand);
-				GlobalData.scrambler333Edges = new _333EdgeScramble(
+				GlobalData.scrambler333Edges = new _333SubsetScramble("Edge",
 						GlobalData.randomPosition333MaxLength, this);
 				ScrambleForm scrambleForm = new ScrambleForm("三阶棱块打乱",
 						GlobalData.scrambler333Edges);
@@ -83,7 +80,7 @@ public class ConfirmForm extends Form implements CommandListener {
 				this.deleteAll();
 				this.removeCommand(okCommand);
 				this.removeCommand(cancelCommand);
-				GlobalData.scrambler333LL = new _333LLScramble(
+				GlobalData.scrambler333LL = new _333SubsetScramble("LL",
 						GlobalData.randomPosition333MaxLength, this);
 				ScrambleForm scrambleForm = new ScrambleForm("三阶顶层打乱",
 						GlobalData.scrambler333LL);
@@ -94,7 +91,7 @@ public class ConfirmForm extends Form implements CommandListener {
 				this.deleteAll();
 				this.removeCommand(okCommand);
 				this.removeCommand(cancelCommand);
-				GlobalData.scrambler333LSLL = new _333LSLLScramble(
+				GlobalData.scrambler333LSLL = new _333SubsetScramble("LSLL",
 						GlobalData.randomPosition333MaxLength, this);
 				ScrambleForm scrambleForm = new ScrambleForm("三阶最后一组F2L打乱",
 						GlobalData.scrambler333LSLL);
