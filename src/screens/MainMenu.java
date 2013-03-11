@@ -126,6 +126,7 @@ public class MainMenu extends List implements CommandListener {
 				this.append("三阶棱块", null);
 				this.append("三阶顶层", null);
 				this.append("三阶最后一组F2L", null);
+				this.append("三阶F2L", null);
 				this.append("三阶 <R,U>", null);
 				this.append("三阶 <R,U,L>", null);
 				this.append("三阶 <R,r,U>", null);
@@ -312,6 +313,33 @@ public class MainMenu extends List implements CommandListener {
 					}
 				} else {
 					Alert alert = new Alert("三阶最后一组F2L打乱",
+							"必须将三阶的打乱方式设置成\"随机状态\"！", null, AlertType.ERROR);
+					alert.setTimeout(3000);
+					GlobalData.display.setCurrent(alert, this);
+				}
+			} else if (this.getString(this.getSelectedIndex()).equals("三阶F2L")) {
+				if (GlobalData.randomPosition333) {
+					if (GlobalData.scrambler333F2L == null) {
+						if (!GlobalData.randomstate333Scrambled) {
+							ConfirmForm confirm = new ConfirmForm("三阶F2L打乱",
+									_333Confirm, this);
+							GlobalData.display.setCurrent(confirm);
+						} else {
+							GlobalData.scrambler333F2L = new _333SubsetScramble(
+									"F2L",
+									GlobalData.randomPosition333MaxLength, null);
+							GlobalData.scrambleForm = new ScrambleForm(
+									"三阶F2L打乱", GlobalData.scrambler333F2L);
+							GlobalData.display
+									.setCurrent(GlobalData.scrambleForm);
+						}
+					} else {
+						GlobalData.scrambleForm = new ScrambleForm("三阶F2L打乱",
+								GlobalData.scrambler333F2L);
+						GlobalData.display.setCurrent(GlobalData.scrambleForm);
+					}
+				} else {
+					Alert alert = new Alert("三阶F2L打乱",
 							"必须将三阶的打乱方式设置成\"随机状态\"！", null, AlertType.ERROR);
 					alert.setTimeout(3000);
 					GlobalData.display.setCurrent(alert, this);

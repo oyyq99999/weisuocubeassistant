@@ -51,6 +51,7 @@ public class GlobalData {
 	public static _333SubsetScramble scrambler333Edges = null;
 	public static _333SubsetScramble scrambler333LL = null;
 	public static _333SubsetScramble scrambler333LSLL = null;
+	public static _333SubsetScramble scrambler333F2L = null;
 	public static _333SubgroupScramble scrambler333RU = null;
 	public static _333SubgroupScramble scrambler333RUF = null;
 	public static _333SubgroupScramble scrambler333RUL = null;

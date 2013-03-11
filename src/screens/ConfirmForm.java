@@ -97,6 +97,17 @@ public class ConfirmForm extends Form implements CommandListener {
 						GlobalData.scrambler333LSLL);
 				GlobalData.randomstate333Scrambled = true;
 				GlobalData.display.setCurrent(scrambleForm);
+			} else if (getTitle().equals("三阶F2L打乱")) {
+				this.setTitle("三阶打乱准备中");
+				this.deleteAll();
+				this.removeCommand(okCommand);
+				this.removeCommand(cancelCommand);
+				GlobalData.scrambler333F2L = new _333SubsetScramble("F2L",
+						GlobalData.randomPosition333MaxLength, this);
+				ScrambleForm scrambleForm = new ScrambleForm("三阶F2L打乱",
+						GlobalData.scrambler333F2L);
+				GlobalData.randomstate333Scrambled = true;
+				GlobalData.display.setCurrent(scrambleForm);
 			} else if (getTitle().equals("金字塔打乱")) {
 				this.setTitle("金字塔打乱准备中");
 				this.deleteAll();
