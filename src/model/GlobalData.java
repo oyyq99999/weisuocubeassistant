@@ -47,10 +47,10 @@ public class GlobalData {
 	public static CubeScramble scrambler999 = null;
 	public static CubeScramble scrambler111111 = null;
 	public static _333NoobScramble scrambler333Noob = null;
-	public static _333CornerScramble scrambler333Corners = null;;
-	public static _333EdgeScramble scrambler333Edges = null;
-	public static _333LLScramble scrambler333LL = null;
-	public static _333LSLLScramble scrambler333LSLL = null;
+	public static _333SubsetScramble scrambler333Corners = null;
+	public static _333SubsetScramble scrambler333Edges = null;
+	public static _333SubsetScramble scrambler333LL = null;
+	public static _333SubsetScramble scrambler333LSLL = null;
 	public static _333SubgroupScramble scrambler333RU = null;
 	public static _333SubgroupScramble scrambler333RUF = null;
 	public static _333SubgroupScramble scrambler333RUL = null;
