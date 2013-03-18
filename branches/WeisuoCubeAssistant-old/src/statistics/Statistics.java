@@ -6,8 +6,8 @@ public class Statistics {
 	Vector data;
 	int best, worst, sum, DNFs;
 	long sos;
-	int bestmo3, bestao5, bestao12;
-	Vector mo3, ao5, ao12;
+	int bestao5, bestao12;
+	Vector ao5, ao12;
 
 	public Statistics() {
 		data = new Vector(12);
@@ -15,37 +15,16 @@ public class Statistics {
 		best = Integer.MAX_VALUE;
 		worst = 0;
 		sos = 0;
-		mo3 = new Vector(12);
 		ao5 = new Vector(12);
 		ao12 = new Vector(12);
-		bestmo3 = bestao5 = bestao12 = Integer.MAX_VALUE;
+		bestao5 = bestao12 = Integer.MAX_VALUE;
 	}
 
 	public void push_back(Data data) {
 		this.data.addElement(data);
 		int n = this.data.size();
 		Data[] recentstats;
-		int mo3 = 0, ao5 = 0, ao12 = 0;
-		if (n < 3) {
-			this.mo3.addElement(new Integer(0));
-		} else {
-			recentstats = new Data[3];
-			int sum = 0;
-			boolean flag = true;
-			for (int i = 0; i < 3; ++i) {
-				recentstats[i] = (Data) this.data.elementAt(n - 3 + i);
-				if (recentstats[i].isDNF()) {
-					mo3 = Integer.MAX_VALUE;
-					flag = false;
-					break;
-				}
-				sum += recentstats[i].time;
-			}
-			if (flag) {
-				mo3 = (int) ((double) sum / 3 + 0.5);
-			}
-			this.mo3.addElement(new Integer(mo3));
-		}
+		int ao5 = 0, ao12 = 0;
 		if (n < 5) {
 			this.ao5.addElement(new Integer(0));
 		} else {
@@ -117,9 +96,6 @@ public class Statistics {
 				worst = data.time;
 			}
 		}
-		if (mo3 > 0 && mo3 < bestmo3) {
-			bestmo3 = mo3;
-		}
 		if (ao5 > 0 && ao5 < bestao5) {
 			bestao5 = ao5;
 		}
@@ -133,14 +109,13 @@ public class Statistics {
 			return;
 		}
 		this.data.removeElementAt(data.size() - 1);
-		mo3.removeElementAt(mo3.size() - 1);
 		ao5.removeElementAt(ao5.size() - 1);
 		ao12.removeElementAt(ao12.size() - 1);
 		sum = DNFs = 0;
 		best = Integer.MAX_VALUE;
 		worst = 0;
 		sos = 0;
-		bestmo3 = bestao5 = bestao12 = Integer.MAX_VALUE;
+		bestao5 = bestao12 = Integer.MAX_VALUE;
 		for (int i = 0; i < data.size(); ++i) {
 			Data d = (Data) data.elementAt(i);
 			if (d.time == Integer.MAX_VALUE) {
@@ -156,10 +131,6 @@ public class Statistics {
 					worst = d.time;
 				}
 			}
-			int mo3 = ((Integer) this.mo3.elementAt(i)).intValue();
-			if (mo3 > 0 && mo3 < bestmo3) {
-				bestmo3 = mo3;
-			}
 			int ao5 = ((Integer) this.ao5.elementAt(i)).intValue();
 			if (ao5 > 0 && ao5 < bestao5) {
 				bestao5 = ao5;
@@ -173,14 +144,13 @@ public class Statistics {
 
 	public void reset() {
 		data.removeAllElements();
-		mo3.removeAllElements();
 		ao5.removeAllElements();
 		ao12.removeAllElements();
 		sum = DNFs = 0;
 		best = Integer.MAX_VALUE;
 		worst = 0;
 		sos = 0;
-		bestmo3 = bestao5 = bestao12 = Integer.MAX_VALUE;
+		bestao5 = bestao12 = Integer.MAX_VALUE;
 	}
 
 	public String toString(boolean brief) {
@@ -219,20 +189,14 @@ public class Statistics {
 				double stddev = Math.sqrt(m * sos - (long) sum * sum) / m;
 				sb.append(Data.time2str((int) (stddev + 0.5)));
 			}
-			if (n >= 3) {
-				sb.append("\n").append("最近/最好3次平均： ");
-				sb.append(Data.time2str(((Integer) mo3.elementAt(n - 1))));
-				sb.append("/").append(Data.time2str(bestmo3));
-				if (n >= 5) {
-					sb.append("\n").append("最近/最好5次平均： ");
-					sb.append(Data.time2str(((Integer) ao5.elementAt(n - 1))));
-					sb.append("/").append(Data.time2str(bestao5));
-					if (n >= 12) {
-						sb.append("\n").append("最近/最好12次平均： ");
-						sb.append(Data.time2str(((Integer) ao12
-								.elementAt(n - 1))));
-						sb.append("/").append(Data.time2str(bestao12));
-					}
+			if (n >= 5) {
+				sb.append("\n").append("最近/最好5次平均： ");
+				sb.append(Data.time2str(((Integer) ao5.elementAt(n - 1))));
+				sb.append("/").append(Data.time2str(bestao5));
+				if (n >= 12) {
+					sb.append("\n").append("最近/最好12次平均： ");
+					sb.append(Data.time2str(((Integer) ao12.elementAt(n - 1))));
+					sb.append("/").append(Data.time2str(bestao12));
 				}
 			}
 			for (int i = data.size(); --i >= 0;) {
